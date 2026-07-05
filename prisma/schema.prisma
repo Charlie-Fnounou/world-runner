@@ -106,6 +106,10 @@ model Evento {
   zonaHoteles String?
   transporte  String?
 
+  bandera         String? // emoji de la bandera del país, ej. "🇩🇪"
+  colorPrimario   String? // color del gradiente de la tarjeta/portada
+  colorSecundario String?
+
   esWorldMarathonMajor Boolean @default(false)
   certificadaAims      Boolean @default(false)
   labelWorldAthletics  String? // ej. "Gold", "Silver", "Elite"

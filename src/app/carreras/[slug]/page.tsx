@@ -4,8 +4,11 @@ import { getCarreras, getCarreraPorSlug, slugify } from "@/lib/races-data";
 import { RaceDetailClient } from "@/components/RaceDetailClient";
 import { fmtFecha } from "@/lib/format";
 
-export function generateStaticParams() {
-  return getCarreras().map((r) => ({ slug: slugify(r.id, r.name) }));
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+  const carreras = await getCarreras();
+  return carreras.map((r) => ({ slug: slugify(r.id, r.name) }));
 }
 
 export async function generateMetadata({
@@ -14,7 +17,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const r = getCarreraPorSlug(slug);
+  const r = await getCarreraPorSlug(slug);
   if (!r) return {};
   const titulo = `${r.name} — ${fmtFecha(r.date)}`;
   const descripcion = r.desc.slice(0, 155);
@@ -33,7 +36,7 @@ export default async function RacePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const r = getCarreraPorSlug(slug);
+  const r = await getCarreraPorSlug(slug);
   if (!r) notFound();
 
   const jsonLd = {
