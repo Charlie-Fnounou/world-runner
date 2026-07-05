@@ -1,0 +1,3368 @@
+[
+  {
+    "id": "berlin",
+    "name": "BMW Berlin Marathon",
+    "city": "Berlín",
+    "country": "Alemania",
+    "flag": "🇩🇪",
+    "continent": "Europa",
+    "lat": 52.52,
+    "lng": 13.4,
+    "date": "2026-09-27",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "cerrada",
+    "price": 163,
+    "cur": "€",
+    "runners": 48000,
+    "elev": 73,
+    "temp": 14,
+    "limit": "6:15",
+    "diff": 2,
+    "rating": 4.9,
+    "nrev": 3124,
+    "major": true,
+    "web": "https://www.bmw-berlin-marathon.com",
+    "airport": "BER · 30 min",
+    "hotel": "Mitte / Tiergarten",
+    "g": [
+      "#0E7490",
+      "#164E63"
+    ],
+    "desc": "El circuito más rápido del mundo: plano, con curvas amplias y ambiente eléctrico. Aquí han caído más récords mundiales que en ninguna otra maratón. Inscripción por sorteo anual.",
+    "recM": "2:01:09 · E. Kipchoge",
+    "recF": "2:11:53 · T. Assefa",
+    "profile": [
+      19,
+      12,
+      7,
+      21,
+      27,
+      11,
+      5,
+      16,
+      19,
+      11,
+      16,
+      24
+    ],
+    "history": [
+      {
+        "y": 2025,
+        "r": 44640,
+        "p": 147
+      },
+      {
+        "y": 2024,
+        "r": 41515,
+        "p": 132
+      },
+      {
+        "y": 2023,
+        "r": 38609,
+        "p": 119
+      }
+    ]
+  },
+  {
+    "id": "chicago",
+    "name": "Bank of America Chicago Marathon",
+    "city": "Chicago",
+    "country": "Estados Unidos",
+    "flag": "🇺🇸",
+    "continent": "América del Norte",
+    "lat": 41.88,
+    "lng": -87.63,
+    "date": "2026-10-11",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "cerrada",
+    "price": 250,
+    "cur": "$",
+    "runners": 52000,
+    "elev": 41,
+    "temp": 12,
+    "limit": "6:30",
+    "diff": 2,
+    "rating": 4.8,
+    "nrev": 2871,
+    "major": true,
+    "web": "https://www.chicagomarathon.com",
+    "airport": "ORD · 45 min",
+    "hotel": "The Loop / River North",
+    "g": [
+      "#B91C1C",
+      "#7F1D1D"
+    ],
+    "desc": "Circuito ultra plano por 29 barrios y sede del récord mundial (2:00:35). Público masivo en cada milla y organización de relojería. Entrada por sorteo o marca de clasificación.",
+    "recM": "2:00:35 · K. Kiptum",
+    "recF": "2:09:56 · R. Chepngetich",
+    "profile": [
+      19,
+      12,
+      10,
+      24,
+      23,
+      7,
+      6,
+      20,
+      20,
+      11,
+      17,
+      22
+    ],
+    "history": [
+      {
+        "y": 2025,
+        "r": 48360,
+        "p": 225
+      },
+      {
+        "y": 2024,
+        "r": 44975,
+        "p": 203
+      },
+      {
+        "y": 2023,
+        "r": 41827,
+        "p": 182
+      }
+    ]
+  },
+  {
+    "id": "nyc",
+    "name": "TCS New York City Marathon",
+    "city": "Nueva York",
+    "country": "Estados Unidos",
+    "flag": "🇺🇸",
+    "continent": "América del Norte",
+    "lat": 40.71,
+    "lng": -74.01,
+    "date": "2026-11-01",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "cerrada",
+    "price": 315,
+    "cur": "$",
+    "runners": 55000,
+    "elev": 247,
+    "temp": 10,
+    "limit": "6:30",
+    "diff": 3,
+    "rating": 4.9,
+    "nrev": 4102,
+    "major": true,
+    "web": "https://www.nyrr.org/tcsnycmarathon",
+    "airport": "JFK / EWR · 60 min",
+    "hotel": "Midtown Manhattan",
+    "g": [
+      "#1D4ED8",
+      "#1E3A8A"
+    ],
+    "desc": "La maratón más grande del planeta: cinco distritos, cinco puentes y dos millones de espectadores. Sorteo anual muy competido; también hay cupos por tiempo y por charities.",
+    "recM": "2:04:58 · T. Kipruto",
+    "recF": "2:22:31 · M. Keitany",
+    "profile": [
+      73,
+      34,
+      61,
+      71,
+      32,
+      46,
+      104,
+      87,
+      22,
+      33,
+      81,
+      65
+    ],
+    "history": [
+      {
+        "y": 2025,
+        "r": 51150,
+        "p": 284
+      },
+      {
+        "y": 2024,
+        "r": 47570,
+        "p": 255
+      },
+      {
+        "y": 2023,
+        "r": 44240,
+        "p": 230
+      }
+    ]
+  },
+  {
+    "id": "boston",
+    "name": "Boston Marathon",
+    "city": "Boston",
+    "country": "Estados Unidos",
+    "flag": "🇺🇸",
+    "continent": "América del Norte",
+    "lat": 42.36,
+    "lng": -71.06,
+    "date": "2027-04-19",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "proximamente",
+    "price": 230,
+    "cur": "$",
+    "runners": 30000,
+    "elev": 247,
+    "temp": 11,
+    "limit": "6:00",
+    "diff": 4,
+    "rating": 4.9,
+    "nrev": 3540,
+    "major": true,
+    "web": "https://www.baa.org/races/boston-marathon",
+    "airport": "BOS · 20 min",
+    "hotel": "Back Bay",
+    "g": [
+      "#CA8A04",
+      "#713F12"
+    ],
+    "desc": "La maratón más antigua del mundo (1897) y la única Major con marca de clasificación obligatoria. Heartbreak Hill en el km 32 decide la carrera. Registro en septiembre.",
+    "recM": "2:03:02 · G. Mutai",
+    "recF": "2:17:22 · H. Obiri",
+    "profile": [
+      77,
+      49,
+      24,
+      76,
+      110,
+      55,
+      19,
+      61,
+      77,
+      44,
+      60,
+      100
+    ],
+    "history": [
+      {
+        "y": 2026,
+        "r": 27900,
+        "p": 207
+      },
+      {
+        "y": 2025,
+        "r": 25947,
+        "p": 186
+      },
+      {
+        "y": 2024,
+        "r": 24131,
+        "p": 168
+      }
+    ]
+  },
+  {
+    "id": "london",
+    "name": "TCS London Marathon",
+    "city": "Londres",
+    "country": "Reino Unido",
+    "flag": "🇬🇧",
+    "continent": "Europa",
+    "lat": 51.51,
+    "lng": -0.13,
+    "date": "2027-04-25",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "cerrada",
+    "price": 90,
+    "cur": "£",
+    "runners": 56000,
+    "elev": 42,
+    "temp": 11,
+    "limit": "8:00",
+    "diff": 2,
+    "rating": 4.9,
+    "nrev": 3890,
+    "major": true,
+    "web": "https://www.tcslondonmarathon.com",
+    "airport": "LHR · 45 min",
+    "hotel": "Greenwich / Canary Wharf",
+    "g": [
+      "#0F766E",
+      "#134E4A"
+    ],
+    "desc": "El sorteo más masivo del running mundial (ballot cerrado para 2027). Recorrido junto al Támesis, meta frente a Buckingham y la mayor recaudación benéfica del deporte.",
+    "recM": "2:01:25 · K. Kiptum",
+    "recF": "2:15:50 · P. Jepchirchir",
+    "profile": [
+      21,
+      11,
+      15,
+      20,
+      9,
+      6,
+      21,
+      26,
+      12,
+      7,
+      17,
+      16
+    ],
+    "history": [
+      {
+        "y": 2026,
+        "r": 52080,
+        "p": 81
+      },
+      {
+        "y": 2025,
+        "r": 48434,
+        "p": 73
+      },
+      {
+        "y": 2024,
+        "r": 45044,
+        "p": 66
+      }
+    ]
+  },
+  {
+    "id": "tokyo",
+    "name": "Tokyo Marathon",
+    "city": "Tokio",
+    "country": "Japón",
+    "flag": "🇯🇵",
+    "continent": "Asia",
+    "lat": 35.68,
+    "lng": 139.69,
+    "date": "2027-03-07",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "proximamente",
+    "price": 180,
+    "cur": "$",
+    "runners": 38000,
+    "elev": 60,
+    "temp": 9,
+    "limit": "7:00",
+    "diff": 2,
+    "rating": 4.8,
+    "nrev": 1980,
+    "major": true,
+    "web": "https://www.marathon.tokyo",
+    "airport": "HND · 30 min",
+    "hotel": "Shinjuku",
+    "g": [
+      "#DB2777",
+      "#831843"
+    ],
+    "desc": "Precisión japonesa, avituallamientos impecables y recorrido en ligero descenso por el corazón de Tokio. El sorteo suele abrir en agosto del año anterior.",
+    "recM": "2:02:16 · B. Legese",
+    "recF": "2:15:55 · S. Hassan",
+    "profile": [
+      21,
+      20,
+      5,
+      7,
+      23,
+      23,
+      10,
+      13,
+      19,
+      10,
+      7,
+      22
+    ],
+    "history": [
+      {
+        "y": 2026,
+        "r": 35340,
+        "p": 162
+      },
+      {
+        "y": 2025,
+        "r": 32866,
+        "p": 146
+      },
+      {
+        "y": 2024,
+        "r": 30566,
+        "p": 131
+      }
+    ]
+  },
+  {
+    "id": "sydney",
+    "name": "TCS Sydney Marathon",
+    "city": "Sídney",
+    "country": "Australia",
+    "flag": "🇦🇺",
+    "continent": "Oceanía",
+    "lat": -33.87,
+    "lng": 151.21,
+    "date": "2026-08-30",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "cerrada",
+    "price": 170,
+    "cur": "$",
+    "runners": 40000,
+    "elev": 220,
+    "temp": 15,
+    "limit": "7:00",
+    "diff": 3,
+    "rating": 4.7,
+    "nrev": 720,
+    "major": true,
+    "web": "https://www.tcssydneymarathon.com",
+    "airport": "SYD · 25 min",
+    "hotel": "CBD / The Rocks",
+    "g": [
+      "#0369A1",
+      "#0C4A6E"
+    ],
+    "desc": "La séptima World Marathon Major. Cruce del Harbour Bridge al amanecer y meta frente a la Ópera. Ballot 2026 cerrado: quedan cupos por charities y paquetes de viaje oficiales.",
+    "recM": "2:06:18 · H. Kotu",
+    "recF": "2:21:41",
+    "profile": [
+      78,
+      48,
+      51,
+      98,
+      78,
+      15,
+      32,
+      91,
+      79,
+      44,
+      67,
+      79
+    ],
+    "history": [
+      {
+        "y": 2025,
+        "r": 37200,
+        "p": 153
+      },
+      {
+        "y": 2024,
+        "r": 34596,
+        "p": 138
+      },
+      {
+        "y": 2023,
+        "r": 32174,
+        "p": 124
+      }
+    ]
+  },
+  {
+    "id": "valencia",
+    "name": "Maratón Valencia Trinidad Alfonso",
+    "city": "Valencia",
+    "country": "España",
+    "flag": "🇪🇸",
+    "continent": "Europa",
+    "lat": 39.47,
+    "lng": -0.38,
+    "date": "2026-12-06",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "sorteo",
+    "price": 120,
+    "cur": "€",
+    "runners": 35000,
+    "elev": 30,
+    "temp": 15,
+    "limit": "5:30",
+    "diff": 2,
+    "rating": 4.9,
+    "nrev": 2455,
+    "major": false,
+    "web": "https://www.maratonvalencia.com",
+    "airport": "VLC · 20 min",
+    "hotel": "Ciutat Vella / C. de las Artes",
+    "g": [
+      "#EA580C",
+      "#9A3412"
+    ],
+    "desc": "«La ciudad del running». Circuito rapidísimo, clima perfecto en diciembre y meta icónica sobre el agua. La demanda es tal que la edición 2026 se asigna por sorteo (57.500 solicitudes).",
+    "recM": "2:01:48 · S. Kiptum",
+    "recF": "2:14:58 · A. Beriso",
+    "profile": [
+      11,
+      26,
+      22,
+      7,
+      10,
+      19,
+      14,
+      11,
+      22,
+      23,
+      7,
+      5
+    ],
+    "history": [
+      {
+        "y": 2025,
+        "r": 32550,
+        "p": 108
+      },
+      {
+        "y": 2024,
+        "r": 30272,
+        "p": 97
+      },
+      {
+        "y": 2023,
+        "r": 28152,
+        "p": 87
+      }
+    ]
+  },
+  {
+    "id": "paris",
+    "name": "Schneider Electric Marathon de Paris",
+    "city": "París",
+    "country": "Francia",
+    "flag": "🇫🇷",
+    "continent": "Europa",
+    "lat": 48.86,
+    "lng": 2.35,
+    "date": "2027-04-11",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "abierta",
+    "price": 135,
+    "cur": "€",
+    "runners": 54000,
+    "elev": 220,
+    "temp": 12,
+    "limit": "6:00",
+    "diff": 3,
+    "rating": 4.7,
+    "nrev": 2210,
+    "major": false,
+    "web": "https://www.schneiderelectricparismarathon.com",
+    "airport": "CDG · 45 min",
+    "hotel": "Champs-Élysées / Bastille",
+    "g": [
+      "#9333EA",
+      "#581C87"
+    ],
+    "desc": "Salida en los Campos Elíseos, Louvre, Bastilla, Bois de Vincennes y meta junto al Arco del Triunfo. Una de las maratones más bellas y masivas de Europa.",
+    "recM": "2:05:04",
+    "recF": "2:19:48",
+    "profile": [
+      86,
+      47,
+      62,
+      85,
+      41,
+      16,
+      74,
+      108,
+      57,
+      31,
+      67,
+      65
+    ],
+    "history": [
+      {
+        "y": 2026,
+        "r": 50220,
+        "p": 122
+      },
+      {
+        "y": 2025,
+        "r": 46705,
+        "p": 109
+      },
+      {
+        "y": 2024,
+        "r": 43435,
+        "p": 98
+      }
+    ]
+  },
+  {
+    "id": "cdmx",
+    "name": "Maratón de la Ciudad de México Telcel",
+    "city": "Ciudad de México",
+    "country": "México",
+    "flag": "🇲🇽",
+    "continent": "América del Norte",
+    "lat": 19.43,
+    "lng": -99.13,
+    "date": "2026-08-30",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "ultimos",
+    "price": 70,
+    "cur": "$",
+    "runners": 30000,
+    "elev": 180,
+    "temp": 17,
+    "limit": "6:30",
+    "diff": 4,
+    "rating": 4.6,
+    "nrev": 1420,
+    "major": false,
+    "web": "https://maraton.cdmx.gob.mx",
+    "airport": "MEX · 30 min",
+    "hotel": "Roma / Condesa",
+    "g": [
+      "#15803D",
+      "#14532D"
+    ],
+    "desc": "Correr a 2.240 m de altitud desde el Estadio Olímpico de CU hasta el Zócalo, por Reforma y el Ángel. World Athletics Elite Label y Boston Qualifier. Los cupos vuelan.",
+    "recM": "2:08:51",
+    "recF": "2:27:18",
+    "profile": [
+      84,
+      67,
+      15,
+      42,
+      104,
+      84,
+      34,
+      52,
+      74,
+      40,
+      39,
+      96
+    ],
+    "history": [
+      {
+        "y": 2025,
+        "r": 27900,
+        "p": 63
+      },
+      {
+        "y": 2024,
+        "r": 25947,
+        "p": 57
+      },
+      {
+        "y": 2023,
+        "r": 24131,
+        "p": 51
+      }
+    ]
+  },
+  {
+    "id": "bsas",
+    "name": "Maratón Internacional de Buenos Aires",
+    "city": "Buenos Aires",
+    "country": "Argentina",
+    "flag": "🇦🇷",
+    "continent": "América del Sur",
+    "lat": -34.6,
+    "lng": -58.38,
+    "date": "2026-09-20",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "abierta",
+    "price": 100,
+    "cur": "$",
+    "runners": 12500,
+    "elev": 25,
+    "temp": 13,
+    "limit": "6:00",
+    "diff": 2,
+    "rating": 4.6,
+    "nrev": 860,
+    "major": false,
+    "web": "https://www.maratondebuenosaires.com",
+    "airport": "EZE · 45 min",
+    "hotel": "Palermo / Recoleta",
+    "g": [
+      "#0284C7",
+      "#075985"
+    ],
+    "desc": "El circuito más rápido de Sudamérica: plano, fresco en septiembre, pasando por Puerto Madero, La Boca y el Obelisco. Organiza la Asociación Ñandú; inscripción online vía Ticketear.",
+    "recM": "2:05:00",
+    "recF": "2:23:24",
+    "profile": [
+      8,
+      6,
+      19,
+      18,
+      11,
+      19,
+      24,
+      10,
+      3,
+      18,
+      25,
+      14
+    ],
+    "history": [
+      {
+        "y": 2025,
+        "r": 11625,
+        "p": 90
+      },
+      {
+        "y": 2024,
+        "r": 10811,
+        "p": 81
+      },
+      {
+        "y": 2023,
+        "r": 10054,
+        "p": 73
+      }
+    ]
+  },
+  {
+    "id": "bsas21",
+    "name": "Medio Maratón de Buenos Aires 21K",
+    "city": "Buenos Aires",
+    "country": "Argentina",
+    "flag": "🇦🇷",
+    "continent": "América del Sur",
+    "lat": -34.58,
+    "lng": -58.41,
+    "date": "2026-08-23",
+    "km": 21.097,
+    "dist": "Media maratón",
+    "type": "Asfalto",
+    "status": "abierta",
+    "price": 100,
+    "cur": "$",
+    "runners": 25000,
+    "elev": 20,
+    "temp": 11,
+    "limit": "3:30",
+    "diff": 2,
+    "rating": 4.7,
+    "nrev": 940,
+    "major": false,
+    "web": "https://www.maratondebuenosaires.com/medio-maraton-de-buenos-aires-21k.html",
+    "airport": "EZE · 45 min",
+    "hotel": "Palermo",
+    "g": [
+      "#0891B2",
+      "#164E63"
+    ],
+    "desc": "El 21K más rápido y convocante de América: Planetario, Rosedal, Obelisco y Casa Rosada con más de 25.000 corredores. Récord del circuito por debajo de la hora.",
+    "recM": "59:05 · B. Karoki",
+    "recF": "1:07:44 · A. Yeshaneh",
+    "profile": [
+      21,
+      12,
+      15,
+      22,
+      12,
+      3,
+      16,
+      27,
+      16,
+      8,
+      17,
+      17
+    ],
+    "history": [
+      {
+        "y": 2025,
+        "r": 23250,
+        "p": 90
+      },
+      {
+        "y": 2024,
+        "r": 21623,
+        "p": 81
+      },
+      {
+        "y": 2023,
+        "r": 20109,
+        "p": 73
+      }
+    ]
+  },
+  {
+    "id": "medellin",
+    "name": "Maratón Medellín",
+    "city": "Medellín",
+    "country": "Colombia",
+    "flag": "🇨🇴",
+    "continent": "América del Sur",
+    "lat": 6.24,
+    "lng": -75.58,
+    "date": "2026-09-06",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "cerrada",
+    "price": 45,
+    "cur": "$",
+    "runners": 27000,
+    "elev": 320,
+    "temp": 22,
+    "limit": "6:30",
+    "diff": 3,
+    "rating": 4.5,
+    "nrev": 640,
+    "major": false,
+    "web": "https://maratonmedellin.com",
+    "airport": "MDE · 45 min",
+    "hotel": "El Poblado",
+    "g": [
+      "#65A30D",
+      "#3F6212"
+    ],
+    "desc": "La fiesta del running colombiano en la ciudad de la eterna primavera, con salida en Parques del Río. Certificada AIMS y Boston Qualifier. 42K, 21K y 10K agotados para 2026; queda el 5K del sábado.",
+    "recM": "2:10:59",
+    "recF": "2:29:34",
+    "profile": [
+      80,
+      101,
+      41,
+      12,
+      68,
+      92,
+      53,
+      53,
+      85,
+      54,
+      14,
+      59
+    ],
+    "history": [
+      {
+        "y": 2025,
+        "r": 25110,
+        "p": 41
+      },
+      {
+        "y": 2024,
+        "r": 23352,
+        "p": 36
+      },
+      {
+        "y": 2023,
+        "r": 21718,
+        "p": 33
+      }
+    ]
+  },
+  {
+    "id": "panama",
+    "name": "Maratón Internacional de Panamá",
+    "city": "Ciudad de Panamá",
+    "country": "Panamá",
+    "flag": "🇵🇦",
+    "continent": "América Central",
+    "lat": 8.98,
+    "lng": -79.52,
+    "date": "2026-11-15",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "abierta",
+    "price": 65,
+    "cur": "$",
+    "runners": 5000,
+    "elev": 45,
+    "temp": 27,
+    "limit": "8:00",
+    "diff": 3,
+    "rating": 4.3,
+    "nrev": 310,
+    "major": false,
+    "web": "https://maratoninternacionaldepanama.com",
+    "airport": "PTY · 25 min",
+    "hotel": "Cinta Costera / Casco Viejo",
+    "g": [
+      "#0891B2",
+      "#155E75"
+    ],
+    "desc": "Edición histórica: 50 años de la maratón original de Panamá, organizada por el Club Corredores del Istmo. Salida 4:00 a.m. por la Cinta Costera, Punta Pacífica y Amador. También 21K, 5K y relevos.",
+    "recM": "2:18:44",
+    "recF": "2:41:05",
+    "profile": [
+      19,
+      26,
+      12,
+      3,
+      16,
+      23,
+      14,
+      13,
+      22,
+      15,
+      3,
+      13
+    ],
+    "history": [
+      {
+        "y": 2025,
+        "r": 4650,
+        "p": 59
+      },
+      {
+        "y": 2024,
+        "r": 4325,
+        "p": 53
+      },
+      {
+        "y": 2023,
+        "r": 4022,
+        "p": 47
+      }
+    ]
+  },
+  {
+    "id": "bogota",
+    "name": "Media Maratón de Bogotá",
+    "city": "Bogotá",
+    "country": "Colombia",
+    "flag": "🇨🇴",
+    "continent": "América del Sur",
+    "lat": 4.65,
+    "lng": -74.08,
+    "date": "2026-07-26",
+    "km": 21.097,
+    "dist": "Media maratón",
+    "type": "Asfalto",
+    "status": "ultimos",
+    "price": 40,
+    "cur": "$",
+    "runners": 40000,
+    "elev": 280,
+    "temp": 15,
+    "limit": "3:30",
+    "diff": 4,
+    "rating": 4.6,
+    "nrev": 1120,
+    "major": false,
+    "web": "https://www.mediamaratonbogota.com",
+    "airport": "BOG · 40 min",
+    "hotel": "Chapinero / Parque 93",
+    "g": [
+      "#DC2626",
+      "#7F1D1D"
+    ],
+    "desc": "La mmB: el 21K más importante de Colombia, a 2.600 m de altitud y con más de 40.000 corredores. World Athletics Label y ambiente incomparable por la Séptima.",
+    "recM": "1:02:26",
+    "recF": "1:10:36",
+    "profile": [
+      76,
+      47,
+      29,
+      83,
+      107,
+      46,
+      18,
+      65,
+      78,
+      45,
+      63,
+      97
+    ],
+    "history": [
+      {
+        "y": 2025,
+        "r": 37200,
+        "p": 36
+      },
+      {
+        "y": 2024,
+        "r": 34596,
+        "p": 32
+      },
+      {
+        "y": 2023,
+        "r": 32174,
+        "p": 29
+      }
+    ]
+  },
+  {
+    "id": "santiago",
+    "name": "Maratón de Santiago",
+    "city": "Santiago",
+    "country": "Chile",
+    "flag": "🇨🇱",
+    "continent": "América del Sur",
+    "lat": -33.45,
+    "lng": -70.67,
+    "date": "2027-04-11",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "proximamente",
+    "price": 80,
+    "cur": "$",
+    "runners": 30000,
+    "elev": 120,
+    "temp": 14,
+    "limit": "6:00",
+    "diff": 2,
+    "rating": 4.5,
+    "nrev": 780,
+    "major": false,
+    "web": "https://www.maratondesantiago.com",
+    "airport": "SCL · 30 min",
+    "hotel": "Providencia / Centro",
+    "g": [
+      "#B91C1C",
+      "#450A0A"
+    ],
+    "desc": "La maratón más masiva de Chile: plana, otoñal y con la cordillera de fondo. 42K, 21K y 10K desde la Plaza de la Ciudadanía.",
+    "recM": "2:08:09",
+    "recF": "2:26:14",
+    "profile": [
+      53,
+      109,
+      78,
+      20,
+      42,
+      81,
+      56,
+      47,
+      90,
+      84,
+      21,
+      24
+    ],
+    "history": [
+      {
+        "y": 2026,
+        "r": 27900,
+        "p": 72
+      },
+      {
+        "y": 2025,
+        "r": 25947,
+        "p": 65
+      },
+      {
+        "y": 2024,
+        "r": 24131,
+        "p": 58
+      }
+    ]
+  },
+  {
+    "id": "rio",
+    "name": "Maratona do Rio",
+    "city": "Río de Janeiro",
+    "country": "Brasil",
+    "flag": "🇧🇷",
+    "continent": "América del Sur",
+    "lat": -22.91,
+    "lng": -43.17,
+    "date": "2027-06-20",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "proximamente",
+    "price": 90,
+    "cur": "$",
+    "runners": 40000,
+    "elev": 150,
+    "temp": 21,
+    "limit": "6:30",
+    "diff": 3,
+    "rating": 4.7,
+    "nrev": 950,
+    "major": false,
+    "web": "https://www.maratonadorio.com.br",
+    "airport": "GIG · 40 min",
+    "hotel": "Copacabana / Leblon",
+    "g": [
+      "#16A34A",
+      "#14532D"
+    ],
+    "desc": "Posiblemente la meta más bella del mundo: correr junto al mar desde Recreio hasta el Aterro do Flamengo con el Pan de Azúcar de fondo.",
+    "recM": "2:12:26",
+    "recF": "2:33:32",
+    "profile": [
+      73,
+      34,
+      61,
+      71,
+      32,
+      46,
+      104,
+      87,
+      22,
+      33,
+      81,
+      65
+    ],
+    "history": [
+      {
+        "y": 2026,
+        "r": 37200,
+        "p": 81
+      },
+      {
+        "y": 2025,
+        "r": 34596,
+        "p": 73
+      },
+      {
+        "y": 2024,
+        "r": 32174,
+        "p": 66
+      }
+    ]
+  },
+  {
+    "id": "utmb",
+    "name": "UTMB Mont-Blanc",
+    "city": "Chamonix",
+    "country": "Francia",
+    "flag": "🇫🇷",
+    "continent": "Europa",
+    "lat": 45.92,
+    "lng": 6.87,
+    "date": "2026-08-28",
+    "km": 171,
+    "dist": "Ultra maratón",
+    "type": "Trail",
+    "status": "cerrada",
+    "price": 420,
+    "cur": "€",
+    "runners": 2700,
+    "elev": 10000,
+    "temp": 8,
+    "limit": "46:30",
+    "diff": 5,
+    "rating": 4.9,
+    "nrev": 980,
+    "major": false,
+    "web": "https://montblanc.utmb.world",
+    "airport": "GVA · 75 min",
+    "hotel": "Chamonix centro",
+    "g": [
+      "#4338CA",
+      "#1E1B4B"
+    ],
+    "desc": "La cumbre del trail mundial: 171 km y 10.000 m D+ alrededor del Mont Blanc por tres países. Se entra por sorteo acumulando running stones en carreras del circuito UTMB.",
+    "recM": "19:37:43 · K. Jornet",
+    "recF": "22:09:31 · C. Dauwalter",
+    "profile": [
+      1103,
+      1271,
+      445,
+      194,
+      997,
+      1243,
+      681,
+      708,
+      1097,
+      661,
+      219,
+      896
+    ],
+    "history": [
+      {
+        "y": 2025,
+        "r": 2511,
+        "p": 378
+      },
+      {
+        "y": 2024,
+        "r": 2335,
+        "p": 340
+      },
+      {
+        "y": 2023,
+        "r": 2172,
+        "p": 306
+      }
+    ]
+  },
+  {
+    "id": "comrades",
+    "name": "Comrades Marathon",
+    "city": "Durban",
+    "country": "Sudáfrica",
+    "flag": "🇿🇦",
+    "continent": "África",
+    "lat": -29.86,
+    "lng": 31.02,
+    "date": "2027-06-13",
+    "km": 87.7,
+    "dist": "Ultra maratón",
+    "type": "Asfalto",
+    "status": "proximamente",
+    "price": 190,
+    "cur": "$",
+    "runners": 20000,
+    "elev": 1900,
+    "temp": 16,
+    "limit": "12:00",
+    "diff": 5,
+    "rating": 4.8,
+    "nrev": 1240,
+    "major": false,
+    "web": "https://www.comrades.com",
+    "airport": "DUR · 30 min",
+    "hotel": "Durban beachfront",
+    "g": [
+      "#B45309",
+      "#78350F"
+    ],
+    "desc": "«The Ultimate Human Race». El ultra más antiguo y masivo del mundo (desde 1921), entre Durban y Pietermaritzburg, con corte implacable a las 12 horas.",
+    "recM": "5:18:19",
+    "recF": "5:58:39",
+    "profile": [
+      98,
+      87,
+      255,
+      236,
+      145,
+      250,
+      311,
+      124,
+      42,
+      243,
+      333,
+      182
+    ],
+    "history": [
+      {
+        "y": 2026,
+        "r": 18600,
+        "p": 171
+      },
+      {
+        "y": 2025,
+        "r": 17298,
+        "p": 154
+      },
+      {
+        "y": 2024,
+        "r": 16087,
+        "p": 139
+      }
+    ]
+  },
+  {
+    "id": "twooceans",
+    "name": "Totalsports Two Oceans Marathon",
+    "city": "Ciudad del Cabo",
+    "country": "Sudáfrica",
+    "flag": "🇿🇦",
+    "continent": "África",
+    "lat": -33.92,
+    "lng": 18.42,
+    "date": "2027-04-03",
+    "km": 56,
+    "dist": "Ultra maratón",
+    "type": "Asfalto",
+    "status": "proximamente",
+    "price": 95,
+    "cur": "$",
+    "runners": 11000,
+    "elev": 850,
+    "temp": 17,
+    "limit": "7:00",
+    "diff": 4,
+    "rating": 4.8,
+    "nrev": 890,
+    "major": false,
+    "web": "https://www.twooceansmarathon.org.za",
+    "airport": "CPT · 25 min",
+    "hotel": "V&A Waterfront",
+    "g": [
+      "#0E7490",
+      "#134E63"
+    ],
+    "desc": "«La ultra más bella del mundo»: 56 km bordeando dos océanos por Chapman's Peak, con Table Mountain de testigo. Semana Santa en Ciudad del Cabo.",
+    "recM": "3:03:44",
+    "recF": "3:29:42",
+    "profile": [
+      56,
+      268,
+      344,
+      170,
+      128,
+      242,
+      190,
+      90,
+      233,
+      366,
+      200,
+      51
+    ],
+    "history": [
+      {
+        "y": 2026,
+        "r": 10230,
+        "p": 86
+      },
+      {
+        "y": 2025,
+        "r": 9514,
+        "p": 77
+      },
+      {
+        "y": 2024,
+        "r": 8848,
+        "p": 69
+      }
+    ]
+  },
+  {
+    "id": "kili",
+    "name": "Kilimanjaro Marathon",
+    "city": "Moshi",
+    "country": "Tanzania",
+    "flag": "🇹🇿",
+    "continent": "África",
+    "lat": -3.35,
+    "lng": 37.34,
+    "date": "2027-02-28",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "abierta",
+    "price": 80,
+    "cur": "$",
+    "runners": 8000,
+    "elev": 400,
+    "temp": 24,
+    "limit": "6:30",
+    "diff": 4,
+    "rating": 4.4,
+    "nrev": 320,
+    "major": false,
+    "web": "https://www.kilimanjaromarathon.com",
+    "airport": "JRO · 45 min",
+    "hotel": "Moshi town",
+    "g": [
+      "#B45309",
+      "#7C2D12"
+    ],
+    "desc": "Correr a los pies del Kilimanjaro entre cafetales y plátanos, con el techo de África nevado en el horizonte. Ideal para combinar con safari o ascenso.",
+    "recM": "2:11:47",
+    "recF": "2:32:23",
+    "profile": [
+      31,
+      26,
+      75,
+      71,
+      43,
+      75,
+      94,
+      39,
+      12,
+      71,
+      100,
+      55
+    ],
+    "history": [
+      {
+        "y": 2026,
+        "r": 7440,
+        "p": 72
+      },
+      {
+        "y": 2025,
+        "r": 6919,
+        "p": 65
+      },
+      {
+        "y": 2024,
+        "r": 6435,
+        "p": 58
+      }
+    ]
+  },
+  {
+    "id": "sansilvestre",
+    "name": "San Silvestre Vallecana",
+    "city": "Madrid",
+    "country": "España",
+    "flag": "🇪🇸",
+    "continent": "Europa",
+    "lat": 40.42,
+    "lng": -3.7,
+    "date": "2026-12-31",
+    "km": 10,
+    "dist": "10K",
+    "type": "Asfalto",
+    "status": "abierta",
+    "price": 26,
+    "cur": "€",
+    "runners": 40000,
+    "elev": 90,
+    "temp": 8,
+    "limit": "1:30",
+    "diff": 2,
+    "rating": 4.7,
+    "nrev": 1560,
+    "major": false,
+    "web": "https://www.sansilvestrevallecana.com",
+    "airport": "MAD · 30 min",
+    "hotel": "Centro / Retiro",
+    "g": [
+      "#DC2626",
+      "#7F1D1D"
+    ],
+    "desc": "La forma más famosa de despedir el año: 40.000 corredores (muchos disfrazados) desde el Bernabéu hasta Vallecas cada 31 de diciembre desde 1964.",
+    "recM": "26:41",
+    "recF": "29:37",
+    "profile": [
+      19,
+      12,
+      11,
+      24,
+      22,
+      5,
+      6,
+      21,
+      20,
+      11,
+      17,
+      21
+    ],
+    "history": [
+      {
+        "y": 2025,
+        "r": 37200,
+        "p": 23
+      },
+      {
+        "y": 2024,
+        "r": 34596,
+        "p": 21
+      },
+      {
+        "y": 2023,
+        "r": 32174,
+        "p": 19
+      }
+    ]
+  },
+  {
+    "id": "behobia",
+    "name": "Behobia – San Sebastián",
+    "city": "San Sebastián",
+    "country": "España",
+    "flag": "🇪🇸",
+    "continent": "Europa",
+    "lat": 43.32,
+    "lng": -1.98,
+    "date": "2026-11-08",
+    "km": 20,
+    "dist": "20K",
+    "type": "Asfalto",
+    "status": "abierta",
+    "price": 45,
+    "cur": "€",
+    "runners": 30000,
+    "elev": 240,
+    "temp": 13,
+    "limit": "2:45",
+    "diff": 3,
+    "rating": 4.8,
+    "nrev": 1340,
+    "major": false,
+    "web": "https://www.behobia-sansebastian.com",
+    "airport": "EAS / BIO · 30-75 min",
+    "hotel": "Parte Vieja / Gros",
+    "g": [
+      "#0F766E",
+      "#134E4A"
+    ],
+    "desc": "El clásico de noviembre: 20 km desde Behobia hasta el Boulevard donostiarra, con las subidas de Gaintxurizketa y Miracruz y un ambientazo irrepetible desde 1919.",
+    "recM": "57:58",
+    "recF": "1:06:35",
+    "profile": [
+      32,
+      25,
+      75,
+      71,
+      43,
+      74,
+      95,
+      40,
+      11,
+      69,
+      99,
+      56
+    ],
+    "history": [
+      {
+        "y": 2025,
+        "r": 27900,
+        "p": 41
+      },
+      {
+        "y": 2024,
+        "r": 25947,
+        "p": 36
+      },
+      {
+        "y": 2023,
+        "r": 24131,
+        "p": 33
+      }
+    ]
+  },
+  {
+    "id": "greatnorth",
+    "name": "Great North Run",
+    "city": "Newcastle",
+    "country": "Reino Unido",
+    "flag": "🇬🇧",
+    "continent": "Europa",
+    "lat": 54.98,
+    "lng": -1.61,
+    "date": "2026-09-13",
+    "km": 21.097,
+    "dist": "Media maratón",
+    "type": "Asfalto",
+    "status": "cerrada",
+    "price": 70,
+    "cur": "£",
+    "runners": 60000,
+    "elev": 150,
+    "temp": 14,
+    "limit": "4:00",
+    "diff": 2,
+    "rating": 4.7,
+    "nrev": 2100,
+    "major": false,
+    "web": "https://www.greatrun.org/events/great-north-run",
+    "airport": "NCL · 25 min",
+    "hotel": "Newcastle centro",
+    "g": [
+      "#1D4ED8",
+      "#172554"
+    ],
+    "desc": "La media maratón más grande del mundo: 60.000 corredores de Newcastle a South Shields, con los Red Arrows sobrevolando la salida. Ballot anual.",
+    "recM": "58:56 · sub-59",
+    "recF": "1:05:16",
+    "profile": [
+      25,
+      91,
+      100,
+      42,
+      37,
+      73,
+      56,
+      33,
+      79,
+      106,
+      47,
+      13
+    ],
+    "history": [
+      {
+        "y": 2025,
+        "r": 55800,
+        "p": 63
+      },
+      {
+        "y": 2024,
+        "r": 51894,
+        "p": 57
+      },
+      {
+        "y": 2023,
+        "r": 48261,
+        "p": 51
+      }
+    ]
+  },
+  {
+    "id": "cph",
+    "name": "Copenhagen Half Marathon",
+    "city": "Copenhague",
+    "country": "Dinamarca",
+    "flag": "🇩🇰",
+    "continent": "Europa",
+    "lat": 55.68,
+    "lng": 12.57,
+    "date": "2026-09-20",
+    "km": 21.097,
+    "dist": "Media maratón",
+    "type": "Asfalto",
+    "status": "sorteo",
+    "price": 60,
+    "cur": "€",
+    "runners": 25000,
+    "elev": 40,
+    "temp": 13,
+    "limit": "3:00",
+    "diff": 1,
+    "rating": 4.8,
+    "nrev": 980,
+    "major": false,
+    "web": "https://www.cphhalf.dk",
+    "airport": "CPH · 15 min",
+    "hotel": "Indre By / Vesterbro",
+    "g": [
+      "#0284C7",
+      "#0C4A6E"
+    ],
+    "desc": "Uno de los 21K más rápidos del planeta: plano como una mesa, septiembre fresco y la elegancia danesa en la organización. Cupos por sorteo.",
+    "recM": "57:31 récord mundial aquí",
+    "recF": "1:04:21",
+    "profile": [
+      21,
+      16,
+      4,
+      12,
+      27,
+      20,
+      8,
+      13,
+      19,
+      10,
+      11,
+      25
+    ],
+    "history": [
+      {
+        "y": 2025,
+        "r": 23250,
+        "p": 54
+      },
+      {
+        "y": 2024,
+        "r": 21623,
+        "p": 49
+      },
+      {
+        "y": 2023,
+        "r": 20109,
+        "p": 44
+      }
+    ]
+  },
+  {
+    "id": "athens",
+    "name": "Athens Authentic Marathon",
+    "city": "Atenas",
+    "country": "Grecia",
+    "flag": "🇬🇷",
+    "continent": "Europa",
+    "lat": 37.98,
+    "lng": 23.73,
+    "date": "2026-11-08",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "abierta",
+    "price": 100,
+    "cur": "€",
+    "runners": 20000,
+    "elev": 350,
+    "temp": 17,
+    "limit": "8:00",
+    "diff": 4,
+    "rating": 4.7,
+    "nrev": 1010,
+    "major": false,
+    "web": "https://www.athensauthenticmarathon.gr",
+    "airport": "ATH · 40 min",
+    "hotel": "Plaka / Syntagma",
+    "g": [
+      "#0369A1",
+      "#1E3A8A"
+    ],
+    "desc": "LA maratón: el recorrido original desde el pueblo de Maratón hasta el estadio Panathinaikó de mármol. Dura, histórica y obligatoria una vez en la vida.",
+    "recM": "2:10:37",
+    "recF": "2:31:06",
+    "profile": [
+      80,
+      48,
+      55,
+      97,
+      69,
+      12,
+      39,
+      97,
+      77,
+      41,
+      67,
+      74
+    ],
+    "history": [
+      {
+        "y": 2025,
+        "r": 18600,
+        "p": 90
+      },
+      {
+        "y": 2024,
+        "r": 17298,
+        "p": 81
+      },
+      {
+        "y": 2023,
+        "r": 16087,
+        "p": 73
+      }
+    ]
+  },
+  {
+    "id": "rome",
+    "name": "Run Rome The Marathon",
+    "city": "Roma",
+    "country": "Italia",
+    "flag": "🇮🇹",
+    "continent": "Europa",
+    "lat": 41.9,
+    "lng": 12.5,
+    "date": "2027-03-21",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "abierta",
+    "price": 90,
+    "cur": "€",
+    "runners": 30000,
+    "elev": 180,
+    "temp": 13,
+    "limit": "6:30",
+    "diff": 3,
+    "rating": 4.6,
+    "nrev": 1130,
+    "major": false,
+    "web": "https://www.runromethemarathon.com",
+    "airport": "FCO · 45 min",
+    "hotel": "Centro storico",
+    "g": [
+      "#CA8A04",
+      "#713F12"
+    ],
+    "desc": "Salida y meta en los Foros Imperiales junto al Coliseo: 42 km de museo al aire libre sobre sampietrini, Vaticano incluido.",
+    "recM": "2:06:48",
+    "recF": "2:22:52",
+    "profile": [
+      75,
+      47,
+      31,
+      86,
+      105,
+      42,
+      18,
+      68,
+      79,
+      46,
+      64,
+      96
+    ],
+    "history": [
+      {
+        "y": 2026,
+        "r": 27900,
+        "p": 81
+      },
+      {
+        "y": 2025,
+        "r": 25947,
+        "p": 73
+      },
+      {
+        "y": 2024,
+        "r": 24131,
+        "p": 66
+      }
+    ]
+  },
+  {
+    "id": "vienna",
+    "name": "Vienna City Marathon",
+    "city": "Viena",
+    "country": "Austria",
+    "flag": "🇦🇹",
+    "continent": "Europa",
+    "lat": 48.21,
+    "lng": 16.37,
+    "date": "2027-04-18",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "abierta",
+    "price": 115,
+    "cur": "€",
+    "runners": 42000,
+    "elev": 60,
+    "temp": 12,
+    "limit": "6:30",
+    "diff": 2,
+    "rating": 4.7,
+    "nrev": 1290,
+    "major": false,
+    "web": "https://www.vienna-marathon.com",
+    "airport": "VIE · 20 min",
+    "hotel": "Innere Stadt",
+    "g": [
+      "#DB2777",
+      "#831843"
+    ],
+    "desc": "Del Reichsbrücke a la Ópera pasando por Schönbrunn y el Prater: velocidad y música clásica en el evento deportivo más grande de Austria.",
+    "recM": "2:05:41",
+    "recF": "2:20:59",
+    "profile": [
+      20,
+      25,
+      9,
+      3,
+      18,
+      23,
+      13,
+      13,
+      21,
+      13,
+      4,
+      16
+    ],
+    "history": [
+      {
+        "y": 2026,
+        "r": 39060,
+        "p": 104
+      },
+      {
+        "y": 2025,
+        "r": 36326,
+        "p": 93
+      },
+      {
+        "y": 2024,
+        "r": 33783,
+        "p": 84
+      }
+    ]
+  },
+  {
+    "id": "prague",
+    "name": "Prague Marathon",
+    "city": "Praga",
+    "country": "Chequia",
+    "flag": "🇨🇿",
+    "continent": "Europa",
+    "lat": 50.08,
+    "lng": 14.42,
+    "date": "2027-05-02",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "abierta",
+    "price": 110,
+    "cur": "€",
+    "runners": 11000,
+    "elev": 80,
+    "temp": 13,
+    "limit": "7:00",
+    "diff": 2,
+    "rating": 4.7,
+    "nrev": 860,
+    "major": false,
+    "web": "https://www.runczech.com",
+    "airport": "PRG · 30 min",
+    "hotel": "Staré Město",
+    "g": [
+      "#7C3AED",
+      "#4C1D95"
+    ],
+    "desc": "Salida en la plaza de la Ciudad Vieja y cruce del puente de Carlos: una de las maratones más bellas de Europa, organizada por RunCzech.",
+    "recM": "2:05:39",
+    "recF": "2:21:57",
+    "profile": [
+      20,
+      9,
+      15,
+      18,
+      8,
+      9,
+      25,
+      24,
+      8,
+      8,
+      19,
+      16
+    ],
+    "history": [
+      {
+        "y": 2026,
+        "r": 10230,
+        "p": 99
+      },
+      {
+        "y": 2025,
+        "r": 9514,
+        "p": 89
+      },
+      {
+        "y": 2024,
+        "r": 8848,
+        "p": 80
+      }
+    ]
+  },
+  {
+    "id": "stockholm",
+    "name": "adidas Stockholm Marathon",
+    "city": "Estocolmo",
+    "country": "Suecia",
+    "flag": "🇸🇪",
+    "continent": "Europa",
+    "lat": 59.33,
+    "lng": 18.07,
+    "date": "2027-06-05",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "abierta",
+    "price": 120,
+    "cur": "€",
+    "runners": 18000,
+    "elev": 140,
+    "temp": 17,
+    "limit": "6:00",
+    "diff": 3,
+    "rating": 4.6,
+    "nrev": 740,
+    "major": false,
+    "web": "https://www.stockholmmarathon.se",
+    "airport": "ARN · 40 min",
+    "hotel": "Norrmalm / Gamla Stan",
+    "g": [
+      "#0284C7",
+      "#1E3A8A"
+    ],
+    "desc": "Dos vueltas entre islas y agua con meta dentro del Estadio Olímpico de 1912. El verano nórdico en su mejor versión.",
+    "recM": "2:10:11",
+    "recF": "2:28:59",
+    "profile": [
+      71,
+      107,
+      56,
+      12,
+      55,
+      88,
+      56,
+      52,
+      89,
+      65,
+      13,
+      43
+    ],
+    "history": [
+      {
+        "y": 2026,
+        "r": 16740,
+        "p": 108
+      },
+      {
+        "y": 2025,
+        "r": 15568,
+        "p": 97
+      },
+      {
+        "y": 2024,
+        "r": 14478,
+        "p": 87
+      }
+    ]
+  },
+  {
+    "id": "tromso",
+    "name": "Midnight Sun Marathon",
+    "city": "Tromsø",
+    "country": "Noruega",
+    "flag": "🇳🇴",
+    "continent": "Europa",
+    "lat": 69.65,
+    "lng": 18.96,
+    "date": "2027-06-19",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "abierta",
+    "price": 95,
+    "cur": "€",
+    "runners": 7000,
+    "elev": 120,
+    "temp": 10,
+    "limit": "6:30",
+    "diff": 3,
+    "rating": 4.7,
+    "nrev": 410,
+    "major": false,
+    "web": "https://www.msm.no",
+    "airport": "TOS · 15 min",
+    "hotel": "Tromsø sentrum",
+    "g": [
+      "#4338CA",
+      "#1E1B4B"
+    ],
+    "desc": "La maratón del sol de medianoche: salida a las 20:30 y meta con luz de día plena a medianoche, 350 km al norte del círculo polar ártico.",
+    "recM": "2:20:42",
+    "recF": "2:42:53",
+    "profile": [
+      50,
+      25,
+      66,
+      69,
+      38,
+      66,
+      104,
+      59,
+      10,
+      51,
+      94,
+      63
+    ],
+    "history": [
+      {
+        "y": 2026,
+        "r": 6510,
+        "p": 86
+      },
+      {
+        "y": 2025,
+        "r": 6054,
+        "p": 77
+      },
+      {
+        "y": 2024,
+        "r": 5630,
+        "p": 69
+      }
+    ]
+  },
+  {
+    "id": "reykjavik",
+    "name": "Reykjavík Marathon",
+    "city": "Reikiavik",
+    "country": "Islandia",
+    "flag": "🇮🇸",
+    "continent": "Europa",
+    "lat": 64.15,
+    "lng": -21.94,
+    "date": "2026-08-22",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "abierta",
+    "price": 90,
+    "cur": "€",
+    "runners": 15000,
+    "elev": 150,
+    "temp": 11,
+    "limit": "6:00",
+    "diff": 3,
+    "rating": 4.6,
+    "nrev": 520,
+    "major": false,
+    "web": "https://www.marathon.is",
+    "airport": "KEF · 45 min",
+    "hotel": "Miðborg",
+    "g": [
+      "#0E7490",
+      "#164E63"
+    ],
+    "desc": "Costa, geotermia y el festival Menningarnótt: la ciudad entera sale a la calle el día de la maratón de Reikiavik.",
+    "recM": "2:17:06",
+    "recF": "2:35:14",
+    "profile": [
+      80,
+      48,
+      55,
+      97,
+      70,
+      12,
+      39,
+      97,
+      77,
+      42,
+      67,
+      75
+    ],
+    "history": [
+      {
+        "y": 2025,
+        "r": 13950,
+        "p": 81
+      },
+      {
+        "y": 2024,
+        "r": 12974,
+        "p": 73
+      },
+      {
+        "y": 2023,
+        "r": 12065,
+        "p": 66
+      }
+    ]
+  },
+  {
+    "id": "istanbul",
+    "name": "Istanbul Marathon",
+    "city": "Estambul",
+    "country": "Turquía",
+    "flag": "🇹🇷",
+    "continent": "Asia",
+    "lat": 41.01,
+    "lng": 28.98,
+    "date": "2026-11-01",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "abierta",
+    "price": 70,
+    "cur": "€",
+    "runners": 35000,
+    "elev": 250,
+    "temp": 14,
+    "limit": "6:00",
+    "diff": 3,
+    "rating": 4.5,
+    "nrev": 880,
+    "major": false,
+    "web": "https://maraton.istanbul",
+    "airport": "IST · 45 min",
+    "hotel": "Sultanahmet / Beyoğlu",
+    "g": [
+      "#B91C1C",
+      "#450A0A"
+    ],
+    "desc": "La única maratón intercontinental del mundo: se cruza el Bósforo de Asia a Europa por el puente de los Mártires del 15 de Julio.",
+    "recM": "2:09:27",
+    "recF": "2:18:35",
+    "profile": [
+      21,
+      86,
+      102,
+      47,
+      38,
+      73,
+      56,
+      30,
+      75,
+      108,
+      53,
+      14
+    ],
+    "history": [
+      {
+        "y": 2025,
+        "r": 32550,
+        "p": 63
+      },
+      {
+        "y": 2024,
+        "r": 30272,
+        "p": 57
+      },
+      {
+        "y": 2023,
+        "r": 28152,
+        "p": 51
+      }
+    ]
+  },
+  {
+    "id": "dubai",
+    "name": "Dubai Marathon",
+    "city": "Dubái",
+    "country": "Emiratos Árabes",
+    "flag": "🇦🇪",
+    "continent": "Asia",
+    "lat": 25.2,
+    "lng": 55.27,
+    "date": "2027-01-08",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "proximamente",
+    "price": 120,
+    "cur": "$",
+    "runners": 30000,
+    "elev": 20,
+    "temp": 19,
+    "limit": "6:00",
+    "diff": 1,
+    "rating": 4.5,
+    "nrev": 690,
+    "major": false,
+    "web": "https://www.dubaimarathon.org",
+    "airport": "DXB · 20 min",
+    "hotel": "Jumeirah / Downtown",
+    "g": [
+      "#CA8A04",
+      "#78350F"
+    ],
+    "desc": "Plano absoluto junto a Jumeirah Beach y enero fresco (para Dubái): históricamente una de las maratones más rápidas del calendario.",
+    "recM": "2:03:34",
+    "recF": "2:16:07",
+    "profile": [
+      19,
+      12,
+      11,
+      24,
+      22,
+      6,
+      6,
+      20,
+      20,
+      11,
+      17,
+      21
+    ],
+    "history": [
+      {
+        "y": 2026,
+        "r": 27900,
+        "p": 108
+      },
+      {
+        "y": 2025,
+        "r": 25947,
+        "p": 97
+      },
+      {
+        "y": 2024,
+        "r": 24131,
+        "p": 87
+      }
+    ]
+  },
+  {
+    "id": "singapore",
+    "name": "Standard Chartered Singapore Marathon",
+    "city": "Singapur",
+    "country": "Singapur",
+    "flag": "🇸🇬",
+    "continent": "Asia",
+    "lat": 1.29,
+    "lng": 103.85,
+    "date": "2026-12-06",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "abierta",
+    "price": 110,
+    "cur": "$",
+    "runners": 45000,
+    "elev": 90,
+    "temp": 28,
+    "limit": "7:30",
+    "diff": 4,
+    "rating": 4.4,
+    "nrev": 930,
+    "major": false,
+    "web": "https://www.singaporemarathon.com",
+    "airport": "SIN · 20 min",
+    "hotel": "Marina Bay",
+    "g": [
+      "#DC2626",
+      "#7F1D1D"
+    ],
+    "desc": "Maratón nocturna-tropical por Marina Bay, Gardens by the Bay y el Padang. Calor y humedad garantizados; la hidratación es de las mejores del mundo.",
+    "recM": "2:12:19",
+    "recF": "2:31:55",
+    "profile": [
+      21,
+      21,
+      6,
+      6,
+      22,
+      23,
+      11,
+      13,
+      20,
+      11,
+      6,
+      20
+    ],
+    "history": [
+      {
+        "y": 2025,
+        "r": 41850,
+        "p": 99
+      },
+      {
+        "y": 2024,
+        "r": 38921,
+        "p": 89
+      },
+      {
+        "y": 2023,
+        "r": 36196,
+        "p": 80
+      }
+    ]
+  },
+  {
+    "id": "hk",
+    "name": "Hong Kong Marathon",
+    "city": "Hong Kong",
+    "country": "China",
+    "flag": "🇭🇰",
+    "continent": "Asia",
+    "lat": 22.32,
+    "lng": 114.17,
+    "date": "2027-02-07",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "proximamente",
+    "price": 95,
+    "cur": "$",
+    "runners": 37000,
+    "elev": 420,
+    "temp": 16,
+    "limit": "6:00",
+    "diff": 4,
+    "rating": 4.4,
+    "nrev": 760,
+    "major": false,
+    "web": "https://www.hkmarathon.com",
+    "airport": "HKG · 35 min",
+    "hotel": "Tsim Sha Tsui",
+    "g": [
+      "#0F766E",
+      "#134E4A"
+    ],
+    "desc": "Puentes, túneles y las subidas del Island Eastern Corridor: una de las maratones urbanas más duras y espectaculares de Asia.",
+    "recM": "2:09:20",
+    "recF": "2:26:31",
+    "profile": [
+      177,
+      86,
+      217,
+      230,
+      124,
+      214,
+      350,
+      206,
+      35,
+      162,
+      309,
+      212
+    ],
+    "history": [
+      {
+        "y": 2026,
+        "r": 34410,
+        "p": 86
+      },
+      {
+        "y": 2025,
+        "r": 32001,
+        "p": 77
+      },
+      {
+        "y": 2024,
+        "r": 29761,
+        "p": 69
+      }
+    ]
+  },
+  {
+    "id": "goldcoast",
+    "name": "Gold Coast Marathon",
+    "city": "Gold Coast",
+    "country": "Australia",
+    "flag": "🇦🇺",
+    "continent": "Oceanía",
+    "lat": -28.02,
+    "lng": 153.4,
+    "date": "2027-07-04",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "abierta",
+    "price": 130,
+    "cur": "$",
+    "runners": 25000,
+    "elev": 30,
+    "temp": 17,
+    "limit": "6:10",
+    "diff": 1,
+    "rating": 4.7,
+    "nrev": 650,
+    "major": false,
+    "web": "https://goldcoastmarathon.com.au",
+    "airport": "OOL · 20 min",
+    "hotel": "Surfers Paradise",
+    "g": [
+      "#0369A1",
+      "#0C4A6E"
+    ],
+    "desc": "Plana, junto al mar y con el invierno perfecto de Queensland: la carrera favorita de Oceanía para lograr marca personal.",
+    "recM": "2:07:39",
+    "recF": "2:23:53",
+    "profile": [
+      3,
+      18,
+      26,
+      14,
+      10,
+      18,
+      15,
+      6,
+      15,
+      28,
+      17,
+      5
+    ],
+    "history": [
+      {
+        "y": 2026,
+        "r": 23250,
+        "p": 117
+      },
+      {
+        "y": 2025,
+        "r": 21623,
+        "p": 105
+      },
+      {
+        "y": 2024,
+        "r": 20109,
+        "p": 95
+      }
+    ]
+  },
+  {
+    "id": "queenstown",
+    "name": "Queenstown Marathon",
+    "city": "Queenstown",
+    "country": "Nueva Zelanda",
+    "flag": "🇳🇿",
+    "continent": "Oceanía",
+    "lat": -45.03,
+    "lng": 168.66,
+    "date": "2026-11-21",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Mixto",
+    "status": "abierta",
+    "price": 115,
+    "cur": "$",
+    "runners": 12000,
+    "elev": 380,
+    "temp": 13,
+    "limit": "6:30",
+    "diff": 3,
+    "rating": 4.8,
+    "nrev": 480,
+    "major": false,
+    "web": "https://www.queenstown-marathon.co.nz",
+    "airport": "ZQN · 15 min",
+    "hotel": "Queenstown centro",
+    "g": [
+      "#4338CA",
+      "#312E81"
+    ],
+    "desc": "Senderos y caminos entre lagos y los Alpes del Sur: probablemente la maratón con los paisajes más cinematográficos del hemisferio sur.",
+    "recM": "2:19:29",
+    "recF": "2:41:15",
+    "profile": [
+      82,
+      61,
+      15,
+      51,
+      108,
+      78,
+      29,
+      53,
+      74,
+      41,
+      45,
+      100
+    ],
+    "history": [
+      {
+        "y": 2025,
+        "r": 11160,
+        "p": 104
+      },
+      {
+        "y": 2024,
+        "r": 10379,
+        "p": 93
+      },
+      {
+        "y": 2023,
+        "r": 9652,
+        "p": 84
+      }
+    ]
+  },
+  {
+    "id": "honolulu",
+    "name": "Honolulu Marathon",
+    "city": "Honolulu",
+    "country": "Estados Unidos",
+    "flag": "🇺🇸",
+    "continent": "América del Norte",
+    "lat": 21.31,
+    "lng": -157.86,
+    "date": "2026-12-13",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "abierta",
+    "price": 185,
+    "cur": "$",
+    "runners": 25000,
+    "elev": 180,
+    "temp": 24,
+    "limit": "sin límite",
+    "diff": 3,
+    "rating": 4.6,
+    "nrev": 1080,
+    "major": false,
+    "web": "https://www.honolulumarathon.org",
+    "airport": "HNL · 20 min",
+    "hotel": "Waikiki",
+    "g": [
+      "#DB2777",
+      "#831843"
+    ],
+    "desc": "Fuegos artificiales en la salida a las 5 a.m., Diamond Head al amanecer y sin tiempo límite: la maratón más acogedora del Pacífico.",
+    "recM": "2:07:59",
+    "recF": "2:22:15",
+    "profile": [
+      80,
+      100,
+      40,
+      12,
+      69,
+      92,
+      53,
+      53,
+      84,
+      54,
+      14,
+      60
+    ],
+    "history": [
+      {
+        "y": 2025,
+        "r": 23250,
+        "p": 167
+      },
+      {
+        "y": 2024,
+        "r": 21623,
+        "p": 150
+      },
+      {
+        "y": 2023,
+        "r": 20109,
+        "p": 135
+      }
+    ]
+  },
+  {
+    "id": "la",
+    "name": "Los Angeles Marathon",
+    "city": "Los Ángeles",
+    "country": "Estados Unidos",
+    "flag": "🇺🇸",
+    "continent": "América del Norte",
+    "lat": 34.05,
+    "lng": -118.24,
+    "date": "2027-03-07",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "abierta",
+    "price": 210,
+    "cur": "$",
+    "runners": 25000,
+    "elev": 300,
+    "temp": 16,
+    "limit": "6:30",
+    "diff": 3,
+    "rating": 4.5,
+    "nrev": 1170,
+    "major": false,
+    "web": "https://www.lamarathon.com",
+    "airport": "LAX · 40 min",
+    "hotel": "Downtown / Santa Monica",
+    "g": [
+      "#CA8A04",
+      "#713F12"
+    ],
+    "desc": "Del Dodger Stadium a Century City pasando por Hollywood, Sunset y Rodeo Drive: la ruta «Stadium to the Stars».",
+    "recM": "2:06:35",
+    "recF": "2:24:15",
+    "profile": [
+      36,
+      25,
+      73,
+      70,
+      42,
+      73,
+      98,
+      44,
+      10,
+      65,
+      99,
+      58
+    ],
+    "history": [
+      {
+        "y": 2026,
+        "r": 23250,
+        "p": 189
+      },
+      {
+        "y": 2025,
+        "r": 21623,
+        "p": 170
+      },
+      {
+        "y": 2024,
+        "r": 20109,
+        "p": 153
+      }
+    ]
+  },
+  {
+    "id": "mcm",
+    "name": "Marine Corps Marathon",
+    "city": "Washington D. C.",
+    "country": "Estados Unidos",
+    "flag": "🇺🇸",
+    "continent": "América del Norte",
+    "lat": 38.9,
+    "lng": -77.04,
+    "date": "2026-10-25",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "cerrada",
+    "price": 200,
+    "cur": "$",
+    "runners": 30000,
+    "elev": 200,
+    "temp": 12,
+    "limit": "6:30",
+    "diff": 3,
+    "rating": 4.7,
+    "nrev": 1390,
+    "major": false,
+    "web": "https://www.marinemarathon.com",
+    "airport": "DCA · 15 min",
+    "hotel": "Arlington / National Mall",
+    "g": [
+      "#B91C1C",
+      "#450A0A"
+    ],
+    "desc": "«The People's Marathon»: monumentos, marines en cada avituallamiento y la subida final a Iwo Jima. Cupos por sorteo en primavera.",
+    "recM": "2:19:16",
+    "recF": "2:37:00",
+    "profile": [
+      85,
+      44,
+      62,
+      80,
+      36,
+      23,
+      86,
+      105,
+      46,
+      29,
+      70,
+      64
+    ],
+    "history": [
+      {
+        "y": 2025,
+        "r": 27900,
+        "p": 180
+      },
+      {
+        "y": 2024,
+        "r": 25947,
+        "p": 162
+      },
+      {
+        "y": 2023,
+        "r": 24131,
+        "p": 146
+      }
+    ]
+  },
+  {
+    "id": "houston",
+    "name": "Chevron Houston Marathon",
+    "city": "Houston",
+    "country": "Estados Unidos",
+    "flag": "🇺🇸",
+    "continent": "América del Norte",
+    "lat": 29.76,
+    "lng": -95.37,
+    "date": "2027-01-17",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "abierta",
+    "price": 190,
+    "cur": "$",
+    "runners": 27000,
+    "elev": 60,
+    "temp": 10,
+    "limit": "6:00",
+    "diff": 2,
+    "rating": 4.6,
+    "nrev": 830,
+    "major": false,
+    "web": "https://www.chevronhoustonmarathon.com",
+    "airport": "IAH · 35 min",
+    "hotel": "Downtown",
+    "g": [
+      "#1D4ED8",
+      "#172554"
+    ],
+    "desc": "La maratón rápida de enero en EE. UU.: plana, fresca y con fama de fábrica de récords nacionales y marcas olímpicas.",
+    "recM": "2:04:33",
+    "recF": "2:14:18",
+    "profile": [
+      3,
+      16,
+      26,
+      15,
+      10,
+      18,
+      15,
+      6,
+      14,
+      28,
+      19,
+      5
+    ],
+    "history": [
+      {
+        "y": 2026,
+        "r": 25110,
+        "p": 171
+      },
+      {
+        "y": 2025,
+        "r": 23352,
+        "p": 154
+      },
+      {
+        "y": 2024,
+        "r": 21718,
+        "p": 139
+      }
+    ]
+  },
+  {
+    "id": "bigsur",
+    "name": "Big Sur International Marathon",
+    "city": "Big Sur",
+    "country": "Estados Unidos",
+    "flag": "🇺🇸",
+    "continent": "América del Norte",
+    "lat": 36.27,
+    "lng": -121.81,
+    "date": "2027-04-25",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "sorteo",
+    "price": 240,
+    "cur": "$",
+    "runners": 10000,
+    "elev": 650,
+    "temp": 12,
+    "limit": "6:00",
+    "diff": 4,
+    "rating": 4.9,
+    "nrev": 720,
+    "major": false,
+    "web": "https://www.bigsurmarathon.org",
+    "airport": "MRY · 40 min",
+    "hotel": "Monterey / Carmel",
+    "g": [
+      "#0E7490",
+      "#164E63"
+    ],
+    "desc": "La Highway 1 cerrada para ti: acantilados sobre el Pacífico, el puente de Bixby con piano de cola y niebla californiana. Cupos por sorteo.",
+    "recM": "2:16:39",
+    "recF": "2:41:33",
+    "profile": [
+      32,
+      208,
+      339,
+      206,
+      139,
+      246,
+      209,
+      71,
+      178,
+      364,
+      259,
+      76
+    ],
+    "history": [
+      {
+        "y": 2026,
+        "r": 9300,
+        "p": 216
+      },
+      {
+        "y": 2025,
+        "r": 8649,
+        "p": 194
+      },
+      {
+        "y": 2024,
+        "r": 8044,
+        "p": 175
+      }
+    ]
+  },
+  {
+    "id": "toronto",
+    "name": "TCS Toronto Waterfront Marathon",
+    "city": "Toronto",
+    "country": "Canadá",
+    "flag": "🇨🇦",
+    "continent": "América del Norte",
+    "lat": 43.65,
+    "lng": -79.38,
+    "date": "2026-10-18",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "abierta",
+    "price": 165,
+    "cur": "$",
+    "runners": 28000,
+    "elev": 100,
+    "temp": 10,
+    "limit": "6:30",
+    "diff": 2,
+    "rating": 4.6,
+    "nrev": 890,
+    "major": false,
+    "web": "https://www.torontowaterfrontmarathon.com",
+    "airport": "YYZ · 30 min",
+    "hotel": "Downtown / Harbourfront",
+    "g": [
+      "#DC2626",
+      "#7F1D1D"
+    ],
+    "desc": "El circuito rápido de Canadá junto al lago Ontario: sede de múltiples récords nacionales y World Athletics Elite Label.",
+    "recM": "2:05:00",
+    "recF": "2:22:16",
+    "profile": [
+      14,
+      7,
+      16,
+      17,
+      9,
+      16,
+      26,
+      16,
+      3,
+      11,
+      23,
+      16
+    ],
+    "history": [
+      {
+        "y": 2025,
+        "r": 26040,
+        "p": 149
+      },
+      {
+        "y": 2024,
+        "r": 24217,
+        "p": 134
+      },
+      {
+        "y": 2023,
+        "r": 22522,
+        "p": 120
+      }
+    ]
+  },
+  {
+    "id": "vancouver",
+    "name": "BMO Vancouver Marathon",
+    "city": "Vancouver",
+    "country": "Canadá",
+    "flag": "🇨🇦",
+    "continent": "América del Norte",
+    "lat": 49.28,
+    "lng": -123.12,
+    "date": "2027-05-02",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Asfalto",
+    "status": "abierta",
+    "price": 150,
+    "cur": "$",
+    "runners": 18000,
+    "elev": 340,
+    "temp": 12,
+    "limit": "7:00",
+    "diff": 3,
+    "rating": 4.7,
+    "nrev": 760,
+    "major": false,
+    "web": "https://www.bmovanmarathon.ca",
+    "airport": "YVR · 25 min",
+    "hotel": "Downtown / Stanley Park",
+    "g": [
+      "#0F766E",
+      "#134E4A"
+    ],
+    "desc": "Montañas, océano y el rodeo completo de Stanley Park: votada repetidamente como una de las maratones más bonitas del mundo.",
+    "recM": "2:14:07",
+    "recF": "2:32:46",
+    "profile": [
+      10,
+      62,
+      102,
+      62,
+      42,
+      74,
+      63,
+      21,
+      53,
+      109,
+      78,
+      23
+    ],
+    "history": [
+      {
+        "y": 2026,
+        "r": 16740,
+        "p": 135
+      },
+      {
+        "y": 2025,
+        "r": 15568,
+        "p": 122
+      },
+      {
+        "y": 2024,
+        "r": 14478,
+        "p": 109
+      }
+    ]
+  },
+  {
+    "id": "greatwall",
+    "name": "Great Wall Marathon",
+    "city": "Tianjin",
+    "country": "China",
+    "flag": "🇨🇳",
+    "continent": "Asia",
+    "lat": 40.05,
+    "lng": 117.4,
+    "date": "2027-05-15",
+    "km": 42.195,
+    "dist": "Maratón",
+    "type": "Trail",
+    "status": "abierta",
+    "price": 190,
+    "cur": "$",
+    "runners": 2500,
+    "elev": 1200,
+    "temp": 20,
+    "limit": "8:00",
+    "diff": 5,
+    "rating": 4.7,
+    "nrev": 380,
+    "major": false,
+    "web": "https://great-wall-marathon.com",
+    "airport": "PEK/TSN · 2 h",
+    "hotel": "Huangyaguan",
+    "g": [
+      "#B45309",
+      "#78350F"
+    ],
+    "desc": "5.164 escalones sobre la Gran Muralla más pueblos y arrozales: una de las maratones más duras y memorables del planeta.",
+    "recM": "3:09:18",
+    "recF": "3:32:12",
+    "profile": [
+      251,
+      153,
+      133,
+      312,
+      319,
+      97,
+      70,
+      257,
+      267,
+      154,
+      223,
+      297
+    ],
+    "history": [
+      {
+        "y": 2026,
+        "r": 2325,
+        "p": 171
+      },
+      {
+        "y": 2025,
+        "r": 2162,
+        "p": 154
+      },
+      {
+        "y": 2024,
+        "r": 2011,
+        "p": 139
+      }
+    ]
+  },
+  {
+    "id": "mds",
+    "name": "Marathon des Sables",
+    "city": "Sahara",
+    "country": "Marruecos",
+    "flag": "🇲🇦",
+    "continent": "África",
+    "lat": 31.1,
+    "lng": -4,
+    "date": "2027-04-09",
+    "km": 250,
+    "dist": "Ultra maratón",
+    "type": "Trail",
+    "status": "abierta",
+    "price": 3500,
+    "cur": "€",
+    "runners": 1100,
+    "elev": 3000,
+    "temp": 32,
+    "limit": "7 días",
+    "diff": 5,
+    "rating": 4.8,
+    "nrev": 410,
+    "major": false,
+    "web": "https://www.marathondessables.com",
+    "airport": "RAK/ERH · 6 h",
+    "hotel": "Bivouac en el desierto",
+    "g": [
+      "#CA8A04",
+      "#713F12"
+    ],
+    "desc": "La carrera por etapas más mítica: 250 km en autosuficiencia por el Sahara marroquí durante una semana, cargando tu propia comida.",
+    "recM": "etapas · 7 días",
+    "recF": "etapas · 7 días",
+    "profile": [
+      784,
+      362,
+      846,
+      920,
+      475,
+      802,
+      1413,
+      914,
+      164,
+      583,
+      1197,
+      862
+    ],
+    "history": [
+      {
+        "y": 2026,
+        "r": 1023,
+        "p": 3150
+      },
+      {
+        "y": 2025,
+        "r": 951,
+        "p": 2835
+      },
+      {
+        "y": 2024,
+        "r": 885,
+        "p": 2552
+      }
+    ]
+  },
+  {
+    "id": "western",
+    "name": "Western States 100",
+    "city": "Auburn",
+    "country": "Estados Unidos",
+    "flag": "🇺🇸",
+    "continent": "América del Norte",
+    "lat": 38.9,
+    "lng": -121.07,
+    "date": "2027-06-26",
+    "km": 161,
+    "dist": "Ultra maratón",
+    "type": "Trail",
+    "status": "sorteo",
+    "price": 410,
+    "cur": "$",
+    "runners": 380,
+    "elev": 5500,
+    "temp": 25,
+    "limit": "30:00",
+    "diff": 5,
+    "rating": 4.9,
+    "nrev": 290,
+    "major": false,
+    "web": "https://www.wser.org",
+    "airport": "SMF · 60 min",
+    "hotel": "Auburn / Squaw Valley",
+    "g": [
+      "#B45309",
+      "#451A03"
+    ],
+    "desc": "El 100 millas original (desde 1974), de Olympic Valley a Auburn por la Sierra Nevada. Entrar exige clasificar y ganar una lotería con años de espera.",
+    "recM": "14:09:28 · J. Walmsley",
+    "recF": "15:29:33 · C. Dauwalter",
+    "profile": [
+      1028,
+      484,
+      812,
+      964,
+      425,
+      536,
+      1350,
+      1235,
+      369,
+      413,
+      1032,
+      868
+    ],
+    "history": [
+      {
+        "y": 2026,
+        "r": 353,
+        "p": 369
+      },
+      {
+        "y": 2025,
+        "r": 329,
+        "p": 332
+      },
+      {
+        "y": 2024,
+        "r": 306,
+        "p": 299
+      }
+    ]
+  },
+  {
+    "id": "sierrezinal",
+    "name": "Sierre-Zinal",
+    "city": "Sierre",
+    "country": "Suiza",
+    "flag": "🇨🇭",
+    "continent": "Europa",
+    "lat": 46.29,
+    "lng": 7.53,
+    "date": "2026-08-08",
+    "km": 31,
+    "dist": "Trail",
+    "type": "Trail",
+    "status": "cerrada",
+    "price": 90,
+    "cur": "€",
+    "runners": 5000,
+    "elev": 2200,
+    "temp": 14,
+    "limit": "8:30",
+    "diff": 5,
+    "rating": 4.9,
+    "nrev": 360,
+    "major": false,
+    "web": "https://www.sierre-zinal.com",
+    "airport": "GVA · 2 h",
+    "hotel": "Valle de Anniviers",
+    "g": [
+      "#4338CA",
+      "#1E1B4B"
+    ],
+    "desc": "«La carrera de los cinco 4.000»: la cita más prestigiosa del trail corto mundial, con vistas a Matterhorn y Weisshorn. Dorsales agotados en horas.",
+    "recM": "2:25:35 · K. Jornet",
+    "recF": "2:42:53",
+    "profile": [
+      158,
+      547,
+      1230,
+      930,
+      599,
+      1019,
+      1002,
+      294,
+      417,
+      1303,
+      1255,
+      500
+    ],
+    "history": [
+      {
+        "y": 2025,
+        "r": 4650,
+        "p": 81
+      },
+      {
+        "y": 2024,
+        "r": 4325,
+        "p": 73
+      },
+      {
+        "y": 2023,
+        "r": 4022,
+        "p": 66
+      }
+    ]
+  },
+  {
+    "id": "zegama",
+    "name": "Zegama-Aizkorri",
+    "city": "Zegama",
+    "country": "España",
+    "flag": "🇪🇸",
+    "continent": "Europa",
+    "lat": 42.97,
+    "lng": -2.29,
+    "date": "2027-05-23",
+    "km": 42,
+    "dist": "Trail",
+    "type": "Trail",
+    "status": "sorteo",
+    "price": 80,
+    "cur": "€",
+    "runners": 500,
+    "elev": 2736,
+    "temp": 12,
+    "limit": "8:00",
+    "diff": 5,
+    "rating": 4.9,
+    "nrev": 420,
+    "major": false,
+    "web": "https://www.zegama-aizkorri.com",
+    "airport": "BIO/EAS · 60 min",
+    "hotel": "Zegama / Ordizia",
+    "g": [
+      "#15803D",
+      "#14532D"
+    ],
+    "desc": "El templo del trail: barro, niebla y una afición que ruge en Sancti Spiritu. 500 dorsales por sorteo entre decenas de miles de solicitudes.",
+    "recM": "3:36:40 · K. Jornet",
+    "recF": "4:15:09",
+    "profile": [
+      1127,
+      932,
+      211,
+      506,
+      1355,
+      1145,
+      476,
+      690,
+      996,
+      539,
+      481,
+      1258
+    ],
+    "history": [
+      {
+        "y": 2026,
+        "r": 465,
+        "p": 72
+      },
+      {
+        "y": 2025,
+        "r": 432,
+        "p": 65
+      },
+      {
+        "y": 2024,
+        "r": 402,
+        "p": 58
+      }
+    ]
+  },
+  {
+    "id": "parisienne",
+    "name": "La Parisienne 10K",
+    "city": "París",
+    "country": "Francia",
+    "flag": "🇫🇷",
+    "continent": "Europa",
+    "lat": 48.86,
+    "lng": 2.29,
+    "date": "2026-09-13",
+    "km": 10,
+    "dist": "10K",
+    "type": "Asfalto",
+    "status": "abierta",
+    "price": 35,
+    "cur": "€",
+    "runners": 22000,
+    "elev": 40,
+    "temp": 16,
+    "limit": "2:00",
+    "diff": 1,
+    "rating": 4.4,
+    "nrev": 410,
+    "major": false,
+    "web": "https://www.la-parisienne.net",
+    "airport": "CDG · 45 min",
+    "hotel": "7ème arr. / Tour Eiffel",
+    "g": [
+      "#DB2777",
+      "#9D174D"
+    ],
+    "desc": "El 10K femenino más grande de Europa, bajo la Torre Eiffel y a lo largo del Sena. Fiesta, disfraces y causa solidaria.",
+    "recM": "—",
+    "recF": "—",
+    "profile": [
+      19,
+      12,
+      12,
+      24,
+      21,
+      5,
+      7,
+      21,
+      20,
+      11,
+      17,
+      21
+    ],
+    "history": [
+      {
+        "y": 2025,
+        "r": 20460,
+        "p": 32
+      },
+      {
+        "y": 2024,
+        "r": 19028,
+        "p": 28
+      },
+      {
+        "y": 2023,
+        "r": 17696,
+        "p": 26
+      }
+    ]
+  }
+]
