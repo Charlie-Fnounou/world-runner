@@ -20,7 +20,8 @@
       "Bash(npx prisma *)",
       "Bash(npx tsc *)",
       "mcp__claude-in-chrome__navigate",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(git restore *)"
     ]
   }
 }
