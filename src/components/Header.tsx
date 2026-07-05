@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ThemeToggle } from "./ThemeToggle";
+import { UserMenu } from "./UserMenu";
 
 const NAV = [
   { href: "/", label: "Explorar" },
@@ -23,7 +24,10 @@ export function Header() {
             </Link>
           ))}
         </nav>
-        <ThemeToggle />
+        <div className="flex items-center gap-3">
+          <ThemeToggle />
+          <UserMenu />
+        </div>
       </div>
     </header>
   );
