@@ -1,0 +1,426 @@
+// Esquema de base de datos de World Runner.
+// Motor: PostgreSQL (Supabase). ORM: Prisma.
+//
+// Extensiones necesarias en Postgres para la búsqueda difusa (sin tildes,
+// tolerante a errores de escritura): "unaccent" y "pg_trgm". Se habilitan
+// en la primera migración SQL (ver prisma/migrations/.../migration.sql)
+// porque Prisma no modela índices GIN/trigram de forma nativa todavía.
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
+  extensions = [unaccent, pg_trgm]
+}
+
+// ============================================================
+// ENUMS
+// ============================================================
+
+enum EstadoInscripcion {
+  ABIERTA
+  ULTIMOS_CUPOS
+  SORTEO
+  PROXIMAMENTE
+  CERRADA
+  CANCELADA
+}
+
+enum TipoTerreno {
+  ASFALTO
+  TRAIL
+  MIXTO
+  PISTA
+}
+
+enum TipoDistancia {
+  KM_5
+  KM_10
+  KM_15
+  KM_20
+  MEDIA_MARATON
+  KM_25
+  KM_30
+  MARATON
+  ULTRA
+  RELEVOS
+  OTRA
+}
+
+enum Continente {
+  AFRICA
+  AMERICA_DEL_NORTE
+  AMERICA_CENTRAL
+  AMERICA_DEL_SUR
+  ASIA
+  EUROPA
+  OCEANIA
+}
+
+enum FrecuenciaSincronizacion {
+  CADA_HORA
+  CADA_3_HORAS
+  DIARIA
+  SEMANAL
+}
+
+enum EstadoModeracion {
+  PENDIENTE
+  APROBADO
+  RECHAZADO
+}
+
+enum EstadoEjecucionRobot {
+  OK
+  ERROR
+  PARCIAL
+}
+
+// ============================================================
+// CARRERAS (el núcleo del producto)
+// ============================================================
+
+// Un "Evento" es la carrera en sí (ej. "Maratón de Valencia"), que puede
+// tener varias distancias en la misma fecha (42K + 21K + 10K) y varias
+// ediciones a lo largo de los años.
+model Evento {
+  id         String     @id @default(cuid())
+  slug       String     @unique // usado en /carreras/[slug]
+  nombre     String
+  ciudad     String
+  pais       String
+  codigoPais String? // ISO 3166-1 alpha-2, ej. "ES"
+  continente Continente
+  lat        Float
+  lng        Float
+
+  logoUrl     String?
+  fotos       String[] @default([])
+  sitioWeb    String? // web oficial de la carrera
+  aeropuerto  String?
+  zonaHoteles String?
+  transporte  String?
+
+  esWorldMarathonMajor Boolean @default(false)
+  certificadaAims      Boolean @default(false)
+  labelWorldAthletics  String? // ej. "Gold", "Silver", "Elite"
+
+  descripcion   String?
+  requisitos    String?
+  premios       String?
+  hidratacion   String?
+  expo          String?
+  tieneMedalla  Boolean @default(true)
+  tieneCamiseta Boolean @default(true)
+
+  climaTempPromedioC Float?
+  climaHistorico     Json? // serie histórica simple {mes: tempC}
+
+  creadoEn      DateTime @default(now())
+  actualizadoEn DateTime @updatedAt
+
+  ediciones        Edicion[]
+  distancias       Distancia[]
+  fuentes          FuenteDato[]
+  historialCambios HistorialCambio[]
+  favoritos        Favorito[]
+  alertas          Alerta[]
+  completadas      CarreraCompletada[]
+  resenas          Resena[]
+  ejecucionesRobot EjecucionRobot[]
+
+  @@index([pais])
+  @@index([ciudad])
+  @@index([continente])
+}
+
+// Una edición concreta del evento (ej. "Berlin Marathon 2026").
+// Aquí vive todo lo que cambia año a año: fecha, precio, estado, cupos.
+model Edicion {
+  id       String @id @default(cuid())
+  eventoId String
+  evento   Evento @relation(fields: [eventoId], references: [id], onDelete: Cascade)
+
+  anio   Int
+  fecha  DateTime
+  hora   String?
+  estado EstadoInscripcion @default(PROXIMAMENTE)
+
+  precioDesde     Float?
+  moneda          String? // "EUR", "USD", etc.
+  historialPrecio Json? // [{fecha, precio}] evolución detectada por los robots
+
+  numCorredores    Int?
+  cuposTotales     Int?
+  cuposDisponibles Int?
+
+  desnivelPositivoM Int?
+  perfilElevacion   Json? // serie de puntos para el gráfico de elevación
+  mapaRutaGeoJson   Json? // ruta en GeoJSON para el mapa
+
+  tiempoLimite   String?
+  dificultad     Int? // 1-5
+  ratingPromedio Float?
+  numResenas     Int     @default(0)
+
+  urlInscripcionOficial String?
+
+  recordMasculino  String?
+  recordFemenino   String?
+  recordRecorridoM String?
+  recordRecorridoF String?
+
+  cambioRecorrido Boolean @default(false)
+  notasCambio     String?
+
+  ultimaVerificacion DateTime?
+  ultimoExitoRobot   DateTime?
+  fallosConsecutivos Int       @default(0)
+  requiereRevision   Boolean   @default(false)
+
+  creadoEn      DateTime @default(now())
+  actualizadoEn DateTime @updatedAt
+
+  distancias       Distancia[]
+  historialCambios HistorialCambio[]
+  alertas          Alerta[]
+  completadas      CarreraCompletada[]
+  ejecucionesRobot EjecucionRobot[]
+
+  @@unique([eventoId, anio])
+  @@index([fecha])
+  @@index([estado])
+  @@index([requiereRevision])
+}
+
+// Distancias ofrecidas dentro de una edición (un evento puede tener varias).
+model Distancia {
+  id        String   @id @default(cuid())
+  eventoId  String
+  evento    Evento   @relation(fields: [eventoId], references: [id], onDelete: Cascade)
+  edicionId String?
+  edicion   Edicion? @relation(fields: [edicionId], references: [id], onDelete: Cascade)
+
+  tipo    TipoDistancia
+  km      Float
+  terreno TipoTerreno   @default(ASFALTO)
+  precio  Float?
+  cupos   Int?
+
+  @@index([tipo])
+  @@index([eventoId])
+}
+
+// ============================================================
+// FUENTES, HISTORIAL DE CAMBIOS Y ROBOTS
+// ============================================================
+
+// De dónde salió la información de cada carrera (AIMS, federación,
+// RunSignup, sitio oficial, comunidad) y cuándo se obtuvo por última vez.
+model FuenteDato {
+  id       String @id @default(cuid())
+  eventoId String
+  evento   Evento @relation(fields: [eventoId], references: [id], onDelete: Cascade)
+
+  tipo            String // "aims" | "world_athletics" | "federacion_nacional" | "runsignup" | "sitio_oficial" | "comunidad"
+  nombre          String // ej. "RFEA", "RunSignup API"
+  url             String?
+  frecuencia      FrecuenciaSincronizacion @default(DIARIA)
+  ultimaObtencion DateTime?
+  confiable       Boolean                  @default(true)
+
+  creadoEn DateTime @default(now())
+
+  @@index([eventoId])
+  @@index([tipo])
+}
+
+// Registro de auditoría: qué cambió, valor anterior, valor nuevo, cuándo y de dónde.
+model HistorialCambio {
+  id        String   @id @default(cuid())
+  eventoId  String
+  evento    Evento   @relation(fields: [eventoId], references: [id], onDelete: Cascade)
+  edicionId String?
+  edicion   Edicion? @relation(fields: [edicionId], references: [id], onDelete: Cascade)
+
+  campo         String // ej. "estado", "precioDesde", "fecha"
+  valorAnterior String?
+  valorNuevo    String?
+  fuente        String? // nombre de la fuente que detectó el cambio
+  esImportante  Boolean @default(false) // dispara alertas a suscriptores
+
+  creadoEn DateTime @default(now())
+
+  @@index([eventoId])
+  @@index([creadoEn])
+}
+
+// Log de cada corrida de un robot/collector, para monitoreo en el panel admin.
+model EjecucionRobot {
+  id        String   @id @default(cuid())
+  eventoId  String?
+  evento    Evento?  @relation(fields: [eventoId], references: [id], onDelete: SetNull)
+  edicionId String?
+  edicion   Edicion? @relation(fields: [edicionId], references: [id], onDelete: SetNull)
+
+  collector  String // ej. "aims-sync", "sitio-oficial-sync", "runsignup-sync"
+  estado     EstadoEjecucionRobot
+  mensaje    String?
+  duracionMs Int?
+
+  iniciadoEn DateTime @default(now())
+
+  @@index([collector])
+  @@index([estado])
+  @@index([iniciadoEn])
+}
+
+// ============================================================
+// USUARIOS Y ACTIVIDAD
+// ============================================================
+
+// El usuario vive en Supabase Auth; aquí solo guardamos su perfil extendido.
+// El id coincide con el `auth.users.id` de Supabase.
+model Usuario {
+  id             String  @id // = supabase auth.users.id
+  email          String  @unique
+  nombre         String?
+  avatarUrl      String?
+  paisResidencia String?
+
+  creadoEn DateTime @default(now())
+
+  favoritos   Favorito[]
+  alertas     Alerta[]
+  completadas CarreraCompletada[]
+  resenas     Resena[]
+  logros      UsuarioLogro[]
+  envios      EnvioComunidad[]
+}
+
+model Favorito {
+  id        String  @id @default(cuid())
+  usuarioId String
+  usuario   Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  eventoId  String
+  evento    Evento  @relation(fields: [eventoId], references: [id], onDelete: Cascade)
+
+  creadoEn DateTime @default(now())
+
+  @@unique([usuarioId, eventoId])
+}
+
+// Suscripción a alertas de una carrera concreta (o una edición concreta).
+model Alerta {
+  id        String   @id @default(cuid())
+  usuarioId String
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  eventoId  String
+  evento    Evento   @relation(fields: [eventoId], references: [id], onDelete: Cascade)
+  edicionId String?
+  edicion   Edicion? @relation(fields: [edicionId], references: [id], onDelete: Cascade)
+
+  avisaAperturaInscripcion Boolean @default(true)
+  avisaCambioPrecio        Boolean @default(true)
+  avisaPocosCupos          Boolean @default(true)
+  avisaCambioFecha         Boolean @default(true)
+  avisaCancelacion         Boolean @default(true)
+
+  creadoEn DateTime @default(now())
+
+  @@unique([usuarioId, eventoId])
+}
+
+model CarreraCompletada {
+  id        String   @id @default(cuid())
+  usuarioId String
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  eventoId  String
+  evento    Evento   @relation(fields: [eventoId], references: [id], onDelete: Cascade)
+  edicionId String?
+  edicion   Edicion? @relation(fields: [edicionId], references: [id], onDelete: SetNull)
+
+  tiempoFinal String? // "3:45:12"
+  ritmoMedio  String? // "5:20/km"
+  notas       String?
+
+  creadoEn DateTime @default(now())
+
+  @@index([usuarioId])
+}
+
+model Resena {
+  id        String  @id @default(cuid())
+  usuarioId String
+  usuario   Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  eventoId  String
+  evento    Evento  @relation(fields: [eventoId], references: [id], onDelete: Cascade)
+
+  organizacion  Int // 1-5
+  paisajes      Int
+  dificultad    Int
+  medalla       Int
+  camiseta      Int
+  hidratacion   Int
+  expo          Int
+  seguridad     Int
+  calidadPrecio Int
+
+  comentario String?
+  fotos      String[] @default([])
+
+  creadoEn DateTime @default(now())
+
+  @@unique([usuarioId, eventoId])
+  @@index([eventoId])
+}
+
+model Logro {
+  id          String  @id @default(cuid())
+  codigo      String  @unique // ej. "primer_10k", "10_carreras", "5_paises"
+  nombre      String
+  descripcion String
+  icono       String?
+
+  usuarios UsuarioLogro[]
+}
+
+model UsuarioLogro {
+  id        String  @id @default(cuid())
+  usuarioId String
+  usuario   Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  logroId   String
+  logro     Logro   @relation(fields: [logroId], references: [id], onDelete: Cascade)
+
+  obtenidoEn DateTime @default(now())
+
+  @@unique([usuarioId, logroId])
+}
+
+// ============================================================
+// COMUNIDAD (moderación manual antes de publicar)
+// ============================================================
+
+model EnvioComunidad {
+  id        String   @id @default(cuid())
+  usuarioId String?
+  usuario   Usuario? @relation(fields: [usuarioId], references: [id], onDelete: SetNull)
+
+  tipo     String // "nueva_carrera" | "reporte_error"
+  eventoId String? // si es un reporte sobre una carrera existente
+  datos    Json // payload libre con los campos propuestos
+
+  estado      EstadoModeracion @default(PENDIENTE)
+  notasAdmin  String?
+  revisadoPor String?
+  revisadoEn  DateTime?
+
+  creadoEn DateTime @default(now())
+
+  @@index([estado])
+}
