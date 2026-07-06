@@ -24,7 +24,12 @@ export async function enviarLinkMagico(_prevState: unknown, formData: FormData) 
     },
   });
 
-  if (error) return { error: "No pudimos enviar el link. Intenta de nuevo." };
+  if (error) {
+    if (error.code === "over_email_send_rate_limit") {
+      return { error: "Ya te enviamos un link hace poco. Espera un momento antes de pedir otro." };
+    }
+    return { error: "No pudimos enviar el link. Intenta de nuevo." };
+  }
   return { ok: true };
 }
 
