@@ -1,39 +1,42 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { alternarFavorito } from "@/app/actions/favoritos";
 
-const CLAVE = "wr_favoritos";
+// Favoritos reales, guardados en la base de datos y asociados al usuario
+// con sesión iniciada (Supabase Auth). Si no hay sesión, redirige a /login.
+export function useFavoritos(favoritosIniciales: string[] = []) {
+  const [favoritos, setFavoritos] = useState<Set<string>>(new Set(favoritosIniciales));
+  const [, startTransition] = useTransition();
+  const router = useRouter();
 
-// Favoritos guardados en el navegador (localStorage) mientras no hay
-// autenticación conectada. Cuando exista login con Supabase, esto se
-// reemplaza por la tabla Favorito de la base de datos.
-export function useFavoritos() {
-  const [favoritos, setFavoritos] = useState<Set<string>>(new Set());
-  const [listo, setListo] = useState(false);
+  const alternar = useCallback(
+    (id: string) => {
+      let seEstabaAgregando = false;
+      setFavoritos((prev) => {
+        const next = new Set(prev);
+        seEstabaAgregando = !next.has(id);
+        if (next.has(id)) next.delete(id);
+        else next.add(id);
+        return next;
+      });
 
-  useEffect(() => {
-    try {
-      const guardado = localStorage.getItem(CLAVE);
-      if (guardado) setFavoritos(new Set(JSON.parse(guardado)));
-    } catch {
-      // localStorage no disponible; se ignora
-    }
-    setListo(true);
-  }, []);
+      startTransition(async () => {
+        const res = await alternarFavorito(id);
+        if (!res.ok) {
+          setFavoritos((prev) => {
+            const next = new Set(prev);
+            if (seEstabaAgregando) next.delete(id);
+            else next.add(id);
+            return next;
+          });
+          if (res.error === "no-auth") router.push("/login");
+        }
+      });
+    },
+    [router],
+  );
 
-  const alternar = useCallback((id: string) => {
-    setFavoritos((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      try {
-        localStorage.setItem(CLAVE, JSON.stringify([...next]));
-      } catch {
-        // localStorage no disponible; se ignora
-      }
-      return next;
-    });
-  }, []);
-
-  return { favoritos, alternar, listo };
+  return { favoritos, alternar };
 }

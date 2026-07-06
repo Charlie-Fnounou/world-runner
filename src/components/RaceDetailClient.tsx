@@ -23,8 +23,8 @@ const CHECKLIST = [
   "Visita a la Expo",
 ];
 
-export function RaceDetailClient({ r }: { r: Carrera }) {
-  const { favoritos, alternar } = useFavoritos();
+export function RaceDetailClient({ r, favoritoInicial }: { r: Carrera; favoritoInicial: boolean }) {
+  const { favoritos, alternar } = useFavoritos(favoritoInicial ? [r.id] : []);
   const [alertaActiva, setAlertaActiva] = useState(false);
   const [checks, setChecks] = useState<Record<string, boolean>>({});
   const fav = favoritos.has(r.id);

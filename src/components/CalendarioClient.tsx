@@ -6,8 +6,14 @@ import { RaceCard } from "./RaceCard";
 import { useFavoritos } from "@/hooks/useFavoritos";
 import { MESES_FULL } from "@/lib/format";
 
-export function CalendarioClient({ carreras }: { carreras: Carrera[] }) {
-  const { favoritos, alternar } = useFavoritos();
+export function CalendarioClient({
+  carreras,
+  favoritosIniciales,
+}: {
+  carreras: Carrera[];
+  favoritosIniciales: string[];
+}) {
+  const { favoritos, alternar } = useFavoritos(favoritosIniciales);
 
   const porMes = useMemo(() => {
     const grupos = new Map<string, Carrera[]>();

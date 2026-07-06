@@ -8,9 +8,9 @@ import { MapaMundialLazy } from "./MapaMundialLazy";
 import { useFavoritos } from "@/hooks/useFavoritos";
 import { buscarCarreras } from "@/lib/search";
 
-export function HomeClient({ carreras }: { carreras: Carrera[] }) {
+export function HomeClient({ carreras, favoritosIniciales }: { carreras: Carrera[]; favoritosIniciales: string[] }) {
   const [query, setQuery] = useState("");
-  const { favoritos, alternar } = useFavoritos();
+  const { favoritos, alternar } = useFavoritos(favoritosIniciales);
 
   const filtradas = useMemo(() => buscarCarreras(carreras, query), [carreras, query]);
 
