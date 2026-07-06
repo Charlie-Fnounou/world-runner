@@ -14,12 +14,13 @@ async function origen() {
 export async function enviarLinkMagico(_prevState: unknown, formData: FormData) {
   const email = String(formData.get("email") || "").trim();
   if (!email) return { error: "Escribe un correo válido." };
+  const next = String(formData.get("next") || "/");
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithOtp({
     email,
     options: {
-      emailRedirectTo: `${await origen()}/auth/callback`,
+      emailRedirectTo: `${await origen()}/auth/callback?next=${encodeURIComponent(next)}`,
     },
   });
 
@@ -27,11 +28,12 @@ export async function enviarLinkMagico(_prevState: unknown, formData: FormData) 
   return { ok: true };
 }
 
-export async function iniciarConGoogle() {
+export async function iniciarConGoogle(formData: FormData) {
+  const next = String(formData.get("next") || "/");
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
-    options: { redirectTo: `${await origen()}/auth/callback` },
+    options: { redirectTo: `${await origen()}/auth/callback?next=${encodeURIComponent(next)}` },
   });
 
   if (error || !data.url) redirect("/login?error=Google no está configurado todavía");

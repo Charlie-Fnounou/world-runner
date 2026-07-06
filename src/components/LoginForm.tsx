@@ -5,7 +5,7 @@ import { enviarLinkMagico, iniciarConGoogle } from "@/app/login/actions";
 
 const ESTADO_INICIAL: { error?: string; ok?: boolean } = {};
 
-export function LoginForm() {
+export function LoginForm({ next = "/" }: { next?: string }) {
   const [estado, formAction, pendiente] = useActionState(enviarLinkMagico, ESTADO_INICIAL);
 
   return (
@@ -18,6 +18,7 @@ export function LoginForm() {
       </div>
 
       <form action={formAction} className="flex flex-col gap-3">
+        <input type="hidden" name="next" value={next} />
         <input
           type="email"
           name="email"
@@ -54,6 +55,7 @@ export function LoginForm() {
       </div>
 
       <form action={iniciarConGoogle}>
+        <input type="hidden" name="next" value={next} />
         <button
           type="submit"
           className="w-full rounded-full px-5 py-3.5 text-sm font-semibold wr-panel"

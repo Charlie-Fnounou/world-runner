@@ -296,6 +296,7 @@ model Usuario {
   nombre         String?
   avatarUrl      String?
   paisResidencia String?
+  esAdmin        Boolean @default(false)
 
   creadoEn DateTime @default(now())
 
