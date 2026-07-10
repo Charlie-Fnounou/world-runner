@@ -36,9 +36,12 @@ export async function enviarLinkMagico(_prevState: unknown, formData: FormData) 
   // cookie que solo existe si el LOGIN se inició desde el navegador), pero
   // como lo generamos en el servidor, esa cookie nunca existe y el login
   // fallaría en bucle. token_hash no tiene ese problema.
+  // Importante: el "type" tiene que ser el verification_type real que
+  // devuelve Supabase (p.ej. "magiclink" para usuarios existentes, "signup"
+  // para nuevos) — no un valor fijo, o verifyOtp lo rechaza.
   const link = new URL(`${await origen()}/auth/confirm`);
   link.searchParams.set("token_hash", data.properties.hashed_token);
-  link.searchParams.set("type", "email");
+  link.searchParams.set("type", data.properties.verification_type ?? "magiclink");
   link.searchParams.set("next", next);
 
   try {
