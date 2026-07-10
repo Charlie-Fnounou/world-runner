@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { getCarreras, slugify } from "@/lib/races-data";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = "https://world-runner.vercel.app";
+  const base = "https://theworldrunner.com";
   const races = await getCarreras();
   const carreras = races.map((r) => ({
     url: `${base}/carreras/${slugify(r.id, r.name)}`,

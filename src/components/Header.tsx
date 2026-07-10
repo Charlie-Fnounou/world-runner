@@ -15,7 +15,7 @@ export function Header() {
     >
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
         <Link href="/" className="font-display font-bold text-2xl" style={{ color: "var(--wr-ink)" }}>
-          World<span style={{ color: "var(--wr-acc)" }}>Runner</span>
+          <span style={{ color: "var(--wr-mut)" }}>The </span>World<span style={{ color: "var(--wr-acc)" }}>Runner</span>
         </Link>
         <nav className="hidden sm:flex items-center gap-6 text-sm font-medium" style={{ color: "var(--wr-mut)" }}>
           {NAV.map((n) => (

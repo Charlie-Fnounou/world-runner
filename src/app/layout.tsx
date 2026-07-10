@@ -17,14 +17,14 @@ const barlowCondensed = Barlow_Condensed({
 
 export const metadata: Metadata = {
   title: {
-    default: "World Runner — Toda carrera. Todo el planeta.",
-    template: "%s · World Runner",
+    default: "The World Runner — Toda carrera. Todo el planeta.",
+    template: "%s · The World Runner",
   },
   description:
     "Descubre, compara y planifica maratones, medias maratones, 10K, trails y ultras en cualquier país, con links de inscripción oficiales.",
-  metadataBase: new URL("https://world-runner.vercel.app"),
+  metadataBase: new URL("https://theworldrunner.com"),
   openGraph: {
-    title: "World Runner",
+    title: "The World Runner",
     description: "Descubre, compara y planifica carreras de running en todo el mundo.",
     type: "website",
   },
