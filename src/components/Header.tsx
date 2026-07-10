@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ThemeToggle } from "./ThemeToggle";
 import { UserMenu } from "./UserMenu";
 
@@ -14,8 +15,11 @@ export function Header() {
       style={{ borderColor: "var(--wr-line)", background: "color-mix(in srgb, var(--wr-bg) 85%, transparent)" }}
     >
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
-        <Link href="/" className="font-display font-bold text-2xl" style={{ color: "var(--wr-ink)" }}>
-          <span style={{ color: "var(--wr-mut)" }}>The </span>World<span style={{ color: "var(--wr-acc)" }}>Runner</span>
+        <Link href="/" className="flex items-center gap-2 font-display font-bold text-2xl" style={{ color: "var(--wr-ink)" }}>
+          <Image src="/brand/icono.png" alt="" width={32} height={32} priority />
+          <span>
+            <span style={{ color: "var(--wr-mut)" }}>The </span>World<span style={{ color: "var(--wr-acc)" }}>Runner</span>
+          </span>
         </Link>
         <nav className="hidden sm:flex items-center gap-6 text-sm font-medium" style={{ color: "var(--wr-mut)" }}>
           {NAV.map((n) => (

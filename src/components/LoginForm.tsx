@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import Image from "next/image";
 import { enviarLinkMagico, iniciarConGoogle } from "@/app/login/actions";
 
 const ESTADO_INICIAL: { error?: string; ok?: boolean } = {};
@@ -11,6 +12,7 @@ export function LoginForm({ next = "/" }: { next?: string }) {
   return (
     <div className="max-w-sm mx-auto px-4 py-20 w-full flex flex-col gap-6">
       <div className="text-center">
+        <Image src="/brand/icono.png" alt="" width={64} height={64} className="mx-auto mb-4" priority />
         <h1 className="font-display font-extrabold text-3xl">Entrar a The World Runner</h1>
         <p className="text-sm mt-2" style={{ color: "var(--wr-mut)" }}>
           Guarda tus favoritos, recibe alertas y sigue tus carreras completadas.

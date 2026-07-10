@@ -27,6 +27,11 @@ export const metadata: Metadata = {
     title: "The World Runner",
     description: "Descubre, compara y planifica carreras de running en todo el mundo.",
     type: "website",
+    images: ["/brand/og-image.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/brand/og-image.png"],
   },
 };
 
