@@ -19,25 +19,33 @@ export async function enviarLinkMagico(_prevState: unknown, formData: FormData) 
   const next = String(formData.get("next") || "/");
 
   const admin = createAdminClient();
-  const redirectTo = `${await origen()}/auth/callback?next=${encodeURIComponent(next)}`;
 
   // Generamos el link nosotros mismos (sin que Supabase intente mandar el
   // correo) y lo enviamos con Resend, que sí tenemos garantizado que funciona.
   const { data, error } = await admin.auth.admin.generateLink({
     type: "magiclink",
     email,
-    options: { redirectTo },
   });
 
-  if (error || !data?.properties?.action_link) {
+  if (error || !data?.properties?.hashed_token) {
     return { error: "No pudimos generar el link. Intenta de nuevo." };
   }
+
+  // Usamos nuestra propia ruta de confirmación con token_hash en vez del
+  // action_link que da Supabase: ese link asume el flujo PKCE (necesita una
+  // cookie que solo existe si el LOGIN se inició desde el navegador), pero
+  // como lo generamos en el servidor, esa cookie nunca existe y el login
+  // fallaría en bucle. token_hash no tiene ese problema.
+  const link = new URL(`${await origen()}/auth/confirm`);
+  link.searchParams.set("token_hash", data.properties.hashed_token);
+  link.searchParams.set("type", "email");
+  link.searchParams.set("next", next);
 
   try {
     await enviarCorreo({
       to: email,
       subject: "Tu link para entrar a The World Runner",
-      html: plantillaLinkMagico(data.properties.action_link),
+      html: plantillaLinkMagico(link.toString()),
     });
   } catch {
     return { error: "No pudimos enviar el correo. Intenta de nuevo en un momento." };
