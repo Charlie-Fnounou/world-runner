@@ -20,7 +20,12 @@ export async function GET(request: Request) {
       await upsertUsuario(data.user);
       return NextResponse.redirect(`${origin}${next}`);
     }
+
+    console.error("verifyOtp falló:", error);
+    return NextResponse.redirect(
+      `${origin}/login?error=${encodeURIComponent(error?.message ?? "desconocido")}`,
+    );
   }
 
-  return NextResponse.redirect(`${origin}/login?error=No se pudo iniciar sesión`);
+  return NextResponse.redirect(`${origin}/login?error=Faltan parámetros en el link`);
 }
