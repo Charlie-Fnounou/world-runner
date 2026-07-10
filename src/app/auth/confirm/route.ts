@@ -22,10 +22,7 @@ export async function GET(request: Request) {
     }
 
     console.error("verifyOtp falló:", error);
-    return NextResponse.redirect(
-      `${origin}/login?error=${encodeURIComponent(error?.message ?? "desconocido")}`,
-    );
   }
 
-  return NextResponse.redirect(`${origin}/login?error=Faltan parámetros en el link`);
+  return NextResponse.redirect(`${origin}/login?error=No se pudo iniciar sesión`);
 }
