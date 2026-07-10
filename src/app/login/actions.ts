@@ -1,6 +1,8 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { enviarCorreo, plantillaLinkMagico } from "@/lib/resend";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 
@@ -16,20 +18,31 @@ export async function enviarLinkMagico(_prevState: unknown, formData: FormData) 
   if (!email) return { error: "Escribe un correo válido." };
   const next = String(formData.get("next") || "/");
 
-  const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithOtp({
+  const admin = createAdminClient();
+  const redirectTo = `${await origen()}/auth/callback?next=${encodeURIComponent(next)}`;
+
+  // Generamos el link nosotros mismos (sin que Supabase intente mandar el
+  // correo) y lo enviamos con Resend, que sí tenemos garantizado que funciona.
+  const { data, error } = await admin.auth.admin.generateLink({
+    type: "magiclink",
     email,
-    options: {
-      emailRedirectTo: `${await origen()}/auth/callback?next=${encodeURIComponent(next)}`,
-    },
+    options: { redirectTo },
   });
 
-  if (error) {
-    if (error.code === "over_email_send_rate_limit") {
-      return { error: "Ya te enviamos un link hace poco. Espera un momento antes de pedir otro." };
-    }
-    return { error: "No pudimos enviar el link. Intenta de nuevo." };
+  if (error || !data?.properties?.action_link) {
+    return { error: "No pudimos generar el link. Intenta de nuevo." };
   }
+
+  try {
+    await enviarCorreo({
+      to: email,
+      subject: "Tu link para entrar a The World Runner",
+      html: plantillaLinkMagico(data.properties.action_link),
+    });
+  } catch {
+    return { error: "No pudimos enviar el correo. Intenta de nuevo en un momento." };
+  }
+
   return { ok: true };
 }
 
