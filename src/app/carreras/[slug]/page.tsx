@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getCarreras, getCarreraPorSlug, slugify } from "@/lib/races-data";
 import { getFavoritoIds } from "@/lib/favoritos";
+import { getAlertaIds } from "@/lib/alertas";
 import { RaceDetailClient } from "@/components/RaceDetailClient";
 import { fmtFecha } from "@/lib/format";
 
@@ -40,8 +41,9 @@ export default async function RacePage({
   const r = await getCarreraPorSlug(slug);
   if (!r) notFound();
 
-  const favoritosIniciales = await getFavoritoIds();
+  const [favoritosIniciales, alertasIniciales] = await Promise.all([getFavoritoIds(), getAlertaIds()]);
   const favoritoInicial = favoritosIniciales.includes(r.id);
+  const alertaInicial = alertasIniciales.includes(r.id);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -68,7 +70,7 @@ export default async function RacePage({
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <RaceDetailClient r={r} favoritoInicial={favoritoInicial} />
+      <RaceDetailClient r={r} favoritoInicial={favoritoInicial} alertaInicial={alertaInicial} />
     </>
   );
 }

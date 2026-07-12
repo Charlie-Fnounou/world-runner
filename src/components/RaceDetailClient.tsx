@@ -6,6 +6,7 @@ import type { Carrera } from "@/lib/types";
 import { Badge } from "./Badge";
 import { Countdown } from "./Countdown";
 import { useFavoritos } from "@/hooks/useFavoritos";
+import { useAlertas } from "@/hooks/useAlertas";
 import { fmtFecha, nf } from "@/lib/format";
 
 const CHECKLIST = [
@@ -23,9 +24,17 @@ const CHECKLIST = [
   "Visita a la Expo",
 ];
 
-export function RaceDetailClient({ r, favoritoInicial }: { r: Carrera; favoritoInicial: boolean }) {
+export function RaceDetailClient({
+  r,
+  favoritoInicial,
+  alertaInicial,
+}: {
+  r: Carrera;
+  favoritoInicial: boolean;
+  alertaInicial: boolean;
+}) {
   const { favoritos, alternar } = useFavoritos(favoritoInicial ? [r.id] : []);
-  const [alertaActiva, setAlertaActiva] = useState(false);
+  const { activa: alertaActiva, alternar: alternarAlerta } = useAlertas(r.id, alertaInicial);
   const [checks, setChecks] = useState<Record<string, boolean>>({});
   const fav = favoritos.has(r.id);
 
@@ -97,7 +106,7 @@ export function RaceDetailClient({ r, favoritoInicial }: { r: Carrera; favoritoI
                 {cta}
               </a>
               <button
-                onClick={() => setAlertaActiva((v) => !v)}
+                onClick={alternarAlerta}
                 title="Alertas de esta carrera"
                 className="rounded-xl px-4 py-3.5 text-xl transition-colors"
                 style={{ background: alertaActiva ? "rgba(255,255,255,0.35)" : "rgba(255,255,255,0.15)" }}

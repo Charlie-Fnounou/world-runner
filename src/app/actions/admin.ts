@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { EstadoInscripcion } from "@prisma/client";
 import { requireAdmin } from "@/lib/admin";
 import { prisma } from "@/lib/prisma";
+import { notificarCambios, type TipoCambio } from "@/lib/alertas";
 
 const ESTADOS_VALIDOS = Object.values(EstadoInscripcion);
 
@@ -16,6 +17,8 @@ export async function actualizarEdicion(edicionId: string, formData: FormData) {
   const numCorredores = formData.get("numCorredores");
 
   if (!ESTADOS_VALIDOS.includes(estado as EstadoInscripcion)) throw new Error("Estado inválido");
+
+  const antes = await prisma.edicion.findUniqueOrThrow({ where: { id: edicionId } });
 
   const edicion = await prisma.edicion.update({
     where: { id: edicionId },
@@ -37,6 +40,34 @@ export async function actualizarEdicion(edicionId: string, formData: FormData) {
       esImportante: true,
     },
   });
+
+  const cambios: { tipo: TipoCambio; mensaje: string }[] = [];
+
+  if (antes.estado !== edicion.estado) {
+    if (edicion.estado === "ABIERTA") {
+      cambios.push({ tipo: "apertura", mensaje: "🔔 ¡Ya abrió la inscripción!" });
+    } else if (edicion.estado === "ULTIMOS_CUPOS") {
+      cambios.push({ tipo: "pocosCupos", mensaje: "⚠️ Quedan últimos cupos." });
+    } else if (edicion.estado === "CANCELADA") {
+      cambios.push({ tipo: "cancelacion", mensaje: "❌ La carrera fue cancelada." });
+    }
+  }
+
+  if (antes.precioDesde !== edicion.precioDesde && edicion.precioDesde != null) {
+    cambios.push({
+      tipo: "precio",
+      mensaje: `💰 El precio cambió a ${edicion.moneda ?? "$"}${edicion.precioDesde}.`,
+    });
+  }
+
+  if (antes.fecha.getTime() !== edicion.fecha.getTime()) {
+    cambios.push({
+      tipo: "fecha",
+      mensaje: `📅 La fecha cambió a ${edicion.fecha.toISOString().slice(0, 10)}.`,
+    });
+  }
+
+  await notificarCambios(edicion.eventoId, cambios);
 
   revalidatePath("/admin/carreras");
   revalidatePath(`/admin/carreras/${edicion.eventoId}`);
