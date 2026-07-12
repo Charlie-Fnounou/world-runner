@@ -15,10 +15,17 @@ export function Header() {
       style={{ borderColor: "var(--wr-line)", background: "color-mix(in srgb, var(--wr-bg) 85%, transparent)" }}
     >
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
-        <Link href="/" className="flex items-center gap-2 font-display font-bold text-2xl" style={{ color: "var(--wr-ink)" }}>
+        <Link
+          href="/"
+          className="flex items-center gap-2 font-display font-bold text-xl uppercase tracking-wide"
+          style={{ color: "var(--wr-ink)" }}
+        >
           <Image src="/brand/icono.png" alt="" width={32} height={32} priority />
           <span>
-            <span style={{ color: "var(--wr-mut)" }}>The </span>World<span style={{ color: "var(--wr-acc)" }}>Runner</span>
+            <span style={{ color: "var(--wr-acc)", textDecoration: "underline", textUnderlineOffset: "3px" }}>
+              The
+            </span>{" "}
+            World Runner
           </span>
         </Link>
         <nav className="hidden sm:flex items-center gap-6 text-sm font-medium" style={{ color: "var(--wr-mut)" }}>
