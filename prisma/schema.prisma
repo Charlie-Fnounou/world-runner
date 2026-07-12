@@ -234,12 +234,14 @@ model FuenteDato {
   tipo            String // "aims" | "world_athletics" | "federacion_nacional" | "runsignup" | "sitio_oficial" | "comunidad"
   nombre          String // ej. "RFEA", "RunSignup API"
   url             String?
+  externalId      String? // ID de la carrera en la fuente externa (ej. race_id de RunSignup), para saber si ya existe al recolectar de nuevo
   frecuencia      FrecuenciaSincronizacion @default(DIARIA)
   ultimaObtencion DateTime?
   confiable       Boolean                  @default(true)
 
   creadoEn DateTime @default(now())
 
+  @@unique([tipo, externalId])
   @@index([eventoId])
   @@index([tipo])
 }
