@@ -4,6 +4,7 @@ import { getCarreras, getCarreraPorSlug, slugify } from "@/lib/races-data";
 import { getFavoritoIds } from "@/lib/favoritos";
 import { getAlertaIds } from "@/lib/alertas";
 import { RaceDetailClient } from "@/components/RaceDetailClient";
+import { BannerPublicitario } from "@/components/BannerPublicitario";
 import { fmtFecha } from "@/lib/format";
 
 export const revalidate = 300;
@@ -71,6 +72,9 @@ export default async function RacePage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <RaceDetailClient r={r} favoritoInicial={favoritoInicial} alertaInicial={alertaInicial} />
+      <div className="pb-16">
+        <BannerPublicitario ubicacion="FICHA_CARRERA" />
+      </div>
     </>
   );
 }

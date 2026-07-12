@@ -8,7 +8,17 @@ import { MapaMundialLazy } from "./MapaMundialLazy";
 import { useFavoritos } from "@/hooks/useFavoritos";
 import { buscarCarreras } from "@/lib/search";
 
-export function HomeClient({ carreras, favoritosIniciales }: { carreras: Carrera[]; favoritosIniciales: string[] }) {
+export function HomeClient({
+  carreras,
+  favoritosIniciales,
+  bannerDestacado,
+  bannerMedio,
+}: {
+  carreras: Carrera[];
+  favoritosIniciales: string[];
+  bannerDestacado?: React.ReactNode;
+  bannerMedio?: React.ReactNode;
+}) {
   const [query, setQuery] = useState("");
   const { favoritos, alternar } = useFavoritos(favoritosIniciales);
 
@@ -74,6 +84,8 @@ export function HomeClient({ carreras, favoritosIniciales }: { carreras: Carrera
             </div>
           </section>
 
+          {bannerDestacado}
+
           <section className="max-w-6xl mx-auto px-4 w-full">
             <h2 className="font-display font-bold text-2xl mb-4">Próximas aperturas e inscripciones abiertas</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -82,6 +94,8 @@ export function HomeClient({ carreras, favoritosIniciales }: { carreras: Carrera
               ))}
             </div>
           </section>
+
+          {bannerMedio}
 
           <section className="max-w-6xl mx-auto px-4 w-full">
             <h2 className="font-display font-bold text-2xl mb-4">Mapa mundial</h2>

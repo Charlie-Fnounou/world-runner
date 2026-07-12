@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Inter, Barlow_Condensed } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Header } from "@/components/Header";
+import { TrackerVisitas } from "@/components/TrackerVisitas";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -40,14 +42,27 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const adsenseClientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
+
   return (
     <html
       lang="es"
       suppressHydrationWarning
       className={`${inter.variable} ${barlowCondensed.variable} h-full antialiased`}
     >
+      {adsenseClientId && (
+        <head>
+          <Script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClientId}`}
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+        </head>
+      )}
       <body className="min-h-full flex flex-col">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+          <TrackerVisitas />
           <Header />
           <main className="flex-1 flex flex-col">{children}</main>
         </ThemeProvider>

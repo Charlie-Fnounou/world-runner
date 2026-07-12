@@ -429,3 +429,40 @@ model EnvioComunidad {
 
   @@index([estado])
 }
+
+// ============================================================
+// PUBLICIDAD Y ANALÍTICAS
+// ============================================================
+
+enum UbicacionBanner {
+  HOME_DESTACADO
+  HOME_MEDIO
+  FICHA_CARRERA
+}
+
+// Banner propio de un patrocinador (no es Google AdSense, es un anuncio que
+// el equipo de World Runner vende y sube a mano).
+model Patrocinador {
+  id        String          @id @default(cuid())
+  nombre    String
+  imagenUrl String
+  enlaceUrl String
+  ubicacion UbicacionBanner @default(HOME_MEDIO)
+  activo    Boolean         @default(true)
+
+  creadoEn DateTime @default(now())
+
+  @@index([ubicacion, activo])
+}
+
+// Una fila por cada vez que alguien carga una página. Simple a propósito:
+// solo cuenta visitas totales y por ruta, sin trackear usuarios individuales.
+model VisitaPagina {
+  id   String @id @default(cuid())
+  ruta String
+
+  creadoEn DateTime @default(now())
+
+  @@index([creadoEn])
+  @@index([ruta])
+}
