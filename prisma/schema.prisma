@@ -286,6 +286,15 @@ model EjecucionRobot {
   @@index([iniciadoEn])
 }
 
+// Guarda en qué página se quedó cada collector paginado (ej. RunSignup),
+// para que cada corrida semanal siga avanzando por el catálogo en vez de
+// traer siempre las mismas carreras "más próximas".
+model EstadoCollector {
+  collector     String   @id
+  cursor        Int      @default(0)
+  actualizadoEn DateTime @updatedAt
+}
+
 // ============================================================
 // USUARIOS Y ACTIVIDAD
 // ============================================================

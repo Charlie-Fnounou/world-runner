@@ -1,5 +1,6 @@
 import { Continente, TipoDistancia } from "@prisma/client";
 import { upsertCarreraExterna, registrarEjecucion } from "./upsert";
+import { prisma } from "@/lib/prisma";
 import type { CarreraExterna } from "./types";
 
 // Recolector de RunSignup (EE. UU. y Canadá principalmente). Usa la API
@@ -13,6 +14,15 @@ import type { CarreraExterna } from "./types";
 // ciudad, link). Los detalles por carrera (distancias, precio exacto)
 // están disponibles en /rest/race/{id} y quedan para una mejora futura,
 // para no disparar cientos de llamadas extra en cada corrida semanal.
+//
+// RunSignup ordena el listado por nombre (A-Z) por defecto, no por
+// fecha. Si cada corrida empezara siempre en la página 1, semana tras
+// semana traeríamos siempre las mismas ~300 carreras (las que arrancan
+// con símbolos/números) y nunca llegaríamos, por ejemplo, a las que
+// empiezan con "M" (Miami, Medellín...). Por eso se guarda en
+// EstadoCollector en qué página se quedó la última corrida y la
+// siguiente sigue desde ahí, dando toda la vuelta al catálogo con el
+// tiempo.
 
 const BASE_URL = "https://api.runsignup.com/rest/races";
 
@@ -90,18 +100,35 @@ function aCarreraExterna(r: RaceRunSignup["race"]): CarreraExterna | null {
 }
 
 // Cuántas páginas (de 100 carreras cada una) se procesan por corrida, para
-// no pasarnos del tiempo máximo de ejecución del cron.
-const PAGINAS_POR_CORRIDA = 3;
+// no pasarnos del tiempo máximo de ejecución del cron (300s, ver
+// maxDuration en /api/cron/collectors).
+const PAGINAS_POR_CORRIDA = 5;
+
+const COLLECTOR_ID = "runsignup";
 
 export async function correrCollectorRunSignup() {
   return registrarEjecucion("runsignup", async () => {
+    const estado = await prisma.estadoCollector.findUnique({ where: { collector: COLLECTOR_ID } });
+    const paginaInicial = (estado?.cursor ?? 0) + 1;
+
     let nuevas = 0;
     let actualizadas = 0;
     let errores = 0;
+    let ultimaPaginaVista = estado?.cursor ?? 0;
+    let dioLaVuelta = false;
 
-    for (let pagina = 1; pagina <= PAGINAS_POR_CORRIDA; pagina++) {
+    for (let i = 0; i < PAGINAS_POR_CORRIDA; i++) {
+      const pagina = paginaInicial + i;
       const carreras = await obtenerPaginaDeCarreras(pagina);
-      if (carreras.length === 0) break;
+
+      if (carreras.length === 0) {
+        // Llegamos al final del catálogo: la próxima corrida arranca
+        // de nuevo desde la página 1 para revisar altas nuevas.
+        dioLaVuelta = true;
+        break;
+      }
+
+      ultimaPaginaVista = pagina;
 
       for (const { race } of carreras) {
         try {
@@ -121,6 +148,12 @@ export async function correrCollectorRunSignup() {
       // Pausa entre páginas para no golpear la API de golpe.
       await new Promise((r) => setTimeout(r, 500));
     }
+
+    await prisma.estadoCollector.upsert({
+      where: { collector: COLLECTOR_ID },
+      update: { cursor: dioLaVuelta ? 0 : ultimaPaginaVista },
+      create: { collector: COLLECTOR_ID, cursor: dioLaVuelta ? 0 : ultimaPaginaVista },
+    });
 
     return { nuevas, actualizadas, errores };
   });
