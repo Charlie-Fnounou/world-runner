@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/races-data";
+import { banderaDesdeCodigoIso } from "@/lib/paises";
 import type { CarreraExterna } from "./types";
 
 // Crea o actualiza una carrera a partir de lo que trajo un recolector.
@@ -9,6 +10,7 @@ export async function upsertCarreraExterna(c: CarreraExterna): Promise<{ creada:
   const fuenteExistente = await prisma.fuenteDato.findUnique({
     where: { tipo_externalId: { tipo: c.fuenteTipo, externalId: c.externalId } },
   });
+  const bandera = banderaDesdeCodigoIso(c.codigoPais);
 
   if (fuenteExistente) {
     await prisma.evento.update({
@@ -18,6 +20,7 @@ export async function upsertCarreraExterna(c: CarreraExterna): Promise<{ creada:
         ciudad: c.ciudad,
         pais: c.pais,
         codigoPais: c.codigoPais,
+        bandera,
         lat: c.lat,
         lng: c.lng,
         sitioWeb: c.sitioWeb,
@@ -70,6 +73,7 @@ export async function upsertCarreraExterna(c: CarreraExterna): Promise<{ creada:
       ciudad: c.ciudad,
       pais: c.pais,
       codigoPais: c.codigoPais,
+      bandera,
       continente: c.continente,
       lat: c.lat,
       lng: c.lng,

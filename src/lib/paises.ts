@@ -62,6 +62,16 @@ const PAISES: Record<string, { nombre: string; continente: Continente }> = {
   EG: { nombre: "Egipto", continente: "AFRICA" },
 };
 
+// Convierte un código ISO 3166-1 alpha-2 (ej. "IT") en el emoji de
+// bandera correspondiente, combinando los dos "regional indicator
+// symbols" de Unicode — no hace falta una lista de emojis a mano.
+export function banderaDesdeCodigoIso(codigo: string | undefined | null): string | undefined {
+  if (!codigo || codigo.length !== 2) return undefined;
+  const puntos = [...codigo.toUpperCase()].map((c) => 0x1f1e6 + (c.charCodeAt(0) - 65));
+  if (puntos.some((p) => p < 0x1f1e6 || p > 0x1f1ff)) return undefined;
+  return String.fromCodePoint(...puntos);
+}
+
 export function paisDesdeCodigoIso(codigo: string | undefined | null): { pais: string; continente: Continente } {
   if (!codigo) return { pais: "Estados Unidos", continente: "AMERICA_DEL_NORTE" };
   const info = PAISES[codigo.toUpperCase()];
