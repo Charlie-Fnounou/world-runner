@@ -137,6 +137,7 @@ model Evento {
   completadas      CarreraCompletada[]
   resenas          Resena[]
   ejecucionesRobot EjecucionRobot[]
+  patrocinadores   Patrocinador[]
 
   @@index([pais])
   @@index([ciudad])
@@ -451,6 +452,17 @@ enum UbicacionBanner {
   FICHA_CARRERA
 }
 
+enum TamanoBanner {
+  PEQUENO
+  MEDIANO
+  GRANDE
+}
+
+enum AjusteImagenBanner {
+  CUBRIR // la imagen llena el espacio del banner, puede recortarse
+  CONTENER // se ve la imagen completa, puede dejar franjas vacías a los costados
+}
+
 // Banner propio de un patrocinador (no es Google AdSense, es un anuncio que
 // el equipo de World Runner vende y sube a mano).
 model Patrocinador {
@@ -461,9 +473,19 @@ model Patrocinador {
   ubicacion UbicacionBanner @default(HOME_MEDIO)
   activo    Boolean         @default(true)
 
+  // Si se especifica (solo tiene sentido con ubicacion=FICHA_CARRERA), el
+  // banner aparece SOLO en la ficha de esa carrera. Si queda vacío, aparece
+  // en todas las carreras (para FICHA_CARRERA) o no aplica (para HOME_*).
+  eventoId String?
+  evento   Evento? @relation(fields: [eventoId], references: [id], onDelete: Cascade)
+
+  tamano       TamanoBanner        @default(MEDIANO)
+  ajusteImagen AjusteImagenBanner  @default(CUBRIR)
+
   creadoEn DateTime @default(now())
 
   @@index([ubicacion, activo])
+  @@index([eventoId])
 }
 
 // Una fila por cada vez que alguien carga una página. Simple a propósito:

@@ -84,7 +84,7 @@ export default async function RacePage({
         completadaInicial={completadaInicial}
       />
       <div className="pb-16">
-        <BannerPublicitario ubicacion="FICHA_CARRERA" />
+        <BannerPublicitario ubicacion="FICHA_CARRERA" eventoId={r.id} />
       </div>
     </>
   );
