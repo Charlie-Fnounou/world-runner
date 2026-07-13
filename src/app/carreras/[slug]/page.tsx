@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getCarreras, getCarreraPorSlug, slugify } from "@/lib/races-data";
 import { getFavoritoIds } from "@/lib/favoritos";
 import { getAlertaIds } from "@/lib/alertas";
+import { getCompletadas } from "@/lib/completadas";
 import { RaceDetailClient } from "@/components/RaceDetailClient";
 import { BannerPublicitario } from "@/components/BannerPublicitario";
 import { fmtFecha } from "@/lib/format";
@@ -42,9 +43,14 @@ export default async function RacePage({
   const r = await getCarreraPorSlug(slug);
   if (!r) notFound();
 
-  const [favoritosIniciales, alertasIniciales] = await Promise.all([getFavoritoIds(), getAlertaIds()]);
+  const [favoritosIniciales, alertasIniciales, completadas] = await Promise.all([
+    getFavoritoIds(),
+    getAlertaIds(),
+    getCompletadas(),
+  ]);
   const favoritoInicial = favoritosIniciales.includes(r.id);
   const alertaInicial = alertasIniciales.includes(r.id);
+  const completadaInicial = completadas.some((c) => c.eventoId === r.id);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -71,7 +77,12 @@ export default async function RacePage({
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <RaceDetailClient r={r} favoritoInicial={favoritoInicial} alertaInicial={alertaInicial} />
+      <RaceDetailClient
+        r={r}
+        favoritoInicial={favoritoInicial}
+        alertaInicial={alertaInicial}
+        completadaInicial={completadaInicial}
+      />
       <div className="pb-16">
         <BannerPublicitario ubicacion="FICHA_CARRERA" />
       </div>

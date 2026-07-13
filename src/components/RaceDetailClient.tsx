@@ -1,12 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { Carrera } from "@/lib/types";
 import { Badge } from "./Badge";
 import { Countdown } from "./Countdown";
+import { ElevationChart } from "./ElevationChart";
 import { useFavoritos } from "@/hooks/useFavoritos";
 import { useAlertas } from "@/hooks/useAlertas";
+import { marcarCompletada, quitarCompletada } from "@/app/actions/completadas";
 import { fmtFecha, nf } from "@/lib/format";
 
 const CHECKLIST = [
@@ -28,15 +31,40 @@ export function RaceDetailClient({
   r,
   favoritoInicial,
   alertaInicial,
+  completadaInicial,
 }: {
   r: Carrera;
   favoritoInicial: boolean;
   alertaInicial: boolean;
+  completadaInicial: boolean;
 }) {
   const { favoritos, alternar } = useFavoritos(favoritoInicial ? [r.id] : []);
   const { activa: alertaActiva, alternar: alternarAlerta } = useAlertas(r.id, alertaInicial);
   const [checks, setChecks] = useState<Record<string, boolean>>({});
+  const [completada, setCompletada] = useState(completadaInicial);
+  const [tiempo, setTiempo] = useState("");
+  const [pendingCompletada, startTransitionCompletada] = useTransition();
+  const router = useRouter();
   const fav = favoritos.has(r.id);
+
+  function alternarCompletada() {
+    if (completada) {
+      setCompletada(false);
+      startTransitionCompletada(async () => {
+        const res = await quitarCompletada(r.id);
+        if (!res.ok) setCompletada(true);
+      });
+      return;
+    }
+    setCompletada(true);
+    startTransitionCompletada(async () => {
+      const res = await marcarCompletada(r.id, tiempo || undefined);
+      if (!res.ok) {
+        setCompletada(false);
+        if (res.error === "no-auth") router.push("/login");
+      }
+    });
+  }
 
   const cta =
     r.status === "cerrada"
@@ -192,6 +220,16 @@ export function RaceDetailClient({
             </p>
           </section>
 
+          {r.profile.length > 1 && (
+            <section className="rounded-2xl p-5 wr-panel">
+              <h3 className="font-bold mb-1">Perfil de elevación</h3>
+              <p className="text-xs mb-3" style={{ color: "var(--wr-mut)" }}>
+                Desnivel positivo acumulado: {nf(r.elev)} m
+              </p>
+              <ElevationChart profile={r.profile} color={r.g[0]} />
+            </section>
+          )}
+
           <section className="rounded-2xl p-5 wr-panel">
             <h3 className="font-bold mb-3">Récords</h3>
             <div className="grid sm:grid-cols-2 gap-3 text-sm">
@@ -212,6 +250,38 @@ export function RaceDetailClient({
         </div>
 
         <div className="flex flex-col gap-4">
+          <section className="rounded-2xl p-5 wr-panel">
+            <h3 className="font-bold mb-3">¿Ya la corriste?</h3>
+            {completada ? (
+              <button
+                onClick={alternarCompletada}
+                disabled={pendingCompletada}
+                className="rounded-full px-4 py-2.5 text-sm font-semibold w-full"
+                style={{ background: "var(--wr-acc)", color: "var(--wr-acc-ink)" }}
+              >
+                ✅ Marcada como corrida · quitar
+              </button>
+            ) : (
+              <div className="flex flex-col gap-2">
+                <input
+                  value={tiempo}
+                  onChange={(e) => setTiempo(e.target.value)}
+                  placeholder="Tu tiempo (opcional), ej. 3:45:12"
+                  className="w-full rounded-xl px-3 py-2.5 text-sm outline-none wr-chip"
+                  style={{ color: "var(--wr-ink)" }}
+                />
+                <button
+                  onClick={alternarCompletada}
+                  disabled={pendingCompletada}
+                  className="rounded-full px-4 py-2.5 text-sm font-semibold w-full wr-chip"
+                  style={{ color: "var(--wr-ink)" }}
+                >
+                  Marcar como corrida
+                </button>
+              </div>
+            )}
+          </section>
+
           <section className="rounded-2xl p-5 wr-panel">
             <h3 className="font-bold mb-3">Información práctica</h3>
             <dl className="text-sm flex flex-col gap-2.5">
