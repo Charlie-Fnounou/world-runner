@@ -1,9 +1,11 @@
-import { Continente, TipoDistancia } from "@prisma/client";
+import { TipoDistancia } from "@prisma/client";
 import { upsertCarreraExterna, registrarEjecucion } from "./upsert";
 import { prisma } from "@/lib/prisma";
+import { paisDesdeCodigoIso } from "@/lib/paises";
 import type { CarreraExterna } from "./types";
 
-// Recolector de RunSignup (EE. UU. y Canadá principalmente). Usa la API
+// Recolector de RunSignup (mayoría EE. UU., con carreras sueltas de
+// otros países también). Usa la API
 // REST pública de búsqueda de carreras (/rest/races) — no hace falta
 // autenticación para esta búsqueda; el OAuth2 (ver /admin/robots) queda
 // disponible para funciones futuras que sí lo requieran, pero si se manda
@@ -40,11 +42,6 @@ interface RaceRunSignup {
   };
 }
 
-function paisDesdeCodigo(codigo?: string): { pais: string; continente: Continente } {
-  if (codigo === "CA") return { pais: "Canadá", continente: "AMERICA_DEL_NORTE" };
-  return { pais: "Estados Unidos", continente: "AMERICA_DEL_NORTE" };
-}
-
 function fechaDesdeMMDDYYYY(texto: string): Date | null {
   const m = texto.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
   if (!m) return null;
@@ -75,7 +72,7 @@ function aCarreraExterna(r: RaceRunSignup["race"]): CarreraExterna | null {
   const fecha = fechaDesdeMMDDYYYY(r.next_date);
   if (!fecha) return null;
 
-  const { pais, continente } = paisDesdeCodigo(r.address?.country_code);
+  const { pais, continente } = paisDesdeCodigoIso(r.address?.country_code);
 
   return {
     fuenteTipo: "runsignup",
