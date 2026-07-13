@@ -1,18 +1,20 @@
 import { Continente, TipoDistancia } from "@prisma/client";
 import { upsertCarreraExterna, registrarEjecucion } from "./upsert";
-import { obtenerAccessTokenRunSignup } from "./runsignup-auth";
 import type { CarreraExterna } from "./types";
 
 // Recolector de RunSignup (EE. UU. y Canadá principalmente). Usa la API
-// REST oficial vía OAuth2 (ver /admin/robots para conectar la cuenta) —
-// nada de scraping.
+// REST pública de búsqueda de carreras (/rest/races) — no hace falta
+// autenticación para esta búsqueda; el OAuth2 (ver /admin/robots) queda
+// disponible para funciones futuras que sí lo requieran, pero si se manda
+// el token en esta búsqueda, la API la limita solo a las carreras de esa
+// cuenta en particular (por eso NO se manda Authorization acá).
 //
 // Por ahora solo trae los datos básicos del listado (nombre, fecha,
 // ciudad, link). Los detalles por carrera (distancias, precio exacto)
 // están disponibles en /rest/race/{id} y quedan para una mejora futura,
 // para no disparar cientos de llamadas extra en cada corrida semanal.
 
-const BASE_URL = "https://runsignup.com/rest/races";
+const BASE_URL = "https://api.runsignup.com/rest/races";
 
 interface RaceRunSignup {
   race: {
@@ -40,18 +42,17 @@ function fechaDesdeMMDDYYYY(texto: string): Date | null {
   return new Date(`${anio}-${mes}-${dia}T07:00:00Z`);
 }
 
-async function obtenerPaginaDeCarreras(accessToken: string, pagina: number): Promise<RaceRunSignup[]> {
+async function obtenerPaginaDeCarreras(pagina: number): Promise<RaceRunSignup[]> {
   const hoy = new Date().toISOString().slice(0, 10);
   const url = new URL(BASE_URL);
   url.searchParams.set("format", "json");
   url.searchParams.set("start_date", hoy);
   url.searchParams.set("results_per_page", "100");
   url.searchParams.set("page", String(pagina));
-  url.searchParams.set("event_type", "running");
+  url.searchParams.set("event_type", "running_race");
 
   const res = await fetch(url.toString(), {
     headers: {
-      Authorization: `Bearer ${accessToken}`,
       "User-Agent": "WorldRunnerBot/1.0 (+https://theworldrunner.com)",
     },
   });
@@ -94,14 +95,12 @@ const PAGINAS_POR_CORRIDA = 3;
 
 export async function correrCollectorRunSignup() {
   return registrarEjecucion("runsignup", async () => {
-    const accessToken = await obtenerAccessTokenRunSignup();
-
     let nuevas = 0;
     let actualizadas = 0;
     let errores = 0;
 
     for (let pagina = 1; pagina <= PAGINAS_POR_CORRIDA; pagina++) {
-      const carreras = await obtenerPaginaDeCarreras(accessToken, pagina);
+      const carreras = await obtenerPaginaDeCarreras(pagina);
       if (carreras.length === 0) break;
 
       for (const { race } of carreras) {

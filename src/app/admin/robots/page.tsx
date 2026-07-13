@@ -15,7 +15,6 @@ export default async function AdminRobotsPage({
   ]);
 
   const runsignupConectado = Boolean(integracion?.refreshToken);
-  const clientConfigurado = Boolean(process.env.RUNSIGNUP_CLIENT_ID && process.env.RUNSIGNUP_CLIENT_SECRET);
 
   const panelRunSignup = (
     <section className="rounded-2xl p-5 wr-panel max-w-lg flex flex-col gap-3">
@@ -30,34 +29,29 @@ export default async function AdminRobotsPage({
         </p>
       )}
 
-      {!clientConfigurado ? (
-        <p className="text-sm" style={{ color: "var(--wr-mut)" }}>
-          Falta configurar RUNSIGNUP_CLIENT_ID / RUNSIGNUP_CLIENT_SECRET.
-        </p>
-      ) : runsignupConectado ? (
+      <p className="text-sm" style={{ color: "var(--wr-mut)" }}>
+        La búsqueda de carreras funciona sin conexión extra. La conexión de abajo es opcional, solo
+        hace falta para funciones futuras que necesiten acceso a la cuenta.
+      </p>
+
+      {runsignupConectado ? (
         <p className="text-sm" style={{ color: "var(--wr-mut)" }}>
           ✅ Conectado. Se renueva solo cuando hace falta.
         </p>
       ) : (
-        <>
-          <p className="text-sm" style={{ color: "var(--wr-mut)" }}>
-            Todavía no está autorizado. Hace falta conectarlo una sola vez.
-          </p>
-          <Link
-            href="/api/runsignup/oauth/start"
-            className="rounded-full px-5 py-2.5 text-sm font-semibold self-start"
-            style={{ background: "var(--wr-acc)", color: "var(--wr-acc-ink)" }}
-          >
-            Conectar RunSignup
-          </Link>
-        </>
+        <Link
+          href="/api/runsignup/oauth/start"
+          className="rounded-full px-5 py-2.5 text-sm font-semibold self-start"
+          style={{ background: "var(--wr-acc)", color: "var(--wr-acc-ink)" }}
+        >
+          Conectar RunSignup
+        </Link>
       )}
 
       <form action={correrCollectoresAhora}>
         <button
           type="submit"
-          disabled={!runsignupConectado}
-          className="rounded-full px-5 py-2.5 text-sm font-semibold disabled:opacity-40 wr-chip"
+          className="rounded-full px-5 py-2.5 text-sm font-semibold wr-chip"
           style={{ color: "var(--wr-ink)" }}
         >
           Correr recolectores ahora
