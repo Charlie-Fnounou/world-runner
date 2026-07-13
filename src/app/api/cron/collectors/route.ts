@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 import { correrCollectorRunSignup } from "@/lib/collectors/runsignup";
 
 // Vercel Cron llama esta ruta una vez por semana (ver vercel.json).
@@ -11,14 +12,15 @@ export async function GET(request: Request) {
 
   const resultados: Record<string, unknown> = {};
 
-  if (process.env.RUNSIGNUP_API_KEY && process.env.RUNSIGNUP_API_SECRET) {
+  const runsignupConectado = await prisma.integracionOAuth.findUnique({ where: { proveedor: "runsignup" } });
+  if (runsignupConectado?.refreshToken) {
     try {
       resultados.runsignup = await correrCollectorRunSignup();
     } catch (e) {
       resultados.runsignup = { error: e instanceof Error ? e.message : "error desconocido" };
     }
   } else {
-    resultados.runsignup = { omitido: "faltan credenciales RUNSIGNUP_API_KEY/SECRET" };
+    resultados.runsignup = { omitido: "RunSignup no está conectado (ver /admin/robots)" };
   }
 
   return NextResponse.json(resultados);

@@ -468,3 +468,26 @@ model VisitaPagina {
   @@index([creadoEn])
   @@index([ruta])
 }
+
+// ============================================================
+// INTEGRACIONES (tokens OAuth2 de fuentes externas)
+// ============================================================
+
+// Guarda el estado de la conexión OAuth2 con una fuente externa (por
+// ahora solo RunSignup). Una fila por proveedor.
+model IntegracionOAuth {
+  id        String @id @default(cuid())
+  proveedor String @unique // "runsignup"
+
+  // Mientras se completa el handshake (entre /start y /callback).
+  codeVerifier   String?
+  pendienteDesde DateTime?
+
+  // Una vez autorizado.
+  accessToken  String?
+  refreshToken String?
+  expiraEn     DateTime?
+
+  actualizadoEn DateTime @updatedAt
+  creadoEn      DateTime @default(now())
+}
