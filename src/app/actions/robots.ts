@@ -21,6 +21,9 @@ import { correrCollectorSdcTickets } from "@/lib/collectors/sdctickets";
 import { correrCollectorMinhasInscricoes } from "@/lib/collectors/minhasinscricoes";
 import { correrCollectorLaufen } from "@/lib/collectors/laufen";
 import { correrCollectorInschrijven } from "@/lib/collectors/inschrijven";
+import { correrCollectorInschrijvenBe } from "@/lib/collectors/inschrijven-be";
+import { correrCollectorEpa } from "@/lib/collectors/epa";
+import { correrCollectorRecordePessoal } from "@/lib/collectors/recordepessoal";
 
 const COLLECTORES = [
   correrCollectorRunSignup,
@@ -42,6 +45,9 @@ const COLLECTORES = [
   correrCollectorMinhasInscricoes,
   correrCollectorLaufen,
   correrCollectorInschrijven,
+  correrCollectorInschrijvenBe,
+  correrCollectorEpa,
+  correrCollectorRecordePessoal,
 ];
 
 export async function correrCollectoresAhora() {

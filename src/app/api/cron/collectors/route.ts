@@ -18,6 +18,9 @@ import { correrCollectorSdcTickets } from "@/lib/collectors/sdctickets";
 import { correrCollectorMinhasInscricoes } from "@/lib/collectors/minhasinscricoes";
 import { correrCollectorLaufen } from "@/lib/collectors/laufen";
 import { correrCollectorInschrijven } from "@/lib/collectors/inschrijven";
+import { correrCollectorInschrijvenBe } from "@/lib/collectors/inschrijven-be";
+import { correrCollectorEpa } from "@/lib/collectors/epa";
+import { correrCollectorRecordePessoal } from "@/lib/collectors/recordepessoal";
 
 // Los collectors pueden tardar varios minutos (cientos de carreras, una
 // consulta a la base de datos por cada una). Se le da el máximo de
@@ -46,6 +49,9 @@ const COLLECTORES: { clave: string; correr: () => Promise<{ nuevas: number; actu
   { clave: "minhasinscricoes", correr: correrCollectorMinhasInscricoes }, // Brasil
   { clave: "laufen", correr: correrCollectorLaufen }, // Alemania
   { clave: "inschrijven", correr: correrCollectorInschrijven }, // Países Bajos
+  { clave: "inschrijven-be", correr: correrCollectorInschrijvenBe }, // Bélgica
+  { clave: "epa", correr: correrCollectorEpa }, // Sudáfrica (regional)
+  { clave: "recordepessoal", correr: correrCollectorRecordePessoal }, // Portugal
 ];
 
 // Vercel Cron llama esta ruta una vez por semana (ver vercel.json).
