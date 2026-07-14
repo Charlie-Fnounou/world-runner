@@ -17,6 +17,7 @@ const PAISES: Record<string, { nombre: string; continente: Continente }> = {
   NI: { nombre: "Nicaragua", continente: "AMERICA_CENTRAL" },
   SV: { nombre: "El Salvador", continente: "AMERICA_CENTRAL" },
   BZ: { nombre: "Belice", continente: "AMERICA_CENTRAL" },
+  DO: { nombre: "República Dominicana", continente: "AMERICA_CENTRAL" },
   CO: { nombre: "Colombia", continente: "AMERICA_DEL_SUR" },
   AR: { nombre: "Argentina", continente: "AMERICA_DEL_SUR" },
   CL: { nombre: "Chile", continente: "AMERICA_DEL_SUR" },

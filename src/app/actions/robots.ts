@@ -15,6 +15,10 @@ import { correrCollectorMaratonGuate } from "@/lib/collectors/maratonguate";
 import { correrCollectorProdeporte } from "@/lib/collectors/prodeporte";
 import { correrCollectorAsuncionRunners } from "@/lib/collectors/asuncionrunners";
 import { correrCollectorRunnerBo } from "@/lib/collectors/runnerbo";
+import { correrCollectorTimingEcuador } from "@/lib/collectors/timingecuador";
+import { correrCollectorHipereventos } from "@/lib/collectors/hipereventos";
+import { correrCollectorSdcTickets } from "@/lib/collectors/sdctickets";
+import { correrCollectorMinhasInscricoes } from "@/lib/collectors/minhasinscricoes";
 
 const COLLECTORES = [
   correrCollectorRunSignup,
@@ -30,6 +34,10 @@ const COLLECTORES = [
   correrCollectorProdeporte,
   correrCollectorAsuncionRunners,
   correrCollectorRunnerBo,
+  correrCollectorTimingEcuador,
+  correrCollectorHipereventos,
+  correrCollectorSdcTickets,
+  correrCollectorMinhasInscricoes,
 ];
 
 export async function correrCollectoresAhora() {
