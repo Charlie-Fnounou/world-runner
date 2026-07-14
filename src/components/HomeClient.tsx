@@ -1,12 +1,31 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { Carrera } from "@/lib/types";
+import type { Carrera, EstadoInscripcion } from "@/lib/types";
+import { DISTANCIAS, CONTINENTES, ESTADO_INFO } from "@/lib/types";
 import { SearchBar } from "./SearchBar";
 import { RaceCard } from "./RaceCard";
 import { MapaMundialLazy } from "./MapaMundialLazy";
 import { useFavoritos } from "@/hooks/useFavoritos";
 import { buscarCarreras } from "@/lib/search";
+
+const ESTADOS_FILTRO: (EstadoInscripcion | "Todos")[] = ["Todos", "abierta", "ultimos", "sorteo", "proximamente", "cerrada"];
+
+function Chip({ active, label, onClick }: { active: boolean; label: string; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="rounded-full px-3.5 py-1.5 text-[13px] font-medium whitespace-nowrap transition-colors"
+      style={{
+        background: active ? "var(--wr-acc)" : "var(--wr-chip)",
+        color: active ? "var(--wr-acc-ink)" : "var(--wr-mut)",
+        border: `1px solid ${active ? "var(--wr-acc)" : "var(--wr-line)"}`,
+      }}
+    >
+      {label}
+    </button>
+  );
+}
 
 export function HomeClient({
   carreras,
@@ -20,9 +39,31 @@ export function HomeClient({
   bannerMedio?: React.ReactNode;
 }) {
   const [query, setQuery] = useState("");
+  const [fDist, setFDist] = useState<(typeof DISTANCIAS)[number]>("Todas");
+  const [fCont, setFCont] = useState<(typeof CONTINENTES)[number]>("Todos");
+  const [fStat, setFStat] = useState<EstadoInscripcion | "Todos">("Todos");
+  const [modo, setModo] = useState<"lista" | "mapa">("lista");
   const { favoritos, alternar } = useFavoritos(favoritosIniciales);
 
-  const filtradas = useMemo(() => buscarCarreras(carreras, query), [carreras, query]);
+  const buscadas = useMemo(() => buscarCarreras(carreras, query), [carreras, query]);
+
+  const filtrosActivos = fDist !== "Todas" || fCont !== "Todos" || fStat !== "Todos";
+  const mostrarExplorador = query.trim().length > 0 || filtrosActivos;
+
+  const resultados = useMemo(() => {
+    return buscadas
+      .filter((r) => {
+        if (fDist === "Trail") {
+          if (r.type !== "Trail") return false;
+        } else if (fDist !== "Todas" && r.dist !== fDist) {
+          return false;
+        }
+        if (fCont !== "Todos" && r.continent !== fCont) return false;
+        if (fStat !== "Todos" && r.status !== fStat) return false;
+        return true;
+      })
+      .sort((a, b) => a.date.localeCompare(b.date));
+  }, [buscadas, fDist, fCont, fStat]);
 
   const destacadas = useMemo(() => carreras.filter((r) => r.major), [carreras]);
 
@@ -34,8 +75,6 @@ export function HomeClient({
         .slice(0, 8),
     [carreras],
   );
-
-  const mostrarResultadosBusqueda = query.trim().length > 0;
 
   return (
     <div className="flex flex-col gap-14 pb-20">
@@ -58,16 +97,66 @@ export function HomeClient({
         </div>
       </section>
 
-      {mostrarResultadosBusqueda ? (
+      <section className="max-w-6xl mx-auto px-4 w-full flex flex-col gap-2.5">
+        <div className="flex gap-2 overflow-x-auto pb-1">
+          {DISTANCIAS.map((d) => (
+            <Chip key={d} label={d} active={fDist === d} onClick={() => setFDist(d)} />
+          ))}
+        </div>
+        <div className="flex gap-2 overflow-x-auto pb-1">
+          {CONTINENTES.map((c) => (
+            <Chip key={c} label={c} active={fCont === c} onClick={() => setFCont(c)} />
+          ))}
+        </div>
+        <div className="flex gap-2 overflow-x-auto pb-1 items-center">
+          {ESTADOS_FILTRO.map((s) => (
+            <Chip
+              key={s}
+              label={s === "Todos" ? "Cualquier estado" : ESTADO_INFO[s].label}
+              active={fStat === s}
+              onClick={() => setFStat(s)}
+            />
+          ))}
+          <div className="ml-auto flex rounded-xl overflow-hidden shrink-0" style={{ border: "1px solid var(--wr-line)" }}>
+            {(["lista", "mapa"] as const).map((m) => (
+              <button
+                key={m}
+                onClick={() => setModo(m)}
+                className="px-4 py-1.5 text-sm font-semibold"
+                style={{ background: modo === m ? "var(--wr-acc)" : "var(--wr-panel)", color: modo === m ? "var(--wr-acc-ink)" : "var(--wr-mut)" }}
+              >
+                {m === "lista" ? "☰ Lista" : "🗺 Mapa"}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {mostrarExplorador ? (
         <section className="max-w-6xl mx-auto px-4 w-full">
-          <h2 className="font-display font-bold text-2xl mb-4">
-            Resultados para “{query}” ({filtradas.length})
-          </h2>
-          {filtradas.length === 0 ? (
-            <p style={{ color: "var(--wr-mut)" }}>No encontramos carreras que coincidan. Prueba con otro término.</p>
+          <div className="flex items-baseline justify-between mb-4">
+            <h2 className="font-display font-bold text-2xl">
+              {resultados.length} carrera{resultados.length !== 1 ? "s" : ""} encontrada{resultados.length !== 1 ? "s" : ""}
+            </h2>
+            <span className="text-xs font-mono" style={{ color: "var(--wr-mut)" }}>
+              ordenadas por fecha
+            </span>
+          </div>
+          {modo === "mapa" ? (
+            <MapaMundialLazy carreras={resultados} />
+          ) : resultados.length === 0 ? (
+            <div className="rounded-2xl p-10 text-center wr-panel" style={{ borderStyle: "dashed" }}>
+              <div className="text-3xl mb-2">🏜️</div>
+              <p className="font-semibold" style={{ color: "var(--wr-ink)" }}>
+                No hay carreras con esos filtros
+              </p>
+              <p className="text-sm mt-1" style={{ color: "var(--wr-mut)" }}>
+                Prueba con otra distancia, continente o estado, o limpia la búsqueda.
+              </p>
+            </div>
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filtradas.map((r) => (
+              {resultados.map((r) => (
                 <RaceCard key={r.id} r={r} favorito={favoritos.has(r.id)} onFavorito={alternar} />
               ))}
             </div>
