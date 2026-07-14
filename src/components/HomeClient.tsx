@@ -48,7 +48,7 @@ export function HomeClient({
   const buscadas = useMemo(() => buscarCarreras(carreras, query), [carreras, query]);
 
   const filtrosActivos = fDist !== "Todas" || fCont !== "Todos" || fStat !== "Todos";
-  const mostrarExplorador = query.trim().length > 0 || filtrosActivos;
+  const mostrarExplorador = query.trim().length > 0 || filtrosActivos || modo === "mapa";
 
   const resultados = useMemo(() => {
     return buscadas
