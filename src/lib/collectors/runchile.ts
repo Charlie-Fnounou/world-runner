@@ -96,7 +96,8 @@ function aCarreraExterna(fila: FilaRunchile): CarreraExterna | null {
   const esTrail = fila.categoria.toLowerCase().includes("trail");
   // No hay un id propio por carrera en esta tabla: se arma uno estable a
   // partir de la fecha + el nombre normalizado.
-  const externalId = `${fila.fecha}-${normalizar(fila.nombre).replace(/[^a-z0-9]+/g, "-")}`.slice(0, 150);
+  const fechaSlug = normalizar(fila.fecha).replace(/[^a-z0-9]+/g, "-");
+  const externalId = `${fechaSlug}-${normalizar(fila.nombre).replace(/[^a-z0-9]+/g, "-")}`.slice(0, 150);
 
   return {
     fuenteTipo: "runchile",

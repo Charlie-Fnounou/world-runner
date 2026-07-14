@@ -9,6 +9,7 @@ const PAISES: Record<string, { nombre: string; continente: Continente }> = {
   US: { nombre: "Estados Unidos", continente: "AMERICA_DEL_NORTE" },
   CA: { nombre: "Canadá", continente: "AMERICA_DEL_NORTE" },
   MX: { nombre: "México", continente: "AMERICA_DEL_NORTE" },
+  PR: { nombre: "Puerto Rico", continente: "AMERICA_DEL_NORTE" },
   PA: { nombre: "Panamá", continente: "AMERICA_CENTRAL" },
   CR: { nombre: "Costa Rica", continente: "AMERICA_CENTRAL" },
   GT: { nombre: "Guatemala", continente: "AMERICA_CENTRAL" },

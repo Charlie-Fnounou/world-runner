@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/races-data";
 import { banderaDesdeCodigoIso } from "@/lib/paises";
+import { normalizar } from "@/lib/text";
 import type { CarreraExterna } from "./types";
 
 // Crea o actualiza una carrera a partir de lo que trajo un recolector.
@@ -62,7 +63,14 @@ export async function upsertCarreraExterna(c: CarreraExterna): Promise<{ creada:
     return { creada: false };
   }
 
-  const id = `${c.fuenteTipo}-${c.externalId}`.slice(0, 120);
+  // externalId puede traer cualquier caracter (fechas con "/", espacios,
+  // paréntesis...) según cómo lo arme cada collector — se limpia acá,
+  // en un solo lugar, para que el id nunca rompa una URL sin importar
+  // de qué fuente venga.
+  const externalIdLimpio = normalizar(c.externalId)
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+  const id = `${c.fuenteTipo}-${externalIdLimpio}`.slice(0, 120);
   const slug = slugify(id, c.nombre);
 
   await prisma.evento.create({

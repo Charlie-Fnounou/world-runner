@@ -6,16 +6,38 @@ import { correrCollectorRunchile } from "@/lib/collectors/runchile";
 import { correrCollectorRunRunners } from "@/lib/collectors/runrunners";
 import { correrCollectorKms } from "@/lib/collectors/kms";
 import { correrCollectorTim3 } from "@/lib/collectors/tim3";
+import { correrCollectorChiptiming } from "@/lib/collectors/chiptiming";
+import { correrCollectorAbuenpaso } from "@/lib/collectors/abuenpaso";
+import { correrCollectorMaratonGuate } from "@/lib/collectors/maratonguate";
+import { correrCollectorProdeporte } from "@/lib/collectors/prodeporte";
+import { correrCollectorAsuncionRunners } from "@/lib/collectors/asuncionrunners";
+import { correrCollectorRunnerBo } from "@/lib/collectors/runnerbo";
 
 // Los collectors pueden tardar varios minutos (cientos de carreras, una
 // consulta a la base de datos por cada una). Se le da el máximo de
 // tiempo que permite Vercel para funciones de cron.
 export const maxDuration = 300;
 
+// Cada collector corre de forma independiente: si uno falla, no tumba
+// a los demás.
+const COLLECTORES: { clave: string; correr: () => Promise<{ nuevas: number; actualizadas: number; errores: number }> }[] = [
+  { clave: "runsignup", correr: correrCollectorRunSignup }, // EE. UU. / Canadá
+  { clave: "fidal", correr: correrCollectorFidal }, // Italia
+  { clave: "corro", correr: correrCollectorCorro }, // Argentina
+  { clave: "runchile", correr: correrCollectorRunchile }, // Chile
+  { clave: "runrunners", correr: correrCollectorRunRunners }, // Colombia
+  { clave: "kms", correr: correrCollectorKms }, // Francia
+  { clave: "tim3", correr: correrCollectorTim3 }, // México (regional)
+  { clave: "chiptiming", correr: correrCollectorChiptiming }, // Perú
+  { clave: "abuenpaso", correr: correrCollectorAbuenpaso }, // Costa Rica
+  { clave: "maratonguate", correr: correrCollectorMaratonGuate }, // Guatemala
+  { clave: "prodeporte", correr: correrCollectorProdeporte }, // Uruguay
+  { clave: "asuncionrunners", correr: correrCollectorAsuncionRunners }, // Paraguay
+  { clave: "runnerbo", correr: correrCollectorRunnerBo }, // Bolivia
+];
+
 // Vercel Cron llama esta ruta una vez por semana (ver vercel.json).
 // Protegida con CRON_SECRET para que nadie más la pueda disparar.
-// Cada collector va en su propio try/catch: si uno falla, no tumba a
-// los demás.
 export async function GET(request: Request) {
   const auth = request.headers.get("authorization");
   if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -24,46 +46,12 @@ export async function GET(request: Request) {
 
   const resultados: Record<string, unknown> = {};
 
-  try {
-    resultados.runsignup = await correrCollectorRunSignup();
-  } catch (e) {
-    resultados.runsignup = { error: e instanceof Error ? e.message : "error desconocido" };
-  }
-
-  try {
-    resultados.fidal = await correrCollectorFidal();
-  } catch (e) {
-    resultados.fidal = { error: e instanceof Error ? e.message : "error desconocido" };
-  }
-
-  try {
-    resultados.corro = await correrCollectorCorro();
-  } catch (e) {
-    resultados.corro = { error: e instanceof Error ? e.message : "error desconocido" };
-  }
-
-  try {
-    resultados.runchile = await correrCollectorRunchile();
-  } catch (e) {
-    resultados.runchile = { error: e instanceof Error ? e.message : "error desconocido" };
-  }
-
-  try {
-    resultados.runrunners = await correrCollectorRunRunners();
-  } catch (e) {
-    resultados.runrunners = { error: e instanceof Error ? e.message : "error desconocido" };
-  }
-
-  try {
-    resultados.kms = await correrCollectorKms();
-  } catch (e) {
-    resultados.kms = { error: e instanceof Error ? e.message : "error desconocido" };
-  }
-
-  try {
-    resultados.tim3 = await correrCollectorTim3();
-  } catch (e) {
-    resultados.tim3 = { error: e instanceof Error ? e.message : "error desconocido" };
+  for (const { clave, correr } of COLLECTORES) {
+    try {
+      resultados[clave] = await correr();
+    } catch (e) {
+      resultados[clave] = { error: e instanceof Error ? e.message : "error desconocido" };
+    }
   }
 
   return NextResponse.json(resultados);
