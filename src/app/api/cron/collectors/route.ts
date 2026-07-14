@@ -16,6 +16,8 @@ import { correrCollectorTimingEcuador } from "@/lib/collectors/timingecuador";
 import { correrCollectorHipereventos } from "@/lib/collectors/hipereventos";
 import { correrCollectorSdcTickets } from "@/lib/collectors/sdctickets";
 import { correrCollectorMinhasInscricoes } from "@/lib/collectors/minhasinscricoes";
+import { correrCollectorLaufen } from "@/lib/collectors/laufen";
+import { correrCollectorInschrijven } from "@/lib/collectors/inschrijven";
 
 // Los collectors pueden tardar varios minutos (cientos de carreras, una
 // consulta a la base de datos por cada una). Se le da el máximo de
@@ -42,6 +44,8 @@ const COLLECTORES: { clave: string; correr: () => Promise<{ nuevas: number; actu
   { clave: "hipereventos", correr: correrCollectorHipereventos }, // Venezuela (sitio sin eventos futuros por ahora)
   { clave: "sdctickets", correr: correrCollectorSdcTickets }, // República Dominicana
   { clave: "minhasinscricoes", correr: correrCollectorMinhasInscricoes }, // Brasil
+  { clave: "laufen", correr: correrCollectorLaufen }, // Alemania
+  { clave: "inschrijven", correr: correrCollectorInschrijven }, // Países Bajos
 ];
 
 // Vercel Cron llama esta ruta una vez por semana (ver vercel.json).

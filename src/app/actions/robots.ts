@@ -19,6 +19,8 @@ import { correrCollectorTimingEcuador } from "@/lib/collectors/timingecuador";
 import { correrCollectorHipereventos } from "@/lib/collectors/hipereventos";
 import { correrCollectorSdcTickets } from "@/lib/collectors/sdctickets";
 import { correrCollectorMinhasInscricoes } from "@/lib/collectors/minhasinscricoes";
+import { correrCollectorLaufen } from "@/lib/collectors/laufen";
+import { correrCollectorInschrijven } from "@/lib/collectors/inschrijven";
 
 const COLLECTORES = [
   correrCollectorRunSignup,
@@ -38,6 +40,8 @@ const COLLECTORES = [
   correrCollectorHipereventos,
   correrCollectorSdcTickets,
   correrCollectorMinhasInscricoes,
+  correrCollectorLaufen,
+  correrCollectorInschrijven,
 ];
 
 export async function correrCollectoresAhora() {
