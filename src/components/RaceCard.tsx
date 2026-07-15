@@ -21,11 +21,15 @@ export function RaceCard({
   const distanciaTexto =
     r.km > 0 && (r.dist === "Ultra maratón" || r.dist === "Trail") ? r.km + "K" : r.dist || "—";
   const precioTexto = r.price > 0 ? r.cur + r.price : "—";
+  // Casi todas las carreras nuevas todavía no tienen ninguna reseña: "★ 0
+  // (0)" en cada tarjeta parece un dato roto, no "sin calificar todavía".
+  const ratingTexto = r.rating > 0 ? "★ " + r.rating : "—";
+  const ratingLabel = r.rating > 0 ? "(" + nf(r.nrev) + ")" : "sin reseñas";
   const stats: [string, string][] = [
     [distanciaTexto, "distancia"],
     [fmtFecha(r.date).slice(0, 6), "fecha"],
     [precioTexto, "desde"],
-    ["★ " + r.rating, "(" + nf(r.nrev) + ")"],
+    [ratingTexto, ratingLabel],
   ];
 
   return (
