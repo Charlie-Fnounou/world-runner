@@ -1,12 +1,28 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { EstadoInscripcion } from "@prisma/client";
+import { EstadoInscripcion, EstadoModeracion } from "@prisma/client";
 import { requireAdmin } from "@/lib/admin";
 import { prisma } from "@/lib/prisma";
-import { notificarCambios, type TipoCambio } from "@/lib/alertas";
+import { detectarYNotificarCambios } from "@/lib/alertas";
 
 const ESTADOS_VALIDOS = Object.values(EstadoInscripcion);
+
+export async function moderarEnvio(id: string, estado: "APROBADO" | "RECHAZADO", notasAdmin?: string) {
+  const admin = await requireAdmin();
+
+  await prisma.envioComunidad.update({
+    where: { id },
+    data: {
+      estado: estado as EstadoModeracion,
+      notasAdmin: notasAdmin?.trim() || null,
+      revisadoPor: admin.email,
+      revisadoEn: new Date(),
+    },
+  });
+
+  revalidatePath("/admin/comunidad");
+}
 
 export async function actualizarEdicion(edicionId: string, formData: FormData) {
   await requireAdmin();
@@ -41,33 +57,7 @@ export async function actualizarEdicion(edicionId: string, formData: FormData) {
     },
   });
 
-  const cambios: { tipo: TipoCambio; mensaje: string }[] = [];
-
-  if (antes.estado !== edicion.estado) {
-    if (edicion.estado === "ABIERTA") {
-      cambios.push({ tipo: "apertura", mensaje: "🔔 ¡Ya abrió la inscripción!" });
-    } else if (edicion.estado === "ULTIMOS_CUPOS") {
-      cambios.push({ tipo: "pocosCupos", mensaje: "⚠️ Quedan últimos cupos." });
-    } else if (edicion.estado === "CANCELADA") {
-      cambios.push({ tipo: "cancelacion", mensaje: "❌ La carrera fue cancelada." });
-    }
-  }
-
-  if (antes.precioDesde !== edicion.precioDesde && edicion.precioDesde != null) {
-    cambios.push({
-      tipo: "precio",
-      mensaje: `💰 El precio cambió a ${edicion.moneda ?? "$"}${edicion.precioDesde}.`,
-    });
-  }
-
-  if (antes.fecha.getTime() !== edicion.fecha.getTime()) {
-    cambios.push({
-      tipo: "fecha",
-      mensaje: `📅 La fecha cambió a ${edicion.fecha.toISOString().slice(0, 10)}.`,
-    });
-  }
-
-  await notificarCambios(edicion.eventoId, cambios);
+  await detectarYNotificarCambios(edicion.eventoId, antes, edicion, "panel-admin");
 
   revalidatePath("/admin/carreras");
   revalidatePath(`/admin/carreras/${edicion.eventoId}`);

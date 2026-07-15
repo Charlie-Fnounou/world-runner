@@ -16,7 +16,7 @@ interface Logro {
   ok: boolean;
 }
 
-function calcularLogros(completas: Carrera[], paises: string[]): Logro[] {
+function calcularLogros(completas: Carrera[], paises: string[], tieneResena: boolean): Logro[] {
   const distancias = new Set(completas.map((r) => r.dist));
   return [
     { emoji: "🥉", label: "Primer 10K", ok: distancias.has("10K") },
@@ -27,6 +27,7 @@ function calcularLogros(completas: Carrera[], paises: string[]): Logro[] {
     { emoji: "⭐", label: "Una Major", ok: completas.some((r) => r.major) },
     { emoji: "👑", label: "Six Star Finisher", ok: completas.filter((r) => r.major).length >= 6 },
     { emoji: "🏔️", label: "Primer trail", ok: distancias.has("Trail") },
+    { emoji: "✍️", label: "Primera reseña", ok: tieneResena },
   ];
 }
 
@@ -38,6 +39,7 @@ export function PerfilClient({
   favoritoIds,
   alertaIds,
   completadas,
+  tieneResena,
 }: {
   nombre: string | null;
   email: string;
@@ -46,13 +48,14 @@ export function PerfilClient({
   favoritoIds: string[];
   alertaIds: string[];
   completadas: CompletadaInfo[];
+  tieneResena: boolean;
 }) {
   const [, startTransition] = useTransition();
   const completadaIds = new Set(completadas.map((c) => c.eventoId));
   const completas = carreras.filter((r) => completadaIds.has(r.id));
   const paises = [...new Set(completas.map((r) => r.country))];
   const km = completas.reduce((s, r) => s + r.km, 0);
-  const logros = calcularLogros(completas, paises);
+  const logros = calcularLogros(completas, paises, tieneResena);
 
   const favoritas = carreras.filter((r) => favoritoIds.includes(r.id));
   const proximas = favoritas.filter((r) => diasHasta(r.date) > 0).sort((a, b) => a.date.localeCompare(b.date));

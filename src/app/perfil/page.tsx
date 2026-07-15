@@ -18,12 +18,13 @@ export default async function PerfilPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/perfil");
 
-  const [usuario, carreras, favoritoIds, alertaIds, completadas] = await Promise.all([
+  const [usuario, carreras, favoritoIds, alertaIds, completadas, numResenas] = await Promise.all([
     prisma.usuario.findUnique({ where: { id: user.id } }),
     getCarreras(),
     getFavoritoIds(),
     getAlertaIds(),
     getCompletadas(),
+    prisma.resena.count({ where: { usuarioId: user.id } }),
   ]);
 
   return (
@@ -35,6 +36,7 @@ export default async function PerfilPage() {
       favoritoIds={favoritoIds}
       alertaIds={alertaIds}
       completadas={completadas}
+      tieneResena={numResenas > 0}
     />
   );
 }

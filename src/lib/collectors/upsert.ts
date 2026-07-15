@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/races-data";
 import { banderaDesdeCodigoIso } from "@/lib/paises";
 import { normalizar } from "@/lib/text";
+import { detectarYNotificarCambios } from "@/lib/alertas";
 import type { CarreraExterna } from "./types";
 
 // Crea o actualiza una carrera a partir de lo que trajo un recolector.
@@ -28,7 +29,11 @@ export async function upsertCarreraExterna(c: CarreraExterna): Promise<{ creada:
       },
     });
 
-    await prisma.edicion.upsert({
+    const edicionAntes = await prisma.edicion.findUnique({
+      where: { eventoId_anio: { eventoId: fuenteExistente.eventoId, anio: c.anio } },
+    });
+
+    const edicionDespues = await prisma.edicion.upsert({
       where: { eventoId_anio: { eventoId: fuenteExistente.eventoId, anio: c.anio } },
       update: {
         fecha: c.fecha,
@@ -54,6 +59,13 @@ export async function upsertCarreraExterna(c: CarreraExterna): Promise<{ creada:
         ultimoExitoRobot: new Date(),
       },
     });
+
+    // Solo tiene sentido comparar si ya existía antes (si "create" se
+    // acaba de disparar arriba porque era la primera vez que vemos esta
+    // edición puntual, no hay "antes" real con qué compararla).
+    if (edicionAntes) {
+      await detectarYNotificarCambios(fuenteExistente.eventoId, edicionAntes, edicionDespues, c.fuenteNombre);
+    }
 
     await prisma.fuenteDato.update({
       where: { id: fuenteExistente.id },

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { Carrera } from "@/lib/types";
 import { Badge } from "./Badge";
@@ -9,6 +10,8 @@ import { ElevationChart } from "./ElevationChart";
 import { useFavoritos } from "@/hooks/useFavoritos";
 import { useAlertas } from "@/hooks/useAlertas";
 import { marcarCompletada, quitarCompletada, obtenerCompletadaInicial } from "@/app/actions/completadas";
+import { ResenaForm } from "./ResenaForm";
+import { ResenasList } from "./ResenasList";
 import { fmtFecha, nf } from "@/lib/format";
 
 // Algunos collectors traen la URL del sitio oficial tal cual la publica la
@@ -316,6 +319,13 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
                 </dd>
               </div>
             </dl>
+            <Link
+              href={`/proponer?eventoId=${r.id}&nombre=${encodeURIComponent(r.name)}`}
+              className="inline-block mt-3 text-xs hover:underline"
+              style={{ color: "var(--wr-mut)" }}
+            >
+              ⚠️ Reportar un error en esta carrera
+            </Link>
           </section>
 
           <section className="rounded-2xl p-5 wr-panel">
@@ -342,6 +352,17 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
             </div>
           </section>
         </div>
+      </div>
+
+      <div className="grid md:grid-cols-3 gap-4 mt-4">
+        <section className="rounded-2xl p-5 wr-panel">
+          <h3 className="font-bold mb-3">Dejá tu reseña</h3>
+          <ResenaForm eventoId={r.id} />
+        </section>
+        <section className="rounded-2xl p-5 wr-panel md:col-span-2">
+          <h3 className="font-bold mb-3">Reseñas de corredores</h3>
+          <ResenasList eventoId={r.id} />
+        </section>
       </div>
     </div>
   );

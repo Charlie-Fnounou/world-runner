@@ -45,6 +45,70 @@ function quiereAviso(prefs: PreferenciasAlerta, tipo: TipoCambio): boolean {
   }
 }
 
+interface EdicionComparable {
+  id: string;
+  estado: string;
+  precioDesde: number | null;
+  moneda: string | null;
+  fecha: Date;
+  numCorredores: number | null;
+}
+
+// Compara una edición antes/después de que un robot (o el admin) la
+// actualice, guarda en HistorialCambio lo que cambió de verdad, y avisa
+// por correo a los suscriptores. Se usa tanto desde el panel de admin
+// como desde cada collector (ver upsert.ts) para que un cambio real
+// detectado automáticamente (se abrió la inscripción, cambió el precio)
+// tenga el mismo efecto que si lo hubiera cargado un admin a mano.
+export async function detectarYNotificarCambios(
+  eventoId: string,
+  antes: EdicionComparable,
+  despues: EdicionComparable,
+  fuente: string,
+) {
+  const cambios: { tipo: TipoCambio; mensaje: string }[] = [];
+  const historial: { campo: string; valorAnterior: string; valorNuevo: string; esImportante: boolean }[] = [];
+
+  if (antes.estado !== despues.estado) {
+    historial.push({ campo: "estado", valorAnterior: antes.estado, valorNuevo: despues.estado, esImportante: true });
+    if (despues.estado === "ABIERTA") {
+      cambios.push({ tipo: "apertura", mensaje: "🔔 ¡Ya abrió la inscripción!" });
+    } else if (despues.estado === "ULTIMOS_CUPOS") {
+      cambios.push({ tipo: "pocosCupos", mensaje: "⚠️ Quedan últimos cupos." });
+    } else if (despues.estado === "CANCELADA") {
+      cambios.push({ tipo: "cancelacion", mensaje: "❌ La carrera fue cancelada." });
+    }
+  }
+
+  if (despues.precioDesde != null && antes.precioDesde !== despues.precioDesde) {
+    historial.push({
+      campo: "precioDesde",
+      valorAnterior: String(antes.precioDesde ?? ""),
+      valorNuevo: String(despues.precioDesde),
+      esImportante: true,
+    });
+    cambios.push({ tipo: "precio", mensaje: `💰 El precio cambió a ${despues.moneda ?? "$"}${despues.precioDesde}.` });
+  }
+
+  if (antes.fecha.getTime() !== despues.fecha.getTime()) {
+    historial.push({
+      campo: "fecha",
+      valorAnterior: antes.fecha.toISOString().slice(0, 10),
+      valorNuevo: despues.fecha.toISOString().slice(0, 10),
+      esImportante: true,
+    });
+    cambios.push({ tipo: "fecha", mensaje: `📅 La fecha cambió a ${despues.fecha.toISOString().slice(0, 10)}.` });
+  }
+
+  if (historial.length === 0) return;
+
+  await prisma.historialCambio.createMany({
+    data: historial.map((h) => ({ eventoId, edicionId: despues.id, fuente, ...h })),
+  });
+
+  await notificarCambios(eventoId, cambios);
+}
+
 // Manda un correo a cada usuario suscrito a esta carrera, respetando qué
 // tipos de cambio quiere recibir cada quien.
 export async function notificarCambios(eventoId: string, cambios: { tipo: TipoCambio; mensaje: string }[]) {

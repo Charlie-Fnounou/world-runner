@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import type { Carrera, EstadoInscripcion } from "@/lib/types";
 import { DISTANCIAS, CONTINENTES, ESTADO_INFO } from "@/lib/types";
 import { SearchBar } from "./SearchBar";
@@ -136,6 +137,9 @@ export function HomeClient({
               <p className="text-sm mt-1" style={{ color: "var(--wr-mut)" }}>
                 Prueba con otra distancia, continente o estado, o limpia la búsqueda.
               </p>
+              <Link href="/proponer" className="inline-block mt-3 text-sm hover:underline" style={{ color: "var(--wr-acc)" }}>
+                ¿No encontraste tu carrera? Proponela acá →
+              </Link>
             </div>
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">

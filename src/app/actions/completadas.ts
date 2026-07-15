@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
+import { evaluarLogrosDeCompletadas } from "@/lib/logros";
 
 type Resultado = { ok: true } | { ok: false; error: "no-auth" };
 
@@ -56,6 +57,7 @@ export async function marcarCompletada(eventoId: string, tiempoFinal?: string): 
     });
   }
 
+  await evaluarLogrosDeCompletadas(user.id);
   revalidatePath("/perfil");
   return { ok: true };
 }
