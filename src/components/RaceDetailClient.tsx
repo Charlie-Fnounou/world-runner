@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import Link from "next/link";
+import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import type { Carrera } from "@/lib/types";
 import { Badge } from "./Badge";
@@ -9,7 +8,7 @@ import { Countdown } from "./Countdown";
 import { ElevationChart } from "./ElevationChart";
 import { useFavoritos } from "@/hooks/useFavoritos";
 import { useAlertas } from "@/hooks/useAlertas";
-import { marcarCompletada, quitarCompletada } from "@/app/actions/completadas";
+import { marcarCompletada, quitarCompletada, obtenerCompletadaInicial } from "@/app/actions/completadas";
 import { fmtFecha, nf } from "@/lib/format";
 
 const CHECKLIST = [
@@ -27,25 +26,19 @@ const CHECKLIST = [
   "Visita a la Expo",
 ];
 
-export function RaceDetailClient({
-  r,
-  favoritoInicial,
-  alertaInicial,
-  completadaInicial,
-}: {
-  r: Carrera;
-  favoritoInicial: boolean;
-  alertaInicial: boolean;
-  completadaInicial: boolean;
-}) {
-  const { favoritos, alternar } = useFavoritos(favoritoInicial ? [r.id] : []);
-  const { activa: alertaActiva, alternar: alternarAlerta } = useAlertas(r.id, alertaInicial);
+export function RaceDetailClient({ r }: { r: Carrera }) {
+  const { favoritos, alternar } = useFavoritos();
+  const { activa: alertaActiva, alternar: alternarAlerta } = useAlertas(r.id);
   const [checks, setChecks] = useState<Record<string, boolean>>({});
-  const [completada, setCompletada] = useState(completadaInicial);
+  const [completada, setCompletada] = useState(false);
   const [tiempo, setTiempo] = useState("");
   const [pendingCompletada, startTransitionCompletada] = useTransition();
   const router = useRouter();
   const fav = favoritos.has(r.id);
+
+  useEffect(() => {
+    obtenerCompletadaInicial(r.id).then(setCompletada);
+  }, [r.id]);
 
   function alternarCompletada() {
     if (completada) {
@@ -75,9 +68,14 @@ export function RaceDetailClient({
           ? "Ver convocatoria ↗"
           : "Inscribirse ahora ↗";
 
+  // Varios collectors nuevos no traen distancia o precio exactos (la
+  // fuente no los publica): "0 km" o "$0" sería engañoso, mejor un guion.
+  const distanciaTexto = r.km > 0 ? r.km + " km" : "—";
+  const precioTexto = r.price > 0 ? r.cur + nf(r.price) : "—";
+
   const datos: [string, string][] = [
-    ["Distancia", r.km + " km"],
-    ["Precio desde", r.cur + nf(r.price)],
+    ["Distancia", distanciaTexto],
+    ["Precio desde", precioTexto],
     ["Corredores", nf(r.runners)],
     ["Desnivel +", nf(r.elev) + " m"],
     ["Temp. promedio", r.temp + " °C"],
@@ -90,13 +88,13 @@ export function RaceDetailClient({
 
   return (
     <div className="max-w-5xl mx-auto px-4 pb-16 w-full">
-      <Link
-        href="/"
+      <button
+        onClick={() => router.back()}
         className="mt-4 mb-3 inline-block text-sm font-medium hover:opacity-70"
         style={{ color: "var(--wr-mut)" }}
       >
         ← Volver
-      </Link>
+      </button>
 
       <div className="rounded-3xl overflow-hidden" style={{ background: `linear-gradient(135deg,${r.g[0]},${r.g[1]})` }}>
         <div className="p-6 md:p-10 text-white">
@@ -108,7 +106,7 @@ export function RaceDetailClient({
               </span>
             )}
             <span className="text-xs bg-white/15 rounded-full px-3 py-1">{r.type}</span>
-            <span className="text-xs bg-white/15 rounded-full px-3 py-1">{r.km} km</span>
+            {r.km > 0 && <span className="text-xs bg-white/15 rounded-full px-3 py-1">{r.km} km</span>}
           </div>
           <h1
             className="font-display mt-4 font-bold leading-none"

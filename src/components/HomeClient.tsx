@@ -6,35 +6,18 @@ import { DISTANCIAS, CONTINENTES, ESTADO_INFO } from "@/lib/types";
 import { SearchBar } from "./SearchBar";
 import { RaceCard } from "./RaceCard";
 import { MapaMundialLazy } from "./MapaMundialLazy";
+import { Chip } from "./Chip";
 import { useFavoritos } from "@/hooks/useFavoritos";
 import { buscarCarreras } from "@/lib/search";
 
 const ESTADOS_FILTRO: (EstadoInscripcion | "Todos")[] = ["Todos", "abierta", "ultimos", "sorteo", "proximamente", "cerrada"];
 
-function Chip({ active, label, onClick }: { active: boolean; label: string; onClick: () => void }) {
-  return (
-    <button
-      onClick={onClick}
-      className="rounded-full px-3.5 py-1.5 text-[13px] font-medium whitespace-nowrap transition-colors"
-      style={{
-        background: active ? "var(--wr-acc)" : "var(--wr-chip)",
-        color: active ? "var(--wr-acc-ink)" : "var(--wr-mut)",
-        border: `1px solid ${active ? "var(--wr-acc)" : "var(--wr-line)"}`,
-      }}
-    >
-      {label}
-    </button>
-  );
-}
-
 export function HomeClient({
   carreras,
-  favoritosIniciales,
   bannerDestacado,
   bannerMedio,
 }: {
   carreras: Carrera[];
-  favoritosIniciales: string[];
   bannerDestacado?: React.ReactNode;
   bannerMedio?: React.ReactNode;
 }) {
@@ -43,7 +26,7 @@ export function HomeClient({
   const [fCont, setFCont] = useState<(typeof CONTINENTES)[number]>("Todos");
   const [fStat, setFStat] = useState<EstadoInscripcion | "Todos">("Todos");
   const [modo, setModo] = useState<"lista" | "mapa">("lista");
-  const { favoritos, alternar } = useFavoritos(favoritosIniciales);
+  const { favoritos, alternar } = useFavoritos();
 
   const buscadas = useMemo(() => buscarCarreras(carreras, query), [carreras, query]);
 

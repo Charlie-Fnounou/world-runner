@@ -10,14 +10,8 @@ import { MESES_FULL } from "@/lib/format";
 const HOY = new Date();
 const DIAS_SEMANA = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
 
-export function CalendarioClient({
-  carreras,
-  favoritosIniciales,
-}: {
-  carreras: Carrera[];
-  favoritosIniciales: string[];
-}) {
-  const { favoritos, alternar } = useFavoritos(favoritosIniciales);
+export function CalendarioClient({ carreras }: { carreras: Carrera[] }) {
+  const { favoritos, alternar } = useFavoritos();
   const [anio, setAnio] = useState(HOY.getFullYear());
   const [mes, setMes] = useState(HOY.getMonth());
   const [diaSeleccionado, setDiaSeleccionado] = useState<number | null>(null);

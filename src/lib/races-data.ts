@@ -35,7 +35,7 @@ const DISTANCIA_DB_A_UI: Record<string, string> = {
   KM_10: "10K",
   KM_20: "20K",
   ULTRA: "Ultra maratón",
-  OTRA: "Trail",
+  OTRA: "Distancia variable",
 };
 
 const TERRENO_DB_A_UI: Record<string, string> = {

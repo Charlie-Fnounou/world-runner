@@ -1,10 +1,15 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import type { Carrera } from "@/lib/types";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import type { Carrera, EstadoInscripcion } from "@/lib/types";
+import { DISTANCIAS, ESTADO_INFO } from "@/lib/types";
 import { RaceCard } from "./RaceCard";
+import { Chip } from "./Chip";
 import { useFavoritos } from "@/hooks/useFavoritos";
 import { normalizar } from "@/lib/text";
+
+const ESTADOS_FILTRO: (EstadoInscripcion | "Todos")[] = ["Todos", "abierta", "ultimos", "sorteo", "proximamente", "cerrada"];
 
 function coincideDestino(r: Carrera, destino: string): boolean {
   const qts = normalizar(destino).split(/\s+/).filter(Boolean);
@@ -13,11 +18,33 @@ function coincideDestino(r: Carrera, destino: string): boolean {
   return qts.every((qt) => hay.includes(qt));
 }
 
-export function TripClient({ carreras, favoritosIniciales }: { carreras: Carrera[]; favoritosIniciales: string[] }) {
-  const { favoritos, alternar } = useFavoritos(favoritosIniciales);
-  const [dest, setDest] = useState("");
-  const [d1, setD1] = useState("");
-  const [d2, setD2] = useState("");
+export function TripClient({ carreras }: { carreras: Carrera[] }) {
+  const { favoritos, alternar } = useFavoritos();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [dest, setDest] = useState(() => searchParams.get("destino") ?? "");
+  const [d1, setD1] = useState(() => searchParams.get("desde") ?? "");
+  const [d2, setD2] = useState(() => searchParams.get("hasta") ?? "");
+  const [fDist, setFDist] = useState<(typeof DISTANCIAS)[number]>(
+    () => (searchParams.get("dist") as (typeof DISTANCIAS)[number]) ?? "Todas",
+  );
+  const [fStat, setFStat] = useState<EstadoInscripcion | "Todos">(
+    () => (searchParams.get("estado") as EstadoInscripcion | "Todos") ?? "Todos",
+  );
+
+  // La búsqueda se refleja en la URL (no solo en memoria) para que "Volver"
+  // desde la ficha de una carrera restaure el mismo viaje que tenías armado.
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (dest) params.set("destino", dest);
+    if (d1) params.set("desde", d1);
+    if (d2) params.set("hasta", d2);
+    if (fDist !== "Todas") params.set("dist", fDist);
+    if (fStat !== "Todos") params.set("estado", fStat);
+    const qs = params.toString();
+    router.replace(qs ? `/viaje?${qs}` : "/viaje", { scroll: false });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dest, d1, d2, fDist, fStat]);
 
   const resultados = useMemo(() => {
     if (!dest && !d1 && !d2) return null;
@@ -26,10 +53,16 @@ export function TripClient({ carreras, favoritosIniciales }: { carreras: Carrera
         if (dest && !coincideDestino(r, dest)) return false;
         if (d1 && r.date < d1) return false;
         if (d2 && r.date > d2) return false;
+        if (fDist === "Trail") {
+          if (r.type !== "Trail") return false;
+        } else if (fDist !== "Todas" && r.dist !== fDist) {
+          return false;
+        }
+        if (fStat !== "Todos" && r.status !== fStat) return false;
         return true;
       })
       .sort((a, b) => a.date.localeCompare(b.date));
-  }, [dest, d1, d2, carreras]);
+  }, [dest, d1, d2, fDist, fStat, carreras]);
 
   return (
     <div className="max-w-5xl mx-auto px-4 pb-16 w-full">
@@ -79,6 +112,26 @@ export function TripClient({ carreras, favoritosIniciales }: { carreras: Carrera
           />
         </div>
       </div>
+
+      {resultados !== null && (
+        <div className="flex flex-col gap-2.5 mb-5">
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {DISTANCIAS.map((d) => (
+              <Chip key={d} label={d} active={fDist === d} onClick={() => setFDist(d)} />
+            ))}
+          </div>
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {ESTADOS_FILTRO.map((s) => (
+              <Chip
+                key={s}
+                label={s === "Todos" ? "Cualquier estado" : ESTADO_INFO[s].label}
+                active={fStat === s}
+                onClick={() => setFStat(s)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
 
       {resultados === null ? (
         <div className="rounded-2xl p-10 text-center wr-panel" style={{ borderStyle: "dashed" }}>

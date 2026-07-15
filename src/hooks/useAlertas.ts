@@ -1,15 +1,20 @@
 "use client";
 
-import { useCallback, useState, useTransition } from "react";
+import { useCallback, useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { alternarAlerta } from "@/app/actions/alertas";
+import { alternarAlerta, obtenerAlertaActiva } from "@/app/actions/alertas";
 
 // Suscripción a alertas real (tabla Alerta), asociada al usuario con sesión
-// iniciada. Si no hay sesión, redirige a /login.
-export function useAlertas(eventoId: string, activaInicial: boolean) {
-  const [activa, setActiva] = useState(activaInicial);
+// iniciada. Si no hay sesión, redirige a /login. El estado inicial se pide
+// del lado del cliente para que la ficha de carrera pueda quedar cacheada.
+export function useAlertas(eventoId: string) {
+  const [activa, setActiva] = useState(false);
   const [, startTransition] = useTransition();
   const router = useRouter();
+
+  useEffect(() => {
+    obtenerAlertaActiva(eventoId).then(setActiva);
+  }, [eventoId]);
 
   const alternar = useCallback(() => {
     const siguiente = !activa;

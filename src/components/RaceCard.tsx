@@ -16,10 +16,15 @@ export function RaceCard({
   onFavorito: (id: string) => void;
 }) {
   const d = diasHasta(r.date);
+  // Varios collectors nuevos no traen distancia o precio exactos (la fuente
+  // no los publica): mostrar "0K" o "$0" es engañoso, mejor un guion.
+  const distanciaTexto =
+    r.km > 0 && (r.dist === "Ultra maratón" || r.dist === "Trail") ? r.km + "K" : r.dist || "—";
+  const precioTexto = r.price > 0 ? r.cur + r.price : "—";
   const stats: [string, string][] = [
-    [r.dist === "Ultra maratón" || r.dist === "Trail" ? r.km + "K" : r.dist, "distancia"],
+    [distanciaTexto, "distancia"],
     [fmtFecha(r.date).slice(0, 6), "fecha"],
-    [r.cur + r.price, "desde"],
+    [precioTexto, "desde"],
     ["★ " + r.rating, "(" + nf(r.nrev) + ")"],
   ];
 

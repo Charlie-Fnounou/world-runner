@@ -6,6 +6,21 @@ import { prisma } from "@/lib/prisma";
 
 type Resultado = { ok: true } | { ok: false; error: "no-auth" };
 
+// Se pide desde el cliente (RaceDetailClient) para no obligar a la ficha de
+// carrera a ser dinámica solo por leer la sesión.
+export async function obtenerCompletadaInicial(eventoId: string): Promise<boolean> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return false;
+
+  const existente = await prisma.carreraCompletada.findFirst({
+    where: { usuarioId: user.id, eventoId },
+  });
+  return existente !== null;
+}
+
 // Marca una carrera como corrida por el usuario logueado. Si ya la había
 // marcado, actualiza el tiempo/ritmo en vez de duplicar.
 export async function marcarCompletada(eventoId: string, tiempoFinal?: string): Promise<Resultado> {

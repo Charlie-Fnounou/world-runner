@@ -13,8 +13,8 @@ const EJEMPLOS = [
   "Recomiéndame un trail épico para mi primera ultra",
 ];
 
-export function AsistenteClient({ carreras, favoritosIniciales }: { carreras: Carrera[]; favoritosIniciales: string[] }) {
-  const { favoritos, alternar } = useFavoritos(favoritosIniciales);
+export function AsistenteClient({ carreras }: { carreras: Carrera[] }) {
+  const { favoritos, alternar } = useFavoritos();
   const [q, setQ] = useState("");
   const [pending, startTransition] = useTransition();
   const [res, setRes] = useState<RespuestaAsistente | null>(null);
