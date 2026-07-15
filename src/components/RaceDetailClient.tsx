@@ -11,6 +11,18 @@ import { useAlertas } from "@/hooks/useAlertas";
 import { marcarCompletada, quitarCompletada, obtenerCompletadaInicial } from "@/app/actions/completadas";
 import { fmtFecha, nf } from "@/lib/format";
 
+// Algunos collectors traen la URL del sitio oficial tal cual la publica la
+// fuente, que a veces viene mal escrita (ej. "http//;sitio.com" en vez de
+// "http://sitio.com"). new URL() tira si el string no es una URL válida —
+// eso no puede tumbar el build de 2000+ páginas por un solo dato sucio.
+function hostnameDe(web: string): string {
+  try {
+    return new URL(web).hostname;
+  } catch {
+    return web.replace(/^https?:?\/*/i, "").split(/[/?#]/)[0] || web;
+  }
+}
+
 const CHECKLIST = [
   "Inscripción confirmada",
   "Pasaporte vigente",
@@ -295,7 +307,7 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
                 <dt style={{ color: "var(--wr-mut)" }}>Sitio oficial</dt>
                 <dd className="text-right truncate max-w-[55%]">
                   <a href={r.web} target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--wr-acc)" }}>
-                    {new URL(r.web).hostname}
+                    {hostnameDe(r.web)}
                   </a>
                 </dd>
               </div>

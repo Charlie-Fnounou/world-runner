@@ -2,9 +2,25 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { prisma } from "@/lib/prisma";
 import { enviarCorreo, plantillaLinkMagico } from "@/lib/resend";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
+
+// Se pide desde el cliente (UserMenu, en el header de TODAS las páginas)
+// en vez de en el render del servidor: leer la sesión ahí adentro
+// obligaría a que absolutamente ninguna página de la web se pudiera
+// cachear, sin importar el `revalidate` de cada una.
+export async function obtenerMenuUsuario(): Promise<{ email: string; esAdmin: boolean } | null> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const usuario = await prisma.usuario.findUnique({ where: { id: user.id }, select: { esAdmin: true } });
+  return { email: user.email ?? "", esAdmin: usuario?.esAdmin ?? false };
+}
 
 async function origen() {
   const h = await headers();

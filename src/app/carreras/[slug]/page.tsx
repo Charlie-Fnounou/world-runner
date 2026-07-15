@@ -7,9 +7,17 @@ import { fmtFecha } from "@/lib/format";
 
 export const revalidate = 300;
 
+// Pre-generar las ~2200+ fichas de carrera UNA POR UNA en cada build (una
+// consulta a la base por cada una) dejó de ser viable a este tamaño de
+// catálogo: el build empezó a fallar por timeouts de red intermitentes
+// simplemente por el volumen de consultas. En vez de eso, solo se
+// pre-generan de antemano los World Marathon Majors (un puñado fijo, las
+// páginas con más tráfico); el resto se genera la primera vez que alguien
+// las visita y queda cacheada igual gracias al `revalidate` de arriba
+// (dynamicParams sigue en su valor por defecto: true).
 export async function generateStaticParams() {
   const carreras = await getCarreras();
-  return carreras.map((r) => ({ slug: slugify(r.id, r.name) }));
+  return carreras.filter((r) => r.major).map((r) => ({ slug: slugify(r.id, r.name) }));
 }
 
 export async function generateMetadata({
