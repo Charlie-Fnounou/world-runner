@@ -9,13 +9,31 @@ import { slugify } from "@/lib/races-data";
 
 type TabId = "rapidas" | "populares" | "economicas" | "dificiles" | "valoradas" | "frescas";
 
+// Varios collectors nuevos no traen desnivel, precio o clima exactos, y
+// esos campos quedan en 0 quiere decir "sin dato" (no un valor real).
+// Los rankings que ordenan de MENOR a MAYOR (más rápidas = menos desnivel,
+// más económicas = menos precio, mejor clima frío = menos temperatura)
+// tienen que excluir esos ceros o el top-10 termina lleno de carreras sin
+// datos en vez de las que de verdad tienen el mejor valor.
 const TABS: { id: TabId; label: string; ordenar: (rs: Carrera[]) => Carrera[] }[] = [
-  { id: "rapidas", label: "⚡ Más rápidas", ordenar: (rs) => [...rs].filter((r) => r.dist === "Maratón").sort((a, b) => a.elev - b.elev) },
+  {
+    id: "rapidas",
+    label: "⚡ Más rápidas",
+    ordenar: (rs) => [...rs].filter((r) => r.dist === "Maratón" && r.elev > 0).sort((a, b) => a.elev - b.elev),
+  },
   { id: "populares", label: "👥 Más populares", ordenar: (rs) => [...rs].sort((a, b) => b.runners - a.runners) },
-  { id: "economicas", label: "💰 Más económicas", ordenar: (rs) => [...rs].sort((a, b) => a.price - b.price) },
+  {
+    id: "economicas",
+    label: "💰 Más económicas",
+    ordenar: (rs) => [...rs].filter((r) => r.price > 0).sort((a, b) => a.price - b.price),
+  },
   { id: "dificiles", label: "🔥 Más difíciles", ordenar: (rs) => [...rs].sort((a, b) => b.diff * 1000 + b.elev - (a.diff * 1000 + a.elev)) },
-  { id: "valoradas", label: "⭐ Mejor valoradas", ordenar: (rs) => [...rs].sort((a, b) => b.rating - a.rating) },
-  { id: "frescas", label: "❄️ Mejor clima frío", ordenar: (rs) => [...rs].sort((a, b) => a.temp - b.temp) },
+  { id: "valoradas", label: "⭐ Mejor valoradas", ordenar: (rs) => [...rs].filter((r) => r.rating > 0).sort((a, b) => b.rating - a.rating) },
+  {
+    id: "frescas",
+    label: "❄️ Mejor clima frío",
+    ordenar: (rs) => [...rs].filter((r) => r.temp !== 0).sort((a, b) => a.temp - b.temp),
+  },
 ];
 
 function medalla(i: number): string {

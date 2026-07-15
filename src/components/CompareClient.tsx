@@ -13,12 +13,26 @@ type Fila = {
   mejor?: (x: Carrera, y: Carrera) => boolean;
 };
 
+// Varios collectors nuevos no traen distancia, precio o desnivel exactos,
+// y esos campos quedan en 0 (que quiere decir "sin dato", no un valor
+// real). Mostrarlo como "0 km"/"$0" es engañoso, y peor todavía es
+// marcarlo como "el mejor" (menor precio/desnivel) frente a una carrera
+// que sí tiene el dato cargado — por eso esos comparadores exigen que
+// ambos valores sean mayores a 0 antes de declarar un ganador.
 const FILAS: Fila[] = [
   { label: "Fecha", valor: (r) => fmtFecha(r.date) },
-  { label: "Distancia", valor: (r) => r.km + " km" },
-  { label: "Precio", valor: (r) => r.cur + nf(r.price), mejor: (x, y) => x.price < y.price },
+  { label: "Distancia", valor: (r) => (r.km > 0 ? r.km + " km" : "—") },
+  {
+    label: "Precio",
+    valor: (r) => (r.price > 0 ? r.cur + nf(r.price) : "—"),
+    mejor: (x, y) => x.price > 0 && y.price > 0 && x.price < y.price,
+  },
   { label: "Corredores", valor: (r) => nf(r.runners), mejor: (x, y) => x.runners > y.runners },
-  { label: "Desnivel +", valor: (r) => nf(r.elev) + " m", mejor: (x, y) => x.elev < y.elev },
+  {
+    label: "Desnivel +",
+    valor: (r) => (r.elev > 0 ? nf(r.elev) + " m" : "—"),
+    mejor: (x, y) => x.elev > 0 && y.elev > 0 && x.elev < y.elev,
+  },
   { label: "Temp. promedio", valor: (r) => r.temp + " °C" },
   { label: "Tiempo límite", valor: (r) => r.limit },
   { label: "Dificultad", valor: (r) => "●".repeat(r.diff) + "○".repeat(5 - r.diff), mejor: (x, y) => x.diff < y.diff },

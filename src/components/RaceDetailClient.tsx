@@ -80,20 +80,24 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
           ? "Ver convocatoria ↗"
           : "Inscribirse ahora ↗";
 
-  // Varios collectors nuevos no traen distancia o precio exactos (la
-  // fuente no los publica): "0 km" o "$0" sería engañoso, mejor un guion.
+  // Varios collectors nuevos no traen distancia, precio, desnivel,
+  // corredores o clima exactos (la fuente no los publica): "0 km", "$0" o
+  // "0 m" sería engañoso, mejor un guion.
   const distanciaTexto = r.km > 0 ? r.km + " km" : "—";
   const precioTexto = r.price > 0 ? r.cur + nf(r.price) : "—";
+  const corredoresTexto = r.runners > 0 ? nf(r.runners) : "—";
+  const desnivelTexto = r.elev > 0 ? nf(r.elev) + " m" : "—";
+  const tempTexto = r.temp !== 0 ? r.temp + " °C" : "—";
 
   const datos: [string, string][] = [
     ["Distancia", distanciaTexto],
     ["Precio desde", precioTexto],
-    ["Corredores", nf(r.runners)],
-    ["Desnivel +", nf(r.elev) + " m"],
-    ["Temp. promedio", r.temp + " °C"],
-    ["Tiempo límite", r.limit],
+    ["Corredores", corredoresTexto],
+    ["Desnivel +", desnivelTexto],
+    ["Temp. promedio", tempTexto],
+    ["Tiempo límite", r.limit || "—"],
     ["Dificultad", "●".repeat(r.diff) + "○".repeat(5 - r.diff)],
-    ["Valoración", "★ " + r.rating + " (" + nf(r.nrev) + ")"],
+    ["Valoración", r.rating > 0 ? "★ " + r.rating + " (" + nf(r.nrev) + ")" : "Sin valoraciones"],
   ];
 
   const done = Object.values(checks).filter(Boolean).length;
