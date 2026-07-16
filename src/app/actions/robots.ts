@@ -47,6 +47,22 @@ import { correrCollectorAimsSa } from "@/lib/collectors/aims-sa";
 import { correrCollectorHasHr } from "@/lib/collectors/has-hr";
 import { correrCollectorAthleticsLv } from "@/lib/collectors/athletics-lv";
 import { correrCollectorEkjlEe } from "@/lib/collectors/ekjl-ee";
+import { correrCollectorAtletikaCz } from "@/lib/collectors/atletikacz";
+import { correrCollectorConnectAtletik } from "@/lib/collectors/connect-atletik";
+import { correrCollectorAimsCa } from "@/lib/collectors/aims-ca";
+import { correrCollectorAimsJm } from "@/lib/collectors/aims-jm";
+import { correrCollectorAimsTt } from "@/lib/collectors/aims-tt";
+import { correrCollectorAimsBs } from "@/lib/collectors/aims-bs";
+import { correrCollectorAimsPa } from "@/lib/collectors/aims-pa";
+import { correrCollectorAimsMy } from "@/lib/collectors/aims-my";
+import { correrCollectorAimsLk } from "@/lib/collectors/aims-lk";
+import { correrCollectorAimsBd } from "@/lib/collectors/aims-bd";
+import { correrCollectorAimsNp } from "@/lib/collectors/aims-np";
+import { correrCollectorAimGhana } from "@/lib/collectors/aimghana";
+import { correrCollectorAimsTz } from "@/lib/collectors/aims-tz";
+import { correrCollectorUgandaAthletics } from "@/lib/collectors/ugandaathletics";
+import { correrCollectorAimsTn } from "@/lib/collectors/aims-tn";
+import { correrCollectorAimsDz } from "@/lib/collectors/aims-dz";
 
 const COLLECTORES = [
   correrCollectorRunSignup,
@@ -94,13 +110,38 @@ const COLLECTORES = [
   correrCollectorHasHr,
   correrCollectorAthleticsLv,
   correrCollectorEkjlEe,
+  correrCollectorAtletikaCz,
+  correrCollectorConnectAtletik,
+  correrCollectorAimsCa,
+  correrCollectorAimsJm,
+  correrCollectorAimsTt,
+  correrCollectorAimsBs,
+  correrCollectorAimsPa,
+  correrCollectorAimsMy,
+  correrCollectorAimsLk,
+  correrCollectorAimsBd,
+  correrCollectorAimsNp,
+  correrCollectorAimGhana,
+  correrCollectorAimsTz,
+  correrCollectorUgandaAthletics,
+  correrCollectorAimsTn,
+  correrCollectorAimsDz,
 ];
+
+// Si un fetch de algún collector nunca responde, sin este límite se
+// queda esperando para siempre y bloquea a todos los que le siguen.
+function conLimiteDeTiempo<T>(promesa: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    promesa,
+    new Promise<T>((_, reject) => setTimeout(() => reject(new Error(`tardó más de ${ms / 1000}s`)), ms)),
+  ]);
+}
 
 export async function correrCollectoresAhora() {
   await requireAdmin();
 
   for (const correr of COLLECTORES) {
-    await correr().catch(() => {});
+    await conLimiteDeTiempo(correr(), 60_000).catch(() => {});
   }
 
   revalidatePath("/admin/robots");

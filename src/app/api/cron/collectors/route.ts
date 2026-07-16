@@ -44,6 +44,22 @@ import { correrCollectorAimsSa } from "@/lib/collectors/aims-sa";
 import { correrCollectorHasHr } from "@/lib/collectors/has-hr";
 import { correrCollectorAthleticsLv } from "@/lib/collectors/athletics-lv";
 import { correrCollectorEkjlEe } from "@/lib/collectors/ekjl-ee";
+import { correrCollectorAtletikaCz } from "@/lib/collectors/atletikacz";
+import { correrCollectorConnectAtletik } from "@/lib/collectors/connect-atletik";
+import { correrCollectorAimsCa } from "@/lib/collectors/aims-ca";
+import { correrCollectorAimsJm } from "@/lib/collectors/aims-jm";
+import { correrCollectorAimsTt } from "@/lib/collectors/aims-tt";
+import { correrCollectorAimsBs } from "@/lib/collectors/aims-bs";
+import { correrCollectorAimsPa } from "@/lib/collectors/aims-pa";
+import { correrCollectorAimsMy } from "@/lib/collectors/aims-my";
+import { correrCollectorAimsLk } from "@/lib/collectors/aims-lk";
+import { correrCollectorAimsBd } from "@/lib/collectors/aims-bd";
+import { correrCollectorAimsNp } from "@/lib/collectors/aims-np";
+import { correrCollectorAimGhana } from "@/lib/collectors/aimghana";
+import { correrCollectorAimsTz } from "@/lib/collectors/aims-tz";
+import { correrCollectorUgandaAthletics } from "@/lib/collectors/ugandaathletics";
+import { correrCollectorAimsTn } from "@/lib/collectors/aims-tn";
+import { correrCollectorAimsDz } from "@/lib/collectors/aims-dz";
 
 // Los collectors pueden tardar varios minutos (cientos de carreras, una
 // consulta a la base de datos por cada una). Se le da el máximo de
@@ -108,6 +124,22 @@ const COLLECTORES: {
   { clave: "has-hr", correr: correrCollectorHasHr, frecuencia: "semanal" }, // Croacia
   { clave: "athletics-lv", correr: correrCollectorAthleticsLv, frecuencia: "semanal" }, // Letonia
   { clave: "ekjl-ee", correr: correrCollectorEkjlEe, frecuencia: "semanal" }, // Estonia
+  { clave: "atletikacz", correr: correrCollectorAtletikaCz, frecuencia: "semanal" }, // República Checa
+  { clave: "connect-atletik", correr: correrCollectorConnectAtletik, frecuencia: "semanal" }, // Dinamarca
+  { clave: "aims-ca", correr: correrCollectorAimsCa, frecuencia: "semanal" }, // Canadá
+  { clave: "aims-jm", correr: correrCollectorAimsJm, frecuencia: "semanal" }, // Jamaica
+  { clave: "aims-tt", correr: correrCollectorAimsTt, frecuencia: "semanal" }, // Trinidad y Tobago
+  { clave: "aims-bs", correr: correrCollectorAimsBs, frecuencia: "semanal" }, // Bahamas
+  { clave: "aims-pa", correr: correrCollectorAimsPa, frecuencia: "semanal" }, // Panamá
+  { clave: "aims-my", correr: correrCollectorAimsMy, frecuencia: "semanal" }, // Malasia
+  { clave: "aims-lk", correr: correrCollectorAimsLk, frecuencia: "semanal" }, // Sri Lanka
+  { clave: "aims-bd", correr: correrCollectorAimsBd, frecuencia: "semanal" }, // Bangladesh
+  { clave: "aims-np", correr: correrCollectorAimsNp, frecuencia: "semanal" }, // Nepal
+  { clave: "aimghana", correr: correrCollectorAimGhana, frecuencia: "semanal" }, // Ghana
+  { clave: "aims-tz", correr: correrCollectorAimsTz, frecuencia: "semanal" }, // Tanzania
+  { clave: "ugandaathletics", correr: correrCollectorUgandaAthletics, frecuencia: "semanal" }, // Uganda
+  { clave: "aims-tn", correr: correrCollectorAimsTn, frecuencia: "semanal" }, // Túnez
+  { clave: "aims-dz", correr: correrCollectorAimsDz, frecuencia: "semanal" }, // Argelia
 ];
 
 // Reparte los collectors "semanal" entre los 7 días de la semana según su
@@ -115,6 +147,18 @@ const COLLECTORES: {
 function leTocaHoy(indiceEnSemanales: number): boolean {
   const diaSemana = new Date().getDay(); // 0=domingo .. 6=sábado
   return indiceEnSemanales % 7 === diaSemana;
+}
+
+// Si un fetch de algún collector nunca responde (el sitio se cuelga sin
+// cerrar la conexión), sin este límite el collector se queda esperando
+// para siempre y, como corren uno detrás del otro, bloquea a todos los
+// que le siguen ese día. 60s alcanza de sobra para cualquier fuente que
+// esté respondiendo normal.
+function conLimiteDeTiempo<T>(promesa: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    promesa,
+    new Promise<T>((_, reject) => setTimeout(() => reject(new Error(`tardó más de ${ms / 1000}s`)), ms)),
+  ]);
 }
 
 // Vercel Cron llama esta ruta una vez por día (ver vercel.json).
@@ -138,7 +182,7 @@ export async function GET(request: Request) {
     if (!corresponde) continue;
 
     try {
-      resultados[clave] = await correr();
+      resultados[clave] = await conLimiteDeTiempo(correr(), 60_000);
     } catch (e) {
       resultados[clave] = { error: e instanceof Error ? e.message : "error desconocido" };
     }

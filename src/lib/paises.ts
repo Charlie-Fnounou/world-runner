@@ -18,6 +18,9 @@ const PAISES: Record<string, { nombre: string; continente: Continente }> = {
   SV: { nombre: "El Salvador", continente: "AMERICA_CENTRAL" },
   BZ: { nombre: "Belice", continente: "AMERICA_CENTRAL" },
   DO: { nombre: "República Dominicana", continente: "AMERICA_CENTRAL" },
+  JM: { nombre: "Jamaica", continente: "AMERICA_CENTRAL" },
+  TT: { nombre: "Trinidad y Tobago", continente: "AMERICA_CENTRAL" },
+  BS: { nombre: "Bahamas", continente: "AMERICA_CENTRAL" },
   CO: { nombre: "Colombia", continente: "AMERICA_DEL_SUR" },
   AR: { nombre: "Argentina", continente: "AMERICA_DEL_SUR" },
   CL: { nombre: "Chile", continente: "AMERICA_DEL_SUR" },
@@ -73,6 +76,10 @@ const PAISES: Record<string, { nombre: string; continente: Continente }> = {
   EG: { nombre: "Egipto", continente: "AFRICA" },
   NG: { nombre: "Nigeria", continente: "AFRICA" },
   ET: { nombre: "Etiopía", continente: "AFRICA" },
+  GH: { nombre: "Ghana", continente: "AFRICA" },
+  UG: { nombre: "Uganda", continente: "AFRICA" },
+  TN: { nombre: "Túnez", continente: "AFRICA" },
+  DZ: { nombre: "Argelia", continente: "AFRICA" },
 };
 
 // Convierte un código ISO 3166-1 alpha-2 (ej. "IT") en el emoji de
