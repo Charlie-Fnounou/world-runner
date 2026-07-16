@@ -1,9 +1,26 @@
+import { EstadoInscripcion } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/races-data";
 import { banderaDesdeCodigoIso } from "@/lib/paises";
 import { normalizar } from "@/lib/text";
 import { detectarYNotificarCambios } from "@/lib/alertas";
 import type { CarreraExterna } from "./types";
+
+// La mayoría de los collectors no traen un estado de inscripción real
+// (la fuente no lo publica de forma parseable) — antes esos casos
+// quedaban fijos en PROXIMAMENTE ("abre pronto") para siempre, sin
+// importar qué tan cerca estuviera la fecha, lo cual es engañoso: una
+// carrera dentro de pocas semanas casi seguro ya tiene inscripción
+// abierta, no "todavía sin abrir". Cuando el collector no da un estado
+// explícito, se infiere uno razonable a partir de la fecha en vez de
+// asumir siempre "todavía no abrió".
+function estadoPorDefecto(fecha: Date, explicito?: EstadoInscripcion): EstadoInscripcion {
+  if (explicito) return explicito;
+  const diasHasta = (fecha.getTime() - Date.now()) / 86_400_000;
+  if (diasHasta < 0) return "CERRADA";
+  if (diasHasta <= 90) return "ABIERTA";
+  return "PROXIMAMENTE";
+}
 
 // Crea o actualiza una carrera a partir de lo que trajo un recolector.
 // Usa FuenteDato (tipo + externalId) para saber si ya la habíamos
@@ -37,7 +54,7 @@ export async function upsertCarreraExterna(c: CarreraExterna): Promise<{ creada:
       where: { eventoId_anio: { eventoId: fuenteExistente.eventoId, anio: c.anio } },
       update: {
         fecha: c.fecha,
-        estado: c.estado,
+        estado: estadoPorDefecto(c.fecha, c.estado),
         precioDesde: c.precioDesde,
         moneda: c.moneda,
         numCorredores: c.numCorredores,
@@ -50,7 +67,7 @@ export async function upsertCarreraExterna(c: CarreraExterna): Promise<{ creada:
         eventoId: fuenteExistente.eventoId,
         anio: c.anio,
         fecha: c.fecha,
-        estado: c.estado ?? "PROXIMAMENTE",
+        estado: estadoPorDefecto(c.fecha, c.estado),
         precioDesde: c.precioDesde,
         moneda: c.moneda,
         numCorredores: c.numCorredores,
@@ -102,7 +119,7 @@ export async function upsertCarreraExterna(c: CarreraExterna): Promise<{ creada:
         create: {
           anio: c.anio,
           fecha: c.fecha,
-          estado: c.estado ?? "PROXIMAMENTE",
+          estado: estadoPorDefecto(c.fecha, c.estado),
           precioDesde: c.precioDesde,
           moneda: c.moneda,
           numCorredores: c.numCorredores,
