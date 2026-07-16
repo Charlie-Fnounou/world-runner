@@ -23,11 +23,11 @@ export const metadata: Metadata = {
     template: "%s · The World Runner",
   },
   description:
-    "Descubre, compara y planifica maratones, medias maratones, 10K, trails y ultras en cualquier país, con links de inscripción oficiales.",
+    "Miles de maratones, medias maratones, 10K, trails y ultras verificadas en más de 70 países. Descubre, compara y planifica tu próxima carrera con links de inscripción oficiales.",
   metadataBase: new URL("https://theworldrunner.com"),
   openGraph: {
     title: "The World Runner",
-    description: "Descubre, compara y planifica carreras de running en todo el mundo.",
+    description: "Miles de carreras de running verificadas en más de 70 países. Descubre, compara y planifica tu próxima carrera.",
     type: "website",
     images: ["/brand/og-image.png"],
   },
