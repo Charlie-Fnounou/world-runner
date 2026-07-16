@@ -21,6 +21,23 @@ import { correrCollectorInschrijven } from "@/lib/collectors/inschrijven";
 import { correrCollectorInschrijvenBe } from "@/lib/collectors/inschrijven-be";
 import { correrCollectorEpa } from "@/lib/collectors/epa";
 import { correrCollectorRecordePessoal } from "@/lib/collectors/recordepessoal";
+import { correrCollectorRunnetJp } from "@/lib/collectors/runnet-jp";
+import { correrCollectorEthiopianRun } from "@/lib/collectors/ethiopianrun";
+import { correrCollectorTheTriFactory } from "@/lib/collectors/thetrifactory";
+import { correrCollectorMarrakechMarathon } from "@/lib/collectors/marrakechmarathon";
+import { correrCollectorLagosCityMarathon } from "@/lib/collectors/lagoscitymarathon";
+import { correrCollectorRunRio } from "@/lib/collectors/runrio";
+import { correrCollectorAimsId } from "@/lib/collectors/aims-id";
+import { correrCollectorAimsTh } from "@/lib/collectors/aims-th";
+import { correrCollectorAimsVn } from "@/lib/collectors/aims-vn";
+import { correrCollectorAimsSg } from "@/lib/collectors/aims-sg";
+import { correrCollectorKosuTaf } from "@/lib/collectors/kosutaf";
+import { correrCollectorIaaIsrael } from "@/lib/collectors/iaaisrael";
+import { correrCollectorPremierOnlineAe } from "@/lib/collectors/premieronlineae";
+import { correrCollectorProbeg } from "@/lib/collectors/probeg";
+import { correrCollectorVsiprobihy } from "@/lib/collectors/vsiprobihy";
+import { correrCollectorRunIndia } from "@/lib/collectors/runindia";
+import { correrCollectorRunnet } from "@/lib/collectors/runnet";
 
 // Los collectors pueden tardar varios minutos (cientos de carreras, una
 // consulta a la base de datos por cada una). Se le da el máximo de
@@ -62,6 +79,23 @@ const COLLECTORES: {
   { clave: "inschrijven-be", correr: correrCollectorInschrijvenBe, frecuencia: "semanal" }, // Bélgica
   { clave: "epa", correr: correrCollectorEpa, frecuencia: "semanal" }, // Sudáfrica (regional)
   { clave: "recordepessoal", correr: correrCollectorRecordePessoal, frecuencia: "semanal" }, // Portugal
+  { clave: "runnet-jp", correr: correrCollectorRunnetJp, frecuencia: "semanal" }, // Japón
+  { clave: "ethiopianrun", correr: correrCollectorEthiopianRun, frecuencia: "semanal" }, // Etiopía
+  { clave: "thetrifactory", correr: correrCollectorTheTriFactory, frecuencia: "semanal" }, // Egipto
+  { clave: "marrakechmarathon", correr: correrCollectorMarrakechMarathon, frecuencia: "semanal" }, // Marruecos
+  { clave: "lagoscitymarathon", correr: correrCollectorLagosCityMarathon, frecuencia: "semanal" }, // Nigeria
+  { clave: "runrio", correr: correrCollectorRunRio, frecuencia: "semanal" }, // Filipinas
+  { clave: "aims-id", correr: correrCollectorAimsId, frecuencia: "semanal" }, // Indonesia
+  { clave: "aims-th", correr: correrCollectorAimsTh, frecuencia: "semanal" }, // Tailandia
+  { clave: "aims-vn", correr: correrCollectorAimsVn, frecuencia: "semanal" }, // Vietnam
+  { clave: "aims-sg", correr: correrCollectorAimsSg, frecuencia: "semanal" }, // Singapur
+  { clave: "kosutaf", correr: correrCollectorKosuTaf, frecuencia: "semanal" }, // Turquía
+  { clave: "iaaisrael", correr: correrCollectorIaaIsrael, frecuencia: "semanal" }, // Israel
+  { clave: "premieronlineae", correr: correrCollectorPremierOnlineAe, frecuencia: "semanal" }, // Emiratos Árabes Unidos
+  { clave: "probeg", correr: correrCollectorProbeg, frecuencia: "semanal" }, // Rusia
+  { clave: "vsiprobihy", correr: correrCollectorVsiprobihy, frecuencia: "semanal" }, // Ucrania
+  { clave: "runindia", correr: correrCollectorRunIndia, frecuencia: "semanal" }, // India
+  { clave: "runnet", correr: correrCollectorRunnet, frecuencia: "semanal" }, // Japón (fuente 2, RUNNET/RECRUIT)
 ];
 
 // Reparte los collectors "semanal" entre los 7 días de la semana según su

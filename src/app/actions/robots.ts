@@ -24,6 +24,23 @@ import { correrCollectorInschrijven } from "@/lib/collectors/inschrijven";
 import { correrCollectorInschrijvenBe } from "@/lib/collectors/inschrijven-be";
 import { correrCollectorEpa } from "@/lib/collectors/epa";
 import { correrCollectorRecordePessoal } from "@/lib/collectors/recordepessoal";
+import { correrCollectorRunnetJp } from "@/lib/collectors/runnet-jp";
+import { correrCollectorEthiopianRun } from "@/lib/collectors/ethiopianrun";
+import { correrCollectorTheTriFactory } from "@/lib/collectors/thetrifactory";
+import { correrCollectorMarrakechMarathon } from "@/lib/collectors/marrakechmarathon";
+import { correrCollectorLagosCityMarathon } from "@/lib/collectors/lagoscitymarathon";
+import { correrCollectorRunRio } from "@/lib/collectors/runrio";
+import { correrCollectorAimsId } from "@/lib/collectors/aims-id";
+import { correrCollectorAimsTh } from "@/lib/collectors/aims-th";
+import { correrCollectorAimsVn } from "@/lib/collectors/aims-vn";
+import { correrCollectorAimsSg } from "@/lib/collectors/aims-sg";
+import { correrCollectorKosuTaf } from "@/lib/collectors/kosutaf";
+import { correrCollectorIaaIsrael } from "@/lib/collectors/iaaisrael";
+import { correrCollectorPremierOnlineAe } from "@/lib/collectors/premieronlineae";
+import { correrCollectorProbeg } from "@/lib/collectors/probeg";
+import { correrCollectorVsiprobihy } from "@/lib/collectors/vsiprobihy";
+import { correrCollectorRunIndia } from "@/lib/collectors/runindia";
+import { correrCollectorRunnet } from "@/lib/collectors/runnet";
 
 const COLLECTORES = [
   correrCollectorRunSignup,
@@ -48,6 +65,23 @@ const COLLECTORES = [
   correrCollectorInschrijvenBe,
   correrCollectorEpa,
   correrCollectorRecordePessoal,
+  correrCollectorRunnetJp,
+  correrCollectorEthiopianRun,
+  correrCollectorTheTriFactory,
+  correrCollectorMarrakechMarathon,
+  correrCollectorLagosCityMarathon,
+  correrCollectorRunRio,
+  correrCollectorAimsId,
+  correrCollectorAimsTh,
+  correrCollectorAimsVn,
+  correrCollectorAimsSg,
+  correrCollectorKosuTaf,
+  correrCollectorIaaIsrael,
+  correrCollectorPremierOnlineAe,
+  correrCollectorProbeg,
+  correrCollectorVsiprobihy,
+  correrCollectorRunIndia,
+  correrCollectorRunnet,
 ];
 
 export async function correrCollectoresAhora() {
