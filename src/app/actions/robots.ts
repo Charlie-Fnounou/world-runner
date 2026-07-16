@@ -44,6 +44,9 @@ import { correrCollectorRunnet } from "@/lib/collectors/runnet";
 import { correrCollectorAimsCn } from "@/lib/collectors/aims-cn";
 import { correrCollectorAimsKr } from "@/lib/collectors/aims-kr";
 import { correrCollectorAimsSa } from "@/lib/collectors/aims-sa";
+import { correrCollectorHasHr } from "@/lib/collectors/has-hr";
+import { correrCollectorAthleticsLv } from "@/lib/collectors/athletics-lv";
+import { correrCollectorEkjlEe } from "@/lib/collectors/ekjl-ee";
 
 const COLLECTORES = [
   correrCollectorRunSignup,
@@ -88,6 +91,9 @@ const COLLECTORES = [
   correrCollectorAimsCn,
   correrCollectorAimsKr,
   correrCollectorAimsSa,
+  correrCollectorHasHr,
+  correrCollectorAthleticsLv,
+  correrCollectorEkjlEe,
 ];
 
 export async function correrCollectoresAhora() {

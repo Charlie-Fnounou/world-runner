@@ -41,6 +41,9 @@ import { correrCollectorRunnet } from "@/lib/collectors/runnet";
 import { correrCollectorAimsCn } from "@/lib/collectors/aims-cn";
 import { correrCollectorAimsKr } from "@/lib/collectors/aims-kr";
 import { correrCollectorAimsSa } from "@/lib/collectors/aims-sa";
+import { correrCollectorHasHr } from "@/lib/collectors/has-hr";
+import { correrCollectorAthleticsLv } from "@/lib/collectors/athletics-lv";
+import { correrCollectorEkjlEe } from "@/lib/collectors/ekjl-ee";
 
 // Los collectors pueden tardar varios minutos (cientos de carreras, una
 // consulta a la base de datos por cada una). Se le da el máximo de
@@ -102,6 +105,9 @@ const COLLECTORES: {
   { clave: "aims-cn", correr: correrCollectorAimsCn, frecuencia: "semanal" }, // China
   { clave: "aims-kr", correr: correrCollectorAimsKr, frecuencia: "semanal" }, // Corea del Sur
   { clave: "aims-sa", correr: correrCollectorAimsSa, frecuencia: "semanal" }, // Arabia Saudita
+  { clave: "has-hr", correr: correrCollectorHasHr, frecuencia: "semanal" }, // Croacia
+  { clave: "athletics-lv", correr: correrCollectorAthleticsLv, frecuencia: "semanal" }, // Letonia
+  { clave: "ekjl-ee", correr: correrCollectorEkjlEe, frecuencia: "semanal" }, // Estonia
 ];
 
 // Reparte los collectors "semanal" entre los 7 días de la semana según su
