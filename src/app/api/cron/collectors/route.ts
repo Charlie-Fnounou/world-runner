@@ -66,6 +66,7 @@ import { correrCollectorAimsTz } from "@/lib/collectors/aims-tz";
 import { correrCollectorUgandaAthletics } from "@/lib/collectors/ugandaathletics";
 import { correrCollectorAimsTn } from "@/lib/collectors/aims-tn";
 import { correrCollectorAimsDz } from "@/lib/collectors/aims-dz";
+import { correrCollectorCarrerasPanama } from "@/lib/collectors/carreraspanama";
 
 // Los collectors pueden tardar varios minutos (cientos de carreras, una
 // consulta a la base de datos por cada una). Se le da el máximo de
@@ -137,6 +138,7 @@ const COLLECTORES: {
   { clave: "aims-tt", correr: correrCollectorAimsTt, frecuencia: "semanal" }, // Trinidad y Tobago
   { clave: "aims-bs", correr: correrCollectorAimsBs, frecuencia: "semanal" }, // Bahamas
   { clave: "aims-pa", correr: correrCollectorAimsPa, frecuencia: "semanal" }, // Panamá
+  { clave: "carreraspanama", correr: correrCollectorCarrerasPanama, frecuencia: "semanal" }, // Panamá (fuente 2, plataforma local de inscripciones)
   { clave: "aims-my", correr: correrCollectorAimsMy, frecuencia: "semanal" }, // Malasia
   { clave: "aims-lk", correr: correrCollectorAimsLk, frecuencia: "semanal" }, // Sri Lanka
   { clave: "aims-bd", correr: correrCollectorAimsBd, frecuencia: "semanal" }, // Bangladesh

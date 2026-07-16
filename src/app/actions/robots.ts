@@ -69,6 +69,7 @@ import { correrCollectorAimsTz } from "@/lib/collectors/aims-tz";
 import { correrCollectorUgandaAthletics } from "@/lib/collectors/ugandaathletics";
 import { correrCollectorAimsTn } from "@/lib/collectors/aims-tn";
 import { correrCollectorAimsDz } from "@/lib/collectors/aims-dz";
+import { correrCollectorCarrerasPanama } from "@/lib/collectors/carreraspanama";
 
 const COLLECTORES = [
   correrCollectorRunSignup,
@@ -132,6 +133,7 @@ const COLLECTORES = [
   correrCollectorUgandaAthletics,
   correrCollectorAimsTn,
   correrCollectorAimsDz,
+  correrCollectorCarrerasPanama,
   correrCollectorEqTimingSe,
   correrCollectorFutniszep,
   correrCollectorKenyanAthlete,
