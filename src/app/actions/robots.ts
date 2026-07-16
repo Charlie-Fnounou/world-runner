@@ -41,6 +41,9 @@ import { correrCollectorProbeg } from "@/lib/collectors/probeg";
 import { correrCollectorVsiprobihy } from "@/lib/collectors/vsiprobihy";
 import { correrCollectorRunIndia } from "@/lib/collectors/runindia";
 import { correrCollectorRunnet } from "@/lib/collectors/runnet";
+import { correrCollectorAimsCn } from "@/lib/collectors/aims-cn";
+import { correrCollectorAimsKr } from "@/lib/collectors/aims-kr";
+import { correrCollectorAimsSa } from "@/lib/collectors/aims-sa";
 
 const COLLECTORES = [
   correrCollectorRunSignup,
@@ -82,6 +85,9 @@ const COLLECTORES = [
   correrCollectorVsiprobihy,
   correrCollectorRunIndia,
   correrCollectorRunnet,
+  correrCollectorAimsCn,
+  correrCollectorAimsKr,
+  correrCollectorAimsSa,
 ];
 
 export async function correrCollectoresAhora() {
