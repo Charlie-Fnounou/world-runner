@@ -44,6 +44,12 @@ import { correrCollectorAimsSa } from "@/lib/collectors/aims-sa";
 import { correrCollectorHasHr } from "@/lib/collectors/has-hr";
 import { correrCollectorAthleticsLv } from "@/lib/collectors/athletics-lv";
 import { correrCollectorEkjlEe } from "@/lib/collectors/ekjl-ee";
+import { correrCollectorEqTimingSe } from "@/lib/collectors/eqtiming-se";
+import { correrCollectorFutniszep } from "@/lib/collectors/futniszep";
+import { correrCollectorKenyanAthlete } from "@/lib/collectors/kenyanathlete";
+import { correrCollectorKilpailukalenteri } from "@/lib/collectors/kilpailukalenteri";
+import { correrCollectorOelvAthmin } from "@/lib/collectors/oelvathmin";
+import { correrCollectorRacetimeRo } from "@/lib/collectors/racetime-ro";
 import { correrCollectorAtletikaCz } from "@/lib/collectors/atletikacz";
 import { correrCollectorConnectAtletik } from "@/lib/collectors/connect-atletik";
 import { correrCollectorAimsCa } from "@/lib/collectors/aims-ca";
@@ -140,6 +146,12 @@ const COLLECTORES: {
   { clave: "ugandaathletics", correr: correrCollectorUgandaAthletics, frecuencia: "semanal" }, // Uganda
   { clave: "aims-tn", correr: correrCollectorAimsTn, frecuencia: "semanal" }, // Túnez
   { clave: "aims-dz", correr: correrCollectorAimsDz, frecuencia: "semanal" }, // Argelia
+  { clave: "eqtiming-se", correr: correrCollectorEqTimingSe, frecuencia: "semanal" }, // Suecia
+  { clave: "futniszep", correr: correrCollectorFutniszep, frecuencia: "semanal" }, // Hungría
+  { clave: "kenyanathlete", correr: correrCollectorKenyanAthlete, frecuencia: "semanal" }, // Kenia
+  { clave: "kilpailukalenteri", correr: correrCollectorKilpailukalenteri, frecuencia: "semanal" }, // Finlandia
+  { clave: "oelv-athmin", correr: correrCollectorOelvAthmin, frecuencia: "semanal" }, // Austria
+  { clave: "racetime-ro", correr: correrCollectorRacetimeRo, frecuencia: "semanal" }, // Rumania
 ];
 
 // Reparte los collectors "semanal" entre los 7 días de la semana según su
