@@ -80,6 +80,15 @@ import { correrCollectorFinisherTn } from "@/lib/collectors/finisher-tn";
 import { correrCollectorMillenniumMarathonGH } from "@/lib/collectors/millenniummarathon-gh";
 import { correrCollectorCrdbBankMarathon } from "@/lib/collectors/crdbbankmarathon";
 import { correrCollectorActiveSgSg } from "@/lib/collectors/activesg-sg";
+import { correrCollectorNetskraning } from "@/lib/collectors/netskraning";
+import { correrCollectorTimingLjubljana } from "@/lib/collectors/timingljubljana";
+import { correrCollectorRaceTimingBg } from "@/lib/collectors/racetimingbg";
+import { correrCollectorMyRaceRs } from "@/lib/collectors/myrace-rs";
+import { correrCollectorKigaliMarathon } from "@/lib/collectors/kigalimarathon";
+import { correrCollectorMarathonMn } from "@/lib/collectors/marathonmn";
+import { correrCollectorDatasportPl } from "@/lib/collectors/datasportpl";
+import { correrCollectorEqTimingNo } from "@/lib/collectors/eqtiming-no";
+import { correrCollectorRfea } from "@/lib/collectors/rfea";
 
 const COLLECTORES = [
   correrCollectorRunSignup,
@@ -154,6 +163,15 @@ const COLLECTORES = [
   correrCollectorMillenniumMarathonGH,
   correrCollectorCrdbBankMarathon,
   correrCollectorActiveSgSg,
+  correrCollectorNetskraning,
+  correrCollectorTimingLjubljana,
+  correrCollectorRaceTimingBg,
+  correrCollectorMyRaceRs,
+  correrCollectorKigaliMarathon,
+  correrCollectorMarathonMn,
+  correrCollectorDatasportPl,
+  correrCollectorEqTimingNo,
+  correrCollectorRfea,
   correrCollectorEqTimingSe,
   correrCollectorFutniszep,
   correrCollectorKenyanAthlete,

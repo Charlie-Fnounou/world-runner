@@ -77,6 +77,15 @@ import { correrCollectorFinisherTn } from "@/lib/collectors/finisher-tn";
 import { correrCollectorMillenniumMarathonGH } from "@/lib/collectors/millenniummarathon-gh";
 import { correrCollectorCrdbBankMarathon } from "@/lib/collectors/crdbbankmarathon";
 import { correrCollectorActiveSgSg } from "@/lib/collectors/activesg-sg";
+import { correrCollectorNetskraning } from "@/lib/collectors/netskraning";
+import { correrCollectorTimingLjubljana } from "@/lib/collectors/timingljubljana";
+import { correrCollectorRaceTimingBg } from "@/lib/collectors/racetimingbg";
+import { correrCollectorMyRaceRs } from "@/lib/collectors/myrace-rs";
+import { correrCollectorKigaliMarathon } from "@/lib/collectors/kigalimarathon";
+import { correrCollectorMarathonMn } from "@/lib/collectors/marathonmn";
+import { correrCollectorDatasportPl } from "@/lib/collectors/datasportpl";
+import { correrCollectorEqTimingNo } from "@/lib/collectors/eqtiming-no";
+import { correrCollectorRfea } from "@/lib/collectors/rfea";
 
 // Los collectors pueden tardar varios minutos (cientos de carreras, una
 // consulta a la base de datos por cada una). Se le da el máximo de
@@ -159,6 +168,15 @@ const COLLECTORES: {
   { clave: "millenniummarathon-gh", correr: correrCollectorMillenniumMarathonGH, frecuencia: "semanal" }, // Ghana (fuente 2)
   { clave: "crdbbankmarathon", correr: correrCollectorCrdbBankMarathon, frecuencia: "semanal" }, // Tanzania (fuente 2)
   { clave: "activesg-sg", correr: correrCollectorActiveSgSg, frecuencia: "semanal" }, // Singapur (fuente 2)
+  { clave: "netskraning", correr: correrCollectorNetskraning, frecuencia: "semanal" }, // Islandia
+  { clave: "timingljubljana", correr: correrCollectorTimingLjubljana, frecuencia: "semanal" }, // Eslovenia
+  { clave: "racetimingbg", correr: correrCollectorRaceTimingBg, frecuencia: "semanal" }, // Bulgaria
+  { clave: "myrace-rs", correr: correrCollectorMyRaceRs, frecuencia: "semanal" }, // Serbia
+  { clave: "kigalimarathon", correr: correrCollectorKigaliMarathon, frecuencia: "semanal" }, // Ruanda
+  { clave: "marathonmn", correr: correrCollectorMarathonMn, frecuencia: "semanal" }, // Mongolia
+  { clave: "datasport_pl", correr: correrCollectorDatasportPl, frecuencia: "semanal" }, // Polonia
+  { clave: "eqtiming-no", correr: correrCollectorEqTimingNo, frecuencia: "semanal" }, // Noruega
+  { clave: "rfea", correr: correrCollectorRfea, frecuencia: "semanal" }, // España
   { clave: "aims-my", correr: correrCollectorAimsMy, frecuencia: "semanal" }, // Malasia
   { clave: "aims-lk", correr: correrCollectorAimsLk, frecuencia: "semanal" }, // Sri Lanka
   { clave: "aims-bd", correr: correrCollectorAimsBd, frecuencia: "semanal" }, // Bangladesh

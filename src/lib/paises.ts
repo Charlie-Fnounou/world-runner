@@ -54,12 +54,16 @@ const PAISES: Record<string, { nombre: string; continente: Continente }> = {
   RU: { nombre: "Rusia", continente: "EUROPA" },
   UA: { nombre: "Ucrania", continente: "EUROPA" },
   HR: { nombre: "Croacia", continente: "EUROPA" },
+  RS: { nombre: "Serbia", continente: "EUROPA" },
+  SI: { nombre: "Eslovenia", continente: "EUROPA" },
   LV: { nombre: "Letonia", continente: "EUROPA" },
   EE: { nombre: "Estonia", continente: "EUROPA" },
+  BG: { nombre: "Bulgaria", continente: "EUROPA" },
   AU: { nombre: "Australia", continente: "OCEANIA" },
   NZ: { nombre: "Nueva Zelanda", continente: "OCEANIA" },
   JP: { nombre: "Japón", continente: "ASIA" },
   CN: { nombre: "China", continente: "ASIA" },
+  MN: { nombre: "Mongolia", continente: "ASIA" },
   HK: { nombre: "Hong Kong", continente: "ASIA" },
   SG: { nombre: "Singapur", continente: "ASIA" },
   PH: { nombre: "Filipinas", continente: "ASIA" },
@@ -80,6 +84,7 @@ const PAISES: Record<string, { nombre: string; continente: Continente }> = {
   UG: { nombre: "Uganda", continente: "AFRICA" },
   TN: { nombre: "Túnez", continente: "AFRICA" },
   DZ: { nombre: "Argelia", continente: "AFRICA" },
+  RW: { nombre: "Ruanda", continente: "AFRICA" },
 };
 
 // Convierte un código ISO 3166-1 alpha-2 (ej. "IT") en el emoji de
