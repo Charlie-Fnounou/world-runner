@@ -29,8 +29,18 @@ import type { CarreraExterna } from "./types";
 // con el tiempo y reiniciando al llegar al horizonte.
 
 const BASE_URL = "https://api.runsignup.com/rest/races";
-const RESULTS_PER_PAGE = 1000;
-const PAGINAS_POR_CORRIDA = 3; // hasta 3000 carreras por corrida
+// upsertCarreraExterna hace ~6-8 consultas secuenciales a la base por
+// carrera (findUnique + update/create de evento, edicion, fuenteDato,
+// historial de cambios...). Contra una base remota eso da algo así
+// como 300-800ms por carrera. El cron le da a cada collector un límite
+// de 60s (ver conLimiteDeTiempo en route.ts), así que una sola página
+// de 1000 podía tardar varios minutos y nunca terminaba a tiempo — la
+// corrida quedaba abandonada sin guardar nada. Con 35 carreras y
+// concurrencia moderada entra cómodo en la ventana de 60s, y al correr
+// todos los días igual se cubre el catálogo con el tiempo.
+const RESULTS_PER_PAGE = 35;
+const PAGINAS_POR_CORRIDA = 1;
+const CONCURRENCIA = 8; // upserts en simultáneo, para no saturar el pool de conexiones
 const HORIZONTE_MESES = 18; // no ir más allá de año y medio adelante antes de reiniciar
 const COLLECTOR_ID = "runsignup";
 
@@ -48,7 +58,10 @@ interface RaceRunSignup {
   };
 }
 
-function fechaDesdeMMDDYYYY(texto: string): Date | null {
+function fechaDesdeMMDDYYYY(texto: string | null | undefined): Date | null {
+  // Series, programas de entrenamiento y clubes recurrentes no tienen
+  // una única fecha próxima definida y vienen con next_date null/vacío.
+  if (!texto) return null;
   const m = texto.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
   if (!m) return null;
   const [, mes, dia, anio] = m;
@@ -144,22 +157,26 @@ export async function correrCollectorRunSignup() {
         continue;
       }
 
-      for (const { race } of carreras) {
-        try {
-          const externa = aCarreraExterna(race);
-          if (!externa) {
-            errores++;
-            continue;
-          }
-          const { creada } = await upsertCarreraExterna(externa);
-          if (creada) nuevas++;
-          else actualizadas++;
-        } catch {
-          errores++;
+      for (let inicioLote = 0; inicioLote < carreras.length; inicioLote += CONCURRENCIA) {
+        const lote = carreras.slice(inicioLote, inicioLote + CONCURRENCIA);
+        const resultados = await Promise.all(
+          lote.map(async ({ race }) => {
+            try {
+              const externa = aCarreraExterna(race);
+              if (!externa) return "error";
+              const { creada } = await upsertCarreraExterna(externa);
+              return creada ? "nueva" : "actualizada";
+            } catch {
+              return "error";
+            }
+          }),
+        );
+        for (const r of resultados) {
+          if (r === "nueva") nuevas++;
+          else if (r === "actualizada") actualizadas++;
+          else errores++;
         }
       }
-
-      await new Promise((r) => setTimeout(r, 500));
     }
 
     await prisma.estadoCollector.upsert({
