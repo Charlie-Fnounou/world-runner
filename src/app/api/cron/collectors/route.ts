@@ -86,6 +86,7 @@ import { correrCollectorMarathonMn } from "@/lib/collectors/marathonmn";
 import { correrCollectorDatasportPl } from "@/lib/collectors/datasportpl";
 import { correrCollectorEqTimingNo } from "@/lib/collectors/eqtiming-no";
 import { correrCollectorRfea } from "@/lib/collectors/rfea";
+import { correrCollectorUltraPanamaTrailSeries } from "@/lib/collectors/ultrapanamatrailseries";
 
 // Los collectors pueden tardar varios minutos (cientos de carreras, una
 // consulta a la base de datos por cada una). Se le da el máximo de
@@ -177,6 +178,7 @@ const COLLECTORES: {
   { clave: "datasport_pl", correr: correrCollectorDatasportPl, frecuencia: "semanal" }, // Polonia
   { clave: "eqtiming-no", correr: correrCollectorEqTimingNo, frecuencia: "semanal" }, // Noruega
   { clave: "rfea", correr: correrCollectorRfea, frecuencia: "semanal" }, // España
+  { clave: "ultrapanamatrailseries", correr: correrCollectorUltraPanamaTrailSeries, frecuencia: "semanal" }, // Panamá (trail)
   { clave: "aims-my", correr: correrCollectorAimsMy, frecuencia: "semanal" }, // Malasia
   { clave: "aims-lk", correr: correrCollectorAimsLk, frecuencia: "semanal" }, // Sri Lanka
   { clave: "aims-bd", correr: correrCollectorAimsBd, frecuencia: "semanal" }, // Bangladesh

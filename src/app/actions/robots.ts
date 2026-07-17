@@ -89,6 +89,7 @@ import { correrCollectorMarathonMn } from "@/lib/collectors/marathonmn";
 import { correrCollectorDatasportPl } from "@/lib/collectors/datasportpl";
 import { correrCollectorEqTimingNo } from "@/lib/collectors/eqtiming-no";
 import { correrCollectorRfea } from "@/lib/collectors/rfea";
+import { correrCollectorUltraPanamaTrailSeries } from "@/lib/collectors/ultrapanamatrailseries";
 
 const COLLECTORES = [
   correrCollectorRunSignup,
@@ -172,6 +173,7 @@ const COLLECTORES = [
   correrCollectorDatasportPl,
   correrCollectorEqTimingNo,
   correrCollectorRfea,
+  correrCollectorUltraPanamaTrailSeries,
   correrCollectorEqTimingSe,
   correrCollectorFutniszep,
   correrCollectorKenyanAthlete,
