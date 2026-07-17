@@ -70,6 +70,10 @@ import { correrCollectorUgandaAthletics } from "@/lib/collectors/ugandaathletics
 import { correrCollectorAimsTn } from "@/lib/collectors/aims-tn";
 import { correrCollectorAimsDz } from "@/lib/collectors/aims-dz";
 import { correrCollectorCarrerasPanama } from "@/lib/collectors/carreraspanama";
+import { correrCollectorRunningCalendarAu } from "@/lib/collectors/runningcalendar-au";
+import { correrCollectorRunningCalendarNz } from "@/lib/collectors/runningcalendar-nz";
+import { correrCollectorSwissRunning } from "@/lib/collectors/swissrunning";
+import { correrCollectorRunEvents } from "@/lib/collectors/runevents";
 
 const COLLECTORES = [
   correrCollectorRunSignup,
@@ -134,6 +138,10 @@ const COLLECTORES = [
   correrCollectorAimsTn,
   correrCollectorAimsDz,
   correrCollectorCarrerasPanama,
+  correrCollectorRunningCalendarAu,
+  correrCollectorRunningCalendarNz,
+  correrCollectorSwissRunning,
+  correrCollectorRunEvents,
   correrCollectorEqTimingSe,
   correrCollectorFutniszep,
   correrCollectorKenyanAthlete,
