@@ -1,7 +1,7 @@
 import { EstadoInscripcion } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/races-data";
-import { banderaDesdeCodigoIso } from "@/lib/paises";
+import { banderaDesdeCodigoIso, centroideDesdeCodigoIso } from "@/lib/paises";
 import { normalizar } from "@/lib/text";
 import { detectarYNotificarCambios } from "@/lib/alertas";
 import type { CarreraExterna } from "./types";
@@ -22,6 +22,15 @@ function estadoPorDefecto(fecha: Date, explicito?: EstadoInscripcion): EstadoIns
   return "PROXIMAMENTE";
 }
 
+// La mayoría de los collectors no traen lat/lng de la carrera puntual
+// y mandan (0,0) — sin este respaldo, esas carreras quedaban todas
+// amontonadas en el medio del océano en vez de aparecer en su país.
+function latLngConRespaldo(c: Pick<CarreraExterna, "lat" | "lng" | "codigoPais">): { lat: number; lng: number } {
+  if (c.lat !== 0 || c.lng !== 0) return { lat: c.lat, lng: c.lng };
+  const centroide = centroideDesdeCodigoIso(c.codigoPais);
+  return centroide ?? { lat: c.lat, lng: c.lng };
+}
+
 // Crea o actualiza una carrera a partir de lo que trajo un recolector.
 // Usa FuenteDato (tipo + externalId) para saber si ya la habíamos
 // guardado antes y así no duplicarla.
@@ -30,6 +39,7 @@ export async function upsertCarreraExterna(c: CarreraExterna): Promise<{ creada:
     where: { tipo_externalId: { tipo: c.fuenteTipo, externalId: c.externalId } },
   });
   const bandera = banderaDesdeCodigoIso(c.codigoPais);
+  const { lat, lng } = latLngConRespaldo(c);
 
   if (fuenteExistente) {
     await prisma.evento.update({
@@ -40,8 +50,8 @@ export async function upsertCarreraExterna(c: CarreraExterna): Promise<{ creada:
         pais: c.pais,
         codigoPais: c.codigoPais,
         bandera,
-        lat: c.lat,
-        lng: c.lng,
+        lat,
+        lng,
         sitioWeb: c.sitioWeb,
       },
     });
@@ -112,8 +122,8 @@ export async function upsertCarreraExterna(c: CarreraExterna): Promise<{ creada:
       codigoPais: c.codigoPais,
       bandera,
       continente: c.continente,
-      lat: c.lat,
-      lng: c.lng,
+      lat,
+      lng,
       sitioWeb: c.sitioWeb,
       ediciones: {
         create: {
