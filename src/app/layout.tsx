@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Barlow_Condensed } from "next/font/google";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Header } from "@/components/Header";
@@ -69,6 +70,7 @@ export default function RootLayout({
           <Header />
           <main className="flex-1 flex flex-col">{children}</main>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
