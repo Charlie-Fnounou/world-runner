@@ -71,6 +71,12 @@ import { correrCollectorRunningCalendarAu } from "@/lib/collectors/runningcalend
 import { correrCollectorRunningCalendarNz } from "@/lib/collectors/runningcalendar-nz";
 import { correrCollectorSwissRunning } from "@/lib/collectors/swissrunning";
 import { correrCollectorRunEvents } from "@/lib/collectors/runevents";
+import { correrCollectorRunningEventsJa } from "@/lib/collectors/runningeventsja";
+import { correrCollectorSingletreeLk } from "@/lib/collectors/singletree-lk";
+import { correrCollectorFinisherTn } from "@/lib/collectors/finisher-tn";
+import { correrCollectorMillenniumMarathonGH } from "@/lib/collectors/millenniummarathon-gh";
+import { correrCollectorCrdbBankMarathon } from "@/lib/collectors/crdbbankmarathon";
+import { correrCollectorActiveSgSg } from "@/lib/collectors/activesg-sg";
 
 // Los collectors pueden tardar varios minutos (cientos de carreras, una
 // consulta a la base de datos por cada una). Se le da el máximo de
@@ -147,6 +153,12 @@ const COLLECTORES: {
   { clave: "runningcalendar-nz", correr: correrCollectorRunningCalendarNz, frecuencia: "semanal" }, // Nueva Zelanda
   { clave: "swissrunning", correr: correrCollectorSwissRunning, frecuencia: "semanal" }, // Suiza
   { clave: "runevents", correr: correrCollectorRunEvents, frecuencia: "semanal" }, // Reino Unido
+  { clave: "runningeventsja", correr: correrCollectorRunningEventsJa, frecuencia: "semanal" }, // Jamaica (fuente 2)
+  { clave: "singletree-lk", correr: correrCollectorSingletreeLk, frecuencia: "semanal" }, // Sri Lanka (fuente 2)
+  { clave: "finisher-tn", correr: correrCollectorFinisherTn, frecuencia: "semanal" }, // Túnez (fuente 2)
+  { clave: "millenniummarathon-gh", correr: correrCollectorMillenniumMarathonGH, frecuencia: "semanal" }, // Ghana (fuente 2)
+  { clave: "crdbbankmarathon", correr: correrCollectorCrdbBankMarathon, frecuencia: "semanal" }, // Tanzania (fuente 2)
+  { clave: "activesg-sg", correr: correrCollectorActiveSgSg, frecuencia: "semanal" }, // Singapur (fuente 2)
   { clave: "aims-my", correr: correrCollectorAimsMy, frecuencia: "semanal" }, // Malasia
   { clave: "aims-lk", correr: correrCollectorAimsLk, frecuencia: "semanal" }, // Sri Lanka
   { clave: "aims-bd", correr: correrCollectorAimsBd, frecuencia: "semanal" }, // Bangladesh
