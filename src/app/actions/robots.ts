@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/admin";
+import { corregirCalidadDeDatos } from "@/lib/sanidad";
 import { correrCollectorRunSignup } from "@/lib/collectors/runsignup";
 import { correrCollectorFidal } from "@/lib/collectors/fidal";
 import { correrCollectorCorro } from "@/lib/collectors/corro";
@@ -197,6 +198,8 @@ export async function correrCollectoresAhora() {
   for (const correr of COLLECTORES) {
     await conLimiteDeTiempo(correr(), 60_000).catch(() => {});
   }
+
+  await corregirCalidadDeDatos().catch(() => {});
 
   revalidatePath("/admin/robots");
 }

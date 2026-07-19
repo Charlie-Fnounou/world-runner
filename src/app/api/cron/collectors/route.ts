@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { corregirCalidadDeDatos } from "@/lib/sanidad";
 import { correrCollectorRunSignup } from "@/lib/collectors/runsignup";
 import { correrCollectorFidal } from "@/lib/collectors/fidal";
 import { correrCollectorCorro } from "@/lib/collectors/corro";
@@ -240,6 +241,14 @@ export async function GET(request: Request) {
     } catch (e) {
       resultados[clave] = { error: e instanceof Error ? e.message : "error desconocido" };
     }
+  }
+
+  // Barrida de calidad de datos: corrige sola, todos los días, sin que
+  // haga falta que nadie entre a revisar manualmente (ver sanidad.ts).
+  try {
+    resultados["_sanidad"] = await corregirCalidadDeDatos();
+  } catch (e) {
+    resultados["_sanidad"] = { error: e instanceof Error ? e.message : "error desconocido" };
   }
 
   return NextResponse.json(resultados);
