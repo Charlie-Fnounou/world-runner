@@ -62,6 +62,20 @@ function edicionActualDe(evento: EventoConEdiciones) {
   return futuras[0] ?? evento.ediciones[0];
 }
 
+// El estado que guarda cada edición se actualiza solo cuando un
+// collector la vuelve a visitar (ver estadoPorDefecto en upsert.ts).
+// Si una carrera no se re-scrapea justo después de su fecha, puede
+// quedar mostrando "inscripción abierta" indefinidamente aunque ya
+// haya pasado. Como red de seguridad, acá se corrige en el momento de
+// mostrarla: una fecha ya pasada siempre se ve como cerrada, sin
+// importar qué haya quedado guardado.
+function estadoParaMostrar(edicion: EventoConEdiciones["ediciones"][number]): EstadoInscripcion {
+  const yaPaso = edicion.fecha < new Date();
+  const abiertaOSimilar = edicion.estado === "ABIERTA" || edicion.estado === "ULTIMOS_CUPOS" || edicion.estado === "SORTEO" || edicion.estado === "PROXIMAMENTE";
+  if (yaPaso && abiertaOSimilar) return "cerrada";
+  return ESTADO_DB_A_UI[edicion.estado] ?? "proximamente";
+}
+
 function aCarrera(evento: EventoConEdiciones): Carrera | null {
   const edicion = edicionActualDe(evento);
   if (!edicion) return null;
@@ -86,7 +100,7 @@ function aCarrera(evento: EventoConEdiciones): Carrera | null {
     km: distancia?.km ?? 0,
     dist: distancia ? (DISTANCIA_DB_A_UI[distancia.tipo] ?? distancia.tipo) : "",
     type: distancia ? (TERRENO_DB_A_UI[distancia.terreno] ?? distancia.terreno) : "Asfalto",
-    status: ESTADO_DB_A_UI[edicion.estado] ?? "proximamente",
+    status: estadoParaMostrar(edicion),
     price: edicion.precioDesde ?? 0,
     cur: edicion.moneda ?? "$",
     runners: edicion.numCorredores ?? 0,

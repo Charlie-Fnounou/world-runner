@@ -61,7 +61,10 @@ function parsearFilas(html: string): FilaDatasport[] {
     const urlInscripcion = bloque.match(/href="([^"]*)"\s+target="_blank">Zapisy</)?.[1];
     const urlResultados = bloque.match(/href="([^"]*)"\s+target="_blank">Wyniki</)?.[1];
 
-    if (!fecha || !nombre) continue;
+    // A veces la fila trae un nombre degenerado (ej. "." cuando la
+    // celda real no tenía texto reconocible) — se descarta en vez de
+    // guardar una carrera sin nombre útil.
+    if (!fecha || !nombre || !/[a-zA-Z]{2,}/.test(nombre)) continue;
     filas.push({ fecha, nombre, ciudad, urlInscripcion, urlResultados });
   }
   return filas;
