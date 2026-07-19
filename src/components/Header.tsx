@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ThemeToggle } from "./ThemeToggle";
 import { UserMenu } from "./UserMenu";
+import { MobileNav } from "./MobileNav";
 
 const NAV = [
   { href: "/", label: "Explorar" },
@@ -46,6 +47,7 @@ export function Header() {
         <div className="flex items-center gap-3 shrink-0">
           <ThemeToggle />
           <UserMenu />
+          <MobileNav items={NAV} />
         </div>
       </div>
     </header>
