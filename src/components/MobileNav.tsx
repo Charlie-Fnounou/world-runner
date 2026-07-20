@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
+import { InstagramIcon, INSTAGRAM_HANDLE, INSTAGRAM_URL } from "./InstagramIcon";
 
 export function MobileNav({ items }: { items: { href: string; label: string }[] }) {
   const [abierto, setAbierto] = useState(false);
@@ -71,6 +72,15 @@ export function MobileNav({ items }: { items: { href: string; label: string }[] 
                   {n.label}
                 </Link>
               ))}
+              <a
+                href={INSTAGRAM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 pt-4 border-t flex items-center gap-2 px-3 py-3 rounded-lg text-sm font-medium hover:opacity-80"
+                style={{ color: "var(--wr-mut)", borderColor: "var(--wr-line)" }}
+              >
+                <InstagramIcon size={16} />@{INSTAGRAM_HANDLE}
+              </a>
             </nav>
           </div>,
           document.body,

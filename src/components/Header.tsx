@@ -3,6 +3,7 @@ import Image from "next/image";
 import { ThemeToggle } from "./ThemeToggle";
 import { UserMenu } from "./UserMenu";
 import { MobileNav } from "./MobileNav";
+import { InstagramIcon, INSTAGRAM_URL } from "./InstagramIcon";
 
 const NAV = [
   { href: "/", label: "Explorar" },
@@ -45,6 +46,17 @@ export function Header() {
           ))}
         </nav>
         <div className="flex items-center gap-3 shrink-0">
+          <a
+            href={INSTAGRAM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Síguenos en Instagram"
+            title="Síguenos en Instagram"
+            className="w-9 h-9 rounded-full hidden sm:flex items-center justify-center border hover:opacity-80"
+            style={{ borderColor: "var(--wr-line)", color: "var(--wr-ink)" }}
+          >
+            <InstagramIcon />
+          </a>
           <ThemeToggle />
           <UserMenu />
           <MobileNav items={NAV} />
