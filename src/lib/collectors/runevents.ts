@@ -108,11 +108,19 @@ function aCarreraExterna(ev: CarreraApi): CarreraExterna | null {
   const urlInscripcion = ev.registration_url || undefined;
   const sitioWeb = ev.website_url || ev.registration_url || URL_BASE;
 
+  // El "id" que trae la propia API de RunEvents no es estable: en
+  // corridas distintas devuelve un UUID diferente para la misma
+  // carrera, así que usarlo como externalId generaba un evento
+  // duplicado cada vez que se volvía a scrapear. Se arma un id propio
+  // y estable a partir del nombre y la fecha, que sí se repiten igual
+  // entre corridas.
+  const externalId = `${ev.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${fecha.toISOString().slice(0, 10)}`;
+
   return {
     fuenteTipo: "runevents",
     fuenteNombre: "England Athletics — RunEvents",
     fuenteUrl: sitioWeb,
-    externalId: ev.id,
+    externalId,
     nombre: ev.name,
     ciudad: ev.address?.city || ev.address?.region || "Reino Unido",
     pais: "Reino Unido",
@@ -127,6 +135,8 @@ function aCarreraExterna(ev: CarreraApi): CarreraExterna | null {
     distancias: [{ tipo: tipoDistanciaDesdeKm(km), km, terreno: "ASFALTO" }],
   };
 }
+
+const CONCURRENCIA = 8; // upserts en simultáneo, para no tardar minutos con ~700+ carreras
 
 export async function correrCollectorRunEvents() {
   return registrarEjecucion("runevents", async () => {
@@ -146,15 +156,25 @@ export async function correrCollectorRunEvents() {
       const data: RespuestaApi = await res.json();
       ultimaPagina = data.meta?.last_page ?? 1;
 
-      for (const ev of data.data ?? []) {
-        try {
-          const externa = aCarreraExterna(ev);
-          if (!externa) continue;
-          const { creada } = await upsertCarreraExterna(externa);
-          if (creada) nuevas++;
-          else actualizadas++;
-        } catch {
-          errores++;
+      const filas = data.data ?? [];
+      for (let inicioLote = 0; inicioLote < filas.length; inicioLote += CONCURRENCIA) {
+        const lote = filas.slice(inicioLote, inicioLote + CONCURRENCIA);
+        const resultados = await Promise.all(
+          lote.map(async (ev) => {
+            try {
+              const externa = aCarreraExterna(ev);
+              if (!externa) return "salteada";
+              const { creada } = await upsertCarreraExterna(externa);
+              return creada ? "nueva" : "actualizada";
+            } catch {
+              return "error";
+            }
+          }),
+        );
+        for (const r of resultados) {
+          if (r === "nueva") nuevas++;
+          else if (r === "actualizada") actualizadas++;
+          else if (r === "error") errores++;
         }
       }
 
