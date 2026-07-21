@@ -5,8 +5,10 @@ import { useRouter } from "next/navigation";
 import type { Carrera } from "@/lib/types";
 import { sugerir } from "@/lib/search";
 import { slugify } from "@/lib/races-data";
+import { useIdioma } from "./LanguageProvider";
 
 export function SearchBar({ carreras, onQueryChange }: { carreras: Carrera[]; onQueryChange?: (q: string) => void }) {
+  const { t } = useIdioma();
   const [q, setQ] = useState("");
   const [abierto, setAbierto] = useState(false);
   const router = useRouter();
@@ -25,7 +27,7 @@ export function SearchBar({ carreras, onQueryChange }: { carreras: Carrera[]; on
         }}
         onFocus={() => setAbierto(true)}
         onBlur={() => setTimeout(() => setAbierto(false), 150)}
-        placeholder="Busca una carrera, ciudad o país (ej. medellin, maraton berlim)"
+        placeholder={t.home.buscarPlaceholder}
         className="w-full rounded-full px-5 py-3.5 text-sm outline-none wr-panel"
         style={{ color: "var(--wr-ink)" }}
       />

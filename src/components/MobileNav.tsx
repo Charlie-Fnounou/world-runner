@@ -4,8 +4,11 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { InstagramIcon, INSTAGRAM_HANDLE, INSTAGRAM_URL } from "./InstagramIcon";
+import { useIdioma } from "./LanguageProvider";
+import { IDIOMAS } from "@/lib/i18n";
 
 export function MobileNav({ items }: { items: { href: string; label: string }[] }) {
+  const { idioma, cambiarIdioma, t } = useIdioma();
   const [abierto, setAbierto] = useState(false);
   const [montado, setMontado] = useState(false);
 
@@ -22,7 +25,7 @@ export function MobileNav({ items }: { items: { href: string; label: string }[] 
     <div className="sm:hidden">
       <button
         onClick={() => setAbierto(true)}
-        aria-label="Abrir menú"
+        aria-label={t.nav.abrirMenu}
         className="w-9 h-9 rounded-full flex items-center justify-center border text-lg"
         style={{ borderColor: "var(--wr-line)", color: "var(--wr-ink)" }}
       >
@@ -46,15 +49,15 @@ export function MobileNav({ items }: { items: { href: string; label: string }[] 
             <nav
               role="dialog"
               aria-modal="true"
-              aria-label="Menú de navegación"
+              aria-label={t.nav.menu}
               className="absolute top-0 right-0 h-full w-64 max-w-[80vw] flex flex-col gap-1 p-5 pt-6 wr-panel overflow-y-auto"
               style={{ color: "var(--wr-ink)" }}
             >
               <div className="flex items-center justify-between mb-4">
-                <span className="font-display font-bold uppercase tracking-wide">Menú</span>
+                <span className="font-display font-bold uppercase tracking-wide">{t.nav.menu}</span>
                 <button
                   onClick={() => setAbierto(false)}
-                  aria-label="Cerrar menú"
+                  aria-label={t.nav.cerrarMenu}
                   className="w-9 h-9 rounded-full flex items-center justify-center border"
                   style={{ borderColor: "var(--wr-line)" }}
                 >
@@ -72,12 +75,30 @@ export function MobileNav({ items }: { items: { href: string; label: string }[] 
                   {n.label}
                 </Link>
               ))}
+
+              <div className="mt-2 pt-4 border-t flex flex-wrap gap-2" style={{ borderColor: "var(--wr-line)" }}>
+                {IDIOMAS.map((i) => (
+                  <button
+                    key={i.codigo}
+                    onClick={() => cambiarIdioma(i.codigo)}
+                    className="rounded-full px-3 py-1.5 text-xs font-semibold border"
+                    style={{
+                      borderColor: "var(--wr-line)",
+                      color: "var(--wr-ink)",
+                      background: i.codigo === idioma ? "var(--wr-panel-2)" : "transparent",
+                    }}
+                  >
+                    {i.bandera} {i.codigo.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+
               <a
                 href={INSTAGRAM_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-2 pt-4 border-t flex items-center gap-2 px-3 py-3 rounded-lg text-sm font-medium hover:opacity-80"
-                style={{ color: "var(--wr-mut)", borderColor: "var(--wr-line)" }}
+                className="mt-1 flex items-center gap-2 px-3 py-3 rounded-lg text-sm font-medium hover:opacity-80"
+                style={{ color: "var(--wr-mut)" }}
               >
                 <InstagramIcon size={16} />@{INSTAGRAM_HANDLE}
               </a>

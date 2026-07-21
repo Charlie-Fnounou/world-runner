@@ -4,6 +4,7 @@ import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { LanguageProvider } from "@/components/LanguageProvider";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { TrackerVisitas } from "@/components/TrackerVisitas";
@@ -67,10 +68,12 @@ export default function RootLayout({
       )}
       <body className="min-h-full flex flex-col">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          <TrackerVisitas />
-          <Header />
-          <main className="flex-1 flex flex-col">{children}</main>
-          <Footer />
+          <LanguageProvider>
+            <TrackerVisitas />
+            <Header />
+            <main className="flex-1 flex flex-col">{children}</main>
+            <Footer />
+          </LanguageProvider>
         </ThemeProvider>
         <Analytics />
       </body>

@@ -1,21 +1,27 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { ThemeToggle } from "./ThemeToggle";
 import { UserMenu } from "./UserMenu";
 import { MobileNav } from "./MobileNav";
 import { InstagramIcon, INSTAGRAM_URL } from "./InstagramIcon";
-
-const NAV = [
-  { href: "/", label: "Explorar" },
-  { href: "/calendario", label: "Calendario" },
-  { href: "/rankings", label: "Rankings" },
-  { href: "/comparar", label: "Comparar" },
-  { href: "/viaje", label: "Viaje" },
-  { href: "/asistente", label: "IA ✨" },
-  { href: "/perfil", label: "Perfil" },
-];
+import { LanguageSwitcher } from "./LanguageSwitcher";
+import { useIdioma } from "./LanguageProvider";
 
 export function Header() {
+  const { t } = useIdioma();
+
+  const nav = [
+    { href: "/", label: t.nav.explorar },
+    { href: "/calendario", label: t.nav.calendario },
+    { href: "/rankings", label: t.nav.rankings },
+    { href: "/comparar", label: t.nav.comparar },
+    { href: "/viaje", label: t.nav.viaje },
+    { href: "/asistente", label: t.nav.ia },
+    { href: "/perfil", label: t.nav.perfil },
+  ];
+
   return (
     <header
       className="sticky top-0 z-20 backdrop-blur border-b"
@@ -39,7 +45,7 @@ export function Header() {
           className="hidden sm:flex items-center gap-3 lg:gap-5 text-sm font-medium overflow-x-auto min-w-0"
           style={{ color: "var(--wr-mut)" }}
         >
-          {NAV.map((n) => (
+          {nav.map((n) => (
             <Link key={n.href} href={n.href} className="hover:opacity-80 whitespace-nowrap">
               {n.label}
             </Link>
@@ -50,16 +56,19 @@ export function Header() {
             href={INSTAGRAM_URL}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Síguenos en Instagram"
-            title="Síguenos en Instagram"
+            aria-label={t.nav.seguinosInstagram}
+            title={t.nav.seguinosInstagram}
             className="w-9 h-9 rounded-full hidden sm:flex items-center justify-center border hover:opacity-80"
             style={{ borderColor: "var(--wr-line)", color: "var(--wr-ink)" }}
           >
             <InstagramIcon />
           </a>
+          <div className="hidden sm:block">
+            <LanguageSwitcher />
+          </div>
           <ThemeToggle />
           <UserMenu />
-          <MobileNav items={NAV} />
+          <MobileNav items={nav} />
         </div>
       </div>
     </header>

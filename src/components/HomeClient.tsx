@@ -3,13 +3,15 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import type { Carrera, EstadoInscripcion } from "@/lib/types";
-import { DISTANCIAS, CONTINENTES, ESTADO_INFO } from "@/lib/types";
+import { DISTANCIAS, CONTINENTES } from "@/lib/types";
+import { traducirDistancia, traducirContinente, traducirEstado } from "@/lib/i18n";
 import { SearchBar } from "./SearchBar";
 import { RaceCard } from "./RaceCard";
 import { MapaMundialLazy } from "./MapaMundialLazy";
 import { Chip } from "./Chip";
 import { useFavoritos } from "@/hooks/useFavoritos";
 import { buscarCarreras } from "@/lib/search";
+import { useIdioma } from "./LanguageProvider";
 
 const ESTADOS_FILTRO: (EstadoInscripcion | "Todos")[] = ["Todos", "abierta", "ultimos", "sorteo", "proximamente", "cerrada"];
 
@@ -22,6 +24,7 @@ export function HomeClient({
   bannerDestacado?: React.ReactNode;
   bannerMedio?: React.ReactNode;
 }) {
+  const { idioma, t } = useIdioma();
   const [query, setQuery] = useState("");
   const [fDist, setFDist] = useState<(typeof DISTANCIAS)[number]>("Todas");
   const [fCont, setFCont] = useState<(typeof CONTINENTES)[number]>("Todos");
@@ -67,36 +70,35 @@ export function HomeClient({
         style={{ background: "linear-gradient(135deg, var(--wr-panel) 0%, var(--wr-bg) 100%)" }}
       >
         <h1 className="font-display font-extrabold leading-none" style={{ fontSize: "clamp(36px,7vw,64px)" }}>
-          Toda carrera.
+          {t.home.heroTitulo1}
           <br />
-          <span style={{ color: "var(--wr-acc)" }}>Todo el planeta.</span>
+          <span style={{ color: "var(--wr-acc)" }}>{t.home.heroTitulo2}</span>
         </h1>
         <p className="max-w-xl text-base" style={{ color: "var(--wr-mut)" }}>
-          Descubre, compara y planifica maratones, medias maratones, 10K, trails y ultras en
-          cualquier país, con links de inscripción oficiales.
+          {t.home.heroDescripcion}
         </p>
         <SearchBar carreras={carreras} onQueryChange={setQuery} />
         <div className="text-xs" style={{ color: "var(--wr-mut)" }}>
-          {carreras.length} carreras verificadas en {new Set(carreras.map((r) => r.country)).size} países
+          {t.home.statsCarreras(carreras.length, new Set(carreras.map((r) => r.country)).size)}
         </div>
       </section>
 
       <section className="max-w-6xl mx-auto px-4 w-full flex flex-col gap-2.5">
         <div className="flex gap-2 overflow-x-auto pb-1">
           {DISTANCIAS.map((d) => (
-            <Chip key={d} label={d} active={fDist === d} onClick={() => setFDist(d)} />
+            <Chip key={d} label={traducirDistancia(d, idioma)} active={fDist === d} onClick={() => setFDist(d)} />
           ))}
         </div>
         <div className="flex gap-2 overflow-x-auto pb-1">
           {CONTINENTES.map((c) => (
-            <Chip key={c} label={c} active={fCont === c} onClick={() => setFCont(c)} />
+            <Chip key={c} label={traducirContinente(c, idioma)} active={fCont === c} onClick={() => setFCont(c)} />
           ))}
         </div>
         <div className="flex gap-2 overflow-x-auto pb-1 items-center">
           {ESTADOS_FILTRO.map((s) => (
             <Chip
               key={s}
-              label={s === "Todos" ? "Cualquier estado" : ESTADO_INFO[s].label}
+              label={s === "Todos" ? t.home.cualquierEstado : traducirEstado(s, idioma)}
               active={fStat === s}
               onClick={() => setFStat(s)}
             />
@@ -109,7 +111,7 @@ export function HomeClient({
                 className="px-4 py-1.5 text-sm font-semibold"
                 style={{ background: modo === m ? "var(--wr-acc)" : "var(--wr-panel)", color: modo === m ? "var(--wr-acc-ink)" : "var(--wr-mut)" }}
               >
-                {m === "lista" ? "☰ Lista" : "🗺 Mapa"}
+                {m === "lista" ? t.home.lista : t.home.mapa}
               </button>
             ))}
           </div>
@@ -119,11 +121,9 @@ export function HomeClient({
       {mostrarExplorador ? (
         <section className="max-w-6xl mx-auto px-4 w-full">
           <div className="flex items-baseline justify-between mb-4">
-            <h2 className="font-display font-bold text-2xl">
-              {resultados.length} carrera{resultados.length !== 1 ? "s" : ""} encontrada{resultados.length !== 1 ? "s" : ""}
-            </h2>
+            <h2 className="font-display font-bold text-2xl">{t.home.encontradas(resultados.length)}</h2>
             <span className="text-xs font-mono" style={{ color: "var(--wr-mut)" }}>
-              ordenadas por fecha
+              {t.home.ordenadasPorFecha}
             </span>
           </div>
           {modo === "mapa" ? (
@@ -132,13 +132,13 @@ export function HomeClient({
             <div className="rounded-2xl p-10 text-center wr-panel" style={{ borderStyle: "dashed" }}>
               <div className="text-3xl mb-2">🏜️</div>
               <p className="font-semibold" style={{ color: "var(--wr-ink)" }}>
-                No hay carreras con esos filtros
+                {t.home.sinResultadosTitulo}
               </p>
               <p className="text-sm mt-1" style={{ color: "var(--wr-mut)" }}>
-                Prueba con otra distancia, continente o estado, o limpia la búsqueda.
+                {t.home.sinResultadosTexto}
               </p>
               <Link href="/proponer" className="inline-block mt-3 text-sm hover:underline" style={{ color: "var(--wr-acc)" }}>
-                ¿No encontraste tu carrera? Proponela acá →
+                {t.home.proponerCarrera}
               </Link>
             </div>
           ) : (
@@ -152,7 +152,7 @@ export function HomeClient({
       ) : (
         <>
           <section className="max-w-6xl mx-auto px-4 w-full">
-            <h2 className="font-display font-bold text-2xl mb-4">★ Carreras destacadas</h2>
+            <h2 className="font-display font-bold text-2xl mb-4">{t.home.destacadas}</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {destacadas.map((r) => (
                 <RaceCard key={r.id} r={r} favorito={favoritos.has(r.id)} onFavorito={alternar} />
@@ -163,7 +163,7 @@ export function HomeClient({
           {bannerDestacado}
 
           <section className="max-w-6xl mx-auto px-4 w-full">
-            <h2 className="font-display font-bold text-2xl mb-4">Próximas aperturas e inscripciones abiertas</h2>
+            <h2 className="font-display font-bold text-2xl mb-4">{t.home.proximasAperturas}</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {proximasAperturas.map((r) => (
                 <RaceCard key={r.id} r={r} favorito={favoritos.has(r.id)} onFavorito={alternar} />
@@ -174,7 +174,7 @@ export function HomeClient({
           {bannerMedio}
 
           <section className="max-w-6xl mx-auto px-4 w-full">
-            <h2 className="font-display font-bold text-2xl mb-4">Mapa mundial</h2>
+            <h2 className="font-display font-bold text-2xl mb-4">{t.home.mapaMundial}</h2>
             <MapaMundialLazy carreras={carreras} />
           </section>
         </>

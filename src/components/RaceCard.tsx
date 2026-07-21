@@ -5,6 +5,8 @@ import type { Carrera } from "@/lib/types";
 import { Badge } from "./Badge";
 import { diasHasta, fmtFecha, nf } from "@/lib/format";
 import { slugify } from "@/lib/races-data";
+import { traducirDistancia } from "@/lib/i18n";
+import { useIdioma } from "./LanguageProvider";
 
 export function RaceCard({
   r,
@@ -15,20 +17,25 @@ export function RaceCard({
   favorito: boolean;
   onFavorito: (id: string) => void;
 }) {
+  const { idioma, t } = useIdioma();
   const d = diasHasta(r.date);
   // Varios collectors nuevos no traen distancia o precio exactos (la fuente
   // no los publica): mostrar "0K" o "$0" es engañoso, mejor un guion.
   const distanciaTexto =
-    r.km > 0 && (r.dist === "Ultra maratón" || r.dist === "Trail") ? r.km + "K" : r.dist || "—";
+    r.km > 0 && (r.dist === "Ultra maratón" || r.dist === "Trail")
+      ? r.km + "K"
+      : r.dist
+        ? traducirDistancia(r.dist, idioma)
+        : "—";
   const precioTexto = r.price > 0 ? r.cur + r.price : "—";
   // Casi todas las carreras nuevas todavía no tienen ninguna reseña: "★ 0
   // (0)" en cada tarjeta parece un dato roto, no "sin calificar todavía".
   const ratingTexto = r.rating > 0 ? "★ " + r.rating : "—";
-  const ratingLabel = r.rating > 0 ? "(" + nf(r.nrev) + ")" : "sin reseñas";
+  const ratingLabel = r.rating > 0 ? "(" + nf(r.nrev) + ")" : t.raceCard.sinResenas;
   const stats: [string, string][] = [
-    [distanciaTexto, "distancia"],
-    [fmtFecha(r.date).slice(0, 6), "fecha"],
-    [precioTexto, "desde"],
+    [distanciaTexto, t.raceCard.distancia],
+    [fmtFecha(r.date).slice(0, 6), t.raceCard.fecha],
+    [precioTexto, t.raceCard.desde],
     [ratingTexto, ratingLabel],
   ];
 
@@ -49,7 +56,7 @@ export function RaceCard({
             e.preventDefault();
             onFavorito(r.id);
           }}
-          aria-label="Favorito"
+          aria-label={t.raceCard.favorito}
           className="absolute top-2.5 right-3 rounded-full w-8 h-8 flex items-center justify-center text-base transition-transform hover:scale-110"
           style={{ background: "rgba(255,255,255,0.18)", backdropFilter: "blur(4px)" }}
         >

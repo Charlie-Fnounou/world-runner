@@ -1,6 +1,11 @@
+"use client";
+
 import { ESTADO_INFO, type EstadoInscripcion } from "@/lib/types";
+import { traducirEstado } from "@/lib/i18n";
+import { useIdioma } from "./LanguageProvider";
 
 export function Badge({ estado, sm }: { estado: EstadoInscripcion; sm?: boolean }) {
+  const { idioma } = useIdioma();
   const info = ESTADO_INFO[estado];
   return (
     <span
@@ -21,7 +26,7 @@ export function Badge({ estado, sm }: { estado: EstadoInscripcion; sm?: boolean 
         )}
         <span className="relative inline-flex rounded-full" style={{ width: 7, height: 7, background: info.color }} />
       </span>
-      {info.label}
+      {traducirEstado(estado, idioma)}
     </span>
   );
 }
