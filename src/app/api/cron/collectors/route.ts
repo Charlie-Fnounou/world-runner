@@ -227,8 +227,23 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
-  const forzarTodos = new URL(request.url).searchParams.get("todos") === "1";
+  const params = new URL(request.url).searchParams;
+  const forzarTodos = params.get("todos") === "1";
   const resultados: Record<string, unknown> = {};
+
+  // Atajo para probar/forzar solo la traducción de descripciones sin
+  // esperar a que corran los ~90 collectors antes (eso solo, con todos
+  // los recolectores por delante, puede tardar varios minutos y no cabe
+  // cómodo en una sola llamada de prueba).
+  if (params.get("soloTraducciones") === "1") {
+    try {
+      resultados["_traducciones"] = await traducirDescripcionesFaltantes(2000);
+    } catch (e) {
+      resultados["_traducciones"] = { error: e instanceof Error ? e.message : "error desconocido" };
+    }
+    return NextResponse.json(resultados);
+  }
+
   let indiceSemanal = 0;
 
   for (const { clave, correr, frecuencia } of COLLECTORES) {
