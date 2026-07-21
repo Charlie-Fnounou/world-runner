@@ -40,6 +40,9 @@ export interface Carrera {
   hotel: string;
   g: [string, string];
   desc: string;
+  descEn: string;
+  descPt: string;
+  descFr: string;
   recM: string;
   recF: string;
   profile: number[];

@@ -1,6 +1,7 @@
 "use server";
 
 import { getCarreras } from "@/lib/races-data";
+import type { Idioma } from "@/lib/i18n";
 
 export interface RecomendacionIA {
   id: string;
@@ -55,7 +56,18 @@ function datasetCompacto(carreras: Awaited<ReturnType<typeof getCarreras>>) {
   return { total: vigentes.length, texto: filas.join("\n") };
 }
 
-export async function preguntarAsistente(query: string): Promise<ResultadoAsistente> {
+// El dataset de carreras (nombres de ciudad/país, estados, etc.) sigue en
+// español sin importar el idioma elegido — son datos, no texto de la UI.
+// Lo único que cambia con el idioma es en qué idioma redacta Gemini su
+// respuesta (intro + razones de cada recomendación).
+const NOMBRE_IDIOMA: Record<Idioma, string> = {
+  es: "español",
+  en: "English",
+  pt: "português (Brasil)",
+  fr: "français",
+};
+
+export async function preguntarAsistente(query: string, idioma: Idioma = "es"): Promise<ResultadoAsistente> {
   if (!query.trim()) return { ok: false, error: "consulta-vacia" };
   if (!claveConfigurada()) return { ok: false, error: "no-configurado" };
 
@@ -71,7 +83,9 @@ ${dataset}
 
 Petición del usuario: "${query}"
 
-Recomienda entre 2 y 5 carreras de la lista que mejor cumplan la petición, considerando fecha, precio, clima, desnivel, dificultad, estado de inscripción y ubicación. Si pide un plan con varias carreras, espacialas con recuperación razonable entre fechas.`;
+Recomienda entre 2 y 5 carreras de la lista que mejor cumplan la petición, considerando fecha, precio, clima, desnivel, dificultad, estado de inscripción y ubicación. Si pide un plan con varias carreras, espacialas con recuperación razonable entre fechas.
+
+Importante: redacta tu respuesta (intro y razones) enteramente en ${NOMBRE_IDIOMA[idioma]}, sin importar en qué idioma esté escrita la petición del usuario.`;
 
   try {
     const res = await fetch(
@@ -86,14 +100,14 @@ Recomienda entre 2 y 5 carreras de la lista que mejor cumplan la petición, cons
             responseSchema: {
               type: "OBJECT",
               properties: {
-                intro: { type: "STRING", description: "1-2 frases en español resumiendo la recomendación" },
+                intro: { type: "STRING", description: `1-2 frases en ${NOMBRE_IDIOMA[idioma]} resumiendo la recomendación` },
                 recs: {
                   type: "ARRAY",
                   items: {
                     type: "OBJECT",
                     properties: {
                       id: { type: "STRING", description: "id exacto de la carrera, tal cual aparece en la lista" },
-                      reason: { type: "STRING", description: "por qué encaja, en 1-2 frases en español" },
+                      reason: { type: "STRING", description: `por qué encaja, en 1-2 frases en ${NOMBRE_IDIOMA[idioma]}` },
                     },
                     required: ["id", "reason"],
                   },

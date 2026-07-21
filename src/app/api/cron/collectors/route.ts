@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { corregirCalidadDeDatos } from "@/lib/sanidad";
+import { traducirDescripcionesFaltantes } from "@/lib/traducciones";
 import { correrCollectorRunSignup } from "@/lib/collectors/runsignup";
 import { correrCollectorFidal } from "@/lib/collectors/fidal";
 import { correrCollectorCorro } from "@/lib/collectors/corro";
@@ -249,6 +250,15 @@ export async function GET(request: Request) {
     resultados["_sanidad"] = await corregirCalidadDeDatos();
   } catch (e) {
     resultados["_sanidad"] = { error: e instanceof Error ? e.message : "error desconocido" };
+  }
+
+  // Traduce (con IA, gratis) las descripciones de carreras que todavía no
+  // tienen versión en inglés/portugués/francés — así las que traen los
+  // collectors nuevos quedan traducidas solas, sin intervención manual.
+  try {
+    resultados["_traducciones"] = await traducirDescripcionesFaltantes();
+  } catch (e) {
+    resultados["_traducciones"] = { error: e instanceof Error ? e.message : "error desconocido" };
   }
 
   return NextResponse.json(resultados);

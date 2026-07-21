@@ -13,7 +13,7 @@ import { marcarCompletada, quitarCompletada, obtenerCompletadaInicial } from "@/
 import { ResenaForm } from "./ResenaForm";
 import { ResenasList } from "./ResenasList";
 import { fmtFecha, nf } from "@/lib/format";
-import { traducirTerreno } from "@/lib/i18n";
+import { traducirTerreno, descripcionParaIdioma } from "@/lib/i18n";
 import { useIdioma } from "./LanguageProvider";
 
 // Algunos collectors traen la URL del sitio oficial tal cual la publica la
@@ -85,6 +85,7 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
   ];
 
   const done = Object.values(checks).filter(Boolean).length;
+  const descripcion = descripcionParaIdioma(r, idioma);
 
   return (
     <div className="max-w-5xl mx-auto px-4 pb-16 w-full">
@@ -171,7 +172,7 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
           <section className="rounded-2xl p-5 wr-panel">
             <h3 className="font-bold mb-2">{t.raceDetail.sobreLaCarrera}</h3>
             <p className="text-sm leading-relaxed" style={{ color: "var(--wr-mut)" }}>
-              {r.desc}
+              {descripcion}
             </p>
             <div className="mt-4 flex flex-wrap gap-2 text-xs" style={{ color: "var(--wr-mut)" }}>
               {t.raceDetail.amenities.map((s) => (

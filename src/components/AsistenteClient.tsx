@@ -5,15 +5,10 @@ import type { Carrera } from "@/lib/types";
 import { RaceCard } from "./RaceCard";
 import { useFavoritos } from "@/hooks/useFavoritos";
 import { preguntarAsistente, type RespuestaAsistente } from "@/app/actions/asistente";
-
-const EJEMPLOS = [
-  "Quiero correr una media maratón en octubre por menos de $150",
-  "Un maratón plano y fresco para hacer mi mejor marca en 2027",
-  "Quiero correr 4 carreras este año gastando poco, cerca de Latinoamérica",
-  "Recomiéndame un trail épico para mi primera ultra",
-];
+import { useIdioma } from "./LanguageProvider";
 
 export function AsistenteClient({ carreras }: { carreras: Carrera[] }) {
+  const { idioma, t } = useIdioma();
   const { favoritos, alternar } = useFavoritos();
   const [q, setQ] = useState("");
   const [pending, startTransition] = useTransition();
@@ -26,13 +21,9 @@ export function AsistenteClient({ carreras }: { carreras: Carrera[] }) {
     setErr("");
     setRes(null);
     startTransition(async () => {
-      const resultado = await preguntarAsistente(query);
+      const resultado = await preguntarAsistente(query, idioma);
       if (!resultado.ok) {
-        setErr(
-          resultado.error === "no-configurado"
-            ? "El asistente todavía no está activado. Hace falta configurar la clave de la IA."
-            : "No pude consultar al asistente en este momento. Inténtalo de nuevo.",
-        );
+        setErr(resultado.error === "no-configurado" ? t.asistente.errorNoConfigurado : t.asistente.errorGenerico);
         return;
       }
       setRes(resultado.data);
@@ -42,11 +33,10 @@ export function AsistenteClient({ carreras }: { carreras: Carrera[] }) {
   return (
     <div className="max-w-4xl mx-auto px-4 pb-16 w-full">
       <h1 className="font-display font-bold uppercase mt-6 mb-1" style={{ color: "var(--wr-ink)", fontSize: 30 }}>
-        Asistente IA
+        {t.asistente.titulo}
       </h1>
       <p className="text-sm mb-4" style={{ color: "var(--wr-mut)" }}>
-        Describe tu objetivo con tus palabras y el asistente elegirá las mejores carreras usando todos los datos de
-        la plataforma.
+        {t.asistente.descripcion}
       </p>
 
       <div className="rounded-2xl p-3 flex items-end gap-2 wr-panel">
@@ -60,7 +50,7 @@ export function AsistenteClient({ carreras }: { carreras: Carrera[] }) {
               preguntar();
             }
           }}
-          placeholder="p. ej. «Quiero bajar de 3:30 en maratón: busco algo plano, fresco y con inscripción abierta»"
+          placeholder={t.asistente.placeholder}
           className="flex-1 bg-transparent outline-none text-sm resize-none"
           style={{ color: "var(--wr-ink)" }}
         />
@@ -70,12 +60,12 @@ export function AsistenteClient({ carreras }: { carreras: Carrera[] }) {
           className="rounded-xl px-5 py-2.5 font-bold text-sm shrink-0 disabled:opacity-50"
           style={{ background: "var(--wr-acc)", color: "var(--wr-acc-ink)" }}
         >
-          {pending ? "Pensando…" : "Preguntar"}
+          {pending ? t.asistente.pensando : t.asistente.preguntar}
         </button>
       </div>
 
       <div className="flex flex-wrap gap-2 mt-3">
-        {EJEMPLOS.map((ex) => (
+        {t.asistente.ejemplos.map((ex) => (
           <button
             key={ex}
             onClick={() => {
@@ -94,7 +84,7 @@ export function AsistenteClient({ carreras }: { carreras: Carrera[] }) {
         <div className="mt-6 rounded-2xl p-8 text-center wr-panel">
           <div className="text-2xl animate-pulse">🏃‍♀️💨</div>
           <p className="text-sm mt-2" style={{ color: "var(--wr-mut)" }}>
-            Analizando fechas, precios, clima y desniveles…
+            {t.asistente.analizando}
           </p>
         </div>
       )}

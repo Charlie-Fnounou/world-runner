@@ -130,6 +130,17 @@ export interface Diccionario {
     publicar: string;
     sinResenas: string;
   };
+  asistente: {
+    titulo: string;
+    descripcion: string;
+    placeholder: string;
+    pensando: string;
+    preguntar: string;
+    analizando: string;
+    errorNoConfigurado: string;
+    errorGenerico: string;
+    ejemplos: string[];
+  };
 }
 
 export const DICCIONARIOS: Record<Idioma, Diccionario> = {
@@ -264,6 +275,23 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       publicar: "Publicar reseña",
       sinResenas: "Todavía no hay reseñas de esta carrera. ¡Sé el primero en dejar una!",
     },
+    asistente: {
+      titulo: "Asistente IA",
+      descripcion:
+        "Describe tu objetivo con tus palabras y el asistente elegirá las mejores carreras usando todos los datos de la plataforma.",
+      placeholder: "p. ej. «Quiero bajar de 3:30 en maratón: busco algo plano, fresco y con inscripción abierta»",
+      pensando: "Pensando…",
+      preguntar: "Preguntar",
+      analizando: "Analizando fechas, precios, clima y desniveles…",
+      errorNoConfigurado: "El asistente todavía no está activado. Hace falta configurar la clave de la IA.",
+      errorGenerico: "No pude consultar al asistente en este momento. Inténtalo de nuevo.",
+      ejemplos: [
+        "Quiero correr una media maratón en octubre por menos de $150",
+        "Un maratón plano y fresco para hacer mi mejor marca en 2027",
+        "Quiero correr 4 carreras este año gastando poco, cerca de Latinoamérica",
+        "Recomiéndame un trail épico para mi primera ultra",
+      ],
+    },
   },
   en: {
     nav: {
@@ -395,6 +423,23 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       guardando: "Saving…",
       publicar: "Post review",
       sinResenas: "No reviews for this race yet. Be the first to leave one!",
+    },
+    asistente: {
+      titulo: "AI Assistant",
+      descripcion:
+        "Describe your goal in your own words and the assistant will pick the best races using all the platform's data.",
+      placeholder: "e.g. «I want to break 3:30 in a marathon: looking for something flat, cool and with open registration»",
+      pensando: "Thinking…",
+      preguntar: "Ask",
+      analizando: "Analyzing dates, prices, weather and elevation…",
+      errorNoConfigurado: "The assistant isn't activated yet. The AI key needs to be configured.",
+      errorGenerico: "I couldn't reach the assistant right now. Please try again.",
+      ejemplos: [
+        "I want to run a half marathon in October for under $150",
+        "A flat, cool marathon to set my best time in 2027",
+        "I want to run 4 races this year on a budget, near Latin America",
+        "Recommend an epic trail race for my first ultra",
+      ],
     },
   },
   pt: {
@@ -528,6 +573,23 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       publicar: "Publicar avaliação",
       sinResenas: "Ainda não há avaliações desta corrida. Seja o primeiro a deixar uma!",
     },
+    asistente: {
+      titulo: "Assistente de IA",
+      descripcion:
+        "Descreva seu objetivo com suas palavras e o assistente vai escolher as melhores corridas usando todos os dados da plataforma.",
+      placeholder: "ex. «Quero fazer menos de 3h30 na maratona: busco algo plano, fresco e com inscrição aberta»",
+      pensando: "Pensando…",
+      preguntar: "Perguntar",
+      analizando: "Analisando datas, preços, clima e desnível…",
+      errorNoConfigurado: "O assistente ainda não está ativado. É preciso configurar a chave da IA.",
+      errorGenerico: "Não consegui consultar o assistente agora. Tente de novo.",
+      ejemplos: [
+        "Quero correr uma meia maratona em outubro por menos de $150",
+        "Uma maratona plana e fresca para bater meu recorde em 2027",
+        "Quero correr 4 corridas este ano gastando pouco, perto da América Latina",
+        "Recomende um trail épico para minha primeira ultra",
+      ],
+    },
   },
   fr: {
     nav: {
@@ -660,6 +722,23 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       publicar: "Publier l'avis",
       sinResenas: "Aucun avis pour cette course pour l'instant. Soyez le premier à en laisser un !",
     },
+    asistente: {
+      titulo: "Assistant IA",
+      descripcion:
+        "Décrivez votre objectif avec vos mots et l'assistant choisira les meilleures courses en utilisant toutes les données de la plateforme.",
+      placeholder: "ex. « Je veux passer sous 3h30 au marathon : je cherche quelque chose de plat, frais et avec inscription ouverte »",
+      pensando: "Réflexion…",
+      preguntar: "Demander",
+      analizando: "Analyse des dates, prix, météo et dénivelé…",
+      errorNoConfigurado: "L'assistant n'est pas encore activé. La clé de l'IA doit être configurée.",
+      errorGenerico: "Impossible de contacter l'assistant pour le moment. Réessayez.",
+      ejemplos: [
+        "Je veux courir un semi-marathon en octobre pour moins de 150 $",
+        "Un marathon plat et frais pour battre mon record en 2027",
+        "Je veux courir 4 courses cette année à petit budget, près de l'Amérique latine",
+        "Recommandez-moi un trail épique pour mon premier ultra",
+      ],
+    },
   },
 };
 
@@ -709,4 +788,19 @@ export function traducirContinente(valor: string, idioma: Idioma): string {
 
 export function traducirEstado(valor: EstadoInscripcion, idioma: Idioma): string {
   return ETIQUETAS_ESTADO[idioma][valor];
+}
+
+// La descripción de cada carrera es contenido libre cargado por los
+// collectors/admin (no una etiqueta fija de la UI), así que se traduce
+// aparte con IA (ver traducciones.ts) y se guarda una copia por idioma
+// en la base. Si todavía no se tradujo (carrera nueva, cron no pasó
+// todavía) se muestra el original en español antes que dejarlo vacío.
+export function descripcionParaIdioma(
+  carrera: { desc: string; descEn: string; descPt: string; descFr: string },
+  idioma: Idioma,
+): string {
+  if (idioma === "en") return carrera.descEn || carrera.desc;
+  if (idioma === "pt") return carrera.descPt || carrera.desc;
+  if (idioma === "fr") return carrera.descFr || carrera.desc;
+  return carrera.desc;
 }

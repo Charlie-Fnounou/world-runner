@@ -115,6 +115,14 @@ model Evento {
   labelWorldAthletics  String? // ej. "Gold", "Silver", "Elite"
 
   descripcion   String?
+  // Traducciones generadas automáticamente (ver traducciones.ts) a partir
+  // de "descripcion" (español, el idioma en el que cargan los collectors
+  // y el panel de admin). Null hasta que el cron las genera; la UI usa
+  // "descripcion" como respaldo mientras tanto (ver descripcionParaIdioma
+  // en i18n.ts).
+  descripcionEn String?
+  descripcionPt String?
+  descripcionFr String?
   requisitos    String?
   premios       String?
   hidratacion   String?
