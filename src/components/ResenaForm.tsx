@@ -3,17 +3,18 @@
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { guardarResena, obtenerMiResena, type DatosResena } from "@/app/actions/resenas";
+import { useIdioma } from "./LanguageProvider";
 
-const CATEGORIAS: { campo: keyof Omit<DatosResena, "comentario">; label: string }[] = [
-  { campo: "organizacion", label: "Organización" },
-  { campo: "paisajes", label: "Paisajes" },
-  { campo: "dificultad", label: "Dificultad" },
-  { campo: "medalla", label: "Medalla" },
-  { campo: "camiseta", label: "Camiseta" },
-  { campo: "hidratacion", label: "Hidratación" },
-  { campo: "expo", label: "Expo del corredor" },
-  { campo: "seguridad", label: "Seguridad" },
-  { campo: "calidadPrecio", label: "Calidad/precio" },
+const CAMPOS: (keyof Omit<DatosResena, "comentario">)[] = [
+  "organizacion",
+  "paisajes",
+  "dificultad",
+  "medalla",
+  "camiseta",
+  "hidratacion",
+  "expo",
+  "seguridad",
+  "calidadPrecio",
 ];
 
 const VACIO: DatosResena = {
@@ -29,7 +30,7 @@ const VACIO: DatosResena = {
   comentario: "",
 };
 
-function Estrellas({ valor, onChange }: { valor: number; onChange: (v: number) => void }) {
+function Estrellas({ valor, onChange, aria }: { valor: number; onChange: (v: number) => void; aria: (n: number) => string }) {
   return (
     <div className="flex gap-0.5">
       {[1, 2, 3, 4, 5].map((n) => (
@@ -38,7 +39,7 @@ function Estrellas({ valor, onChange }: { valor: number; onChange: (v: number) =
           type="button"
           onClick={() => onChange(n)}
           className="text-lg leading-none hover:scale-110 transition-transform"
-          aria-label={`${n} estrellas`}
+          aria-label={aria(n)}
         >
           {n <= valor ? "★" : "☆"}
         </button>
@@ -48,6 +49,7 @@ function Estrellas({ valor, onChange }: { valor: number; onChange: (v: number) =
 }
 
 export function ResenaForm({ eventoId }: { eventoId: string }) {
+  const { t } = useIdioma();
   const [datos, setDatos] = useState<DatosResena>(VACIO);
   const [cargando, setCargando] = useState(true);
   const [pending, startTransition] = useTransition();
@@ -63,9 +65,9 @@ export function ResenaForm({ eventoId }: { eventoId: string }) {
   }, [eventoId]);
 
   function enviar() {
-    const faltantes = CATEGORIAS.filter((c) => datos[c.campo] < 1);
+    const faltantes = CAMPOS.filter((campo) => datos[campo] < 1);
     if (faltantes.length > 0) {
-      setError("Calificá todas las categorías antes de enviar.");
+      setError(t.resena.errorFaltantes);
       return;
     }
     setError("");
@@ -76,7 +78,7 @@ export function ResenaForm({ eventoId }: { eventoId: string }) {
           router.push("/login");
           return;
         }
-        setError("No pudimos guardar tu reseña. Intenta de nuevo.");
+        setError(t.resena.errorGuardar);
         return;
       }
       setEnviado(true);
@@ -88,7 +90,7 @@ export function ResenaForm({ eventoId }: { eventoId: string }) {
   if (enviado) {
     return (
       <div className="rounded-xl p-4 text-sm wr-chip" style={{ color: "var(--wr-ink)" }}>
-        ✅ ¡Gracias por tu reseña! Ya se sumó al promedio de esta carrera.
+        {t.resena.gracias}
       </div>
     );
   }
@@ -96,12 +98,12 @@ export function ResenaForm({ eventoId }: { eventoId: string }) {
   return (
     <div className="flex flex-col gap-3">
       <div className="grid sm:grid-cols-2 gap-x-6 gap-y-2.5">
-        {CATEGORIAS.map((c) => (
-          <div key={c.campo} className="flex items-center justify-between gap-2">
+        {CAMPOS.map((campo) => (
+          <div key={campo} className="flex items-center justify-between gap-2">
             <span className="text-sm" style={{ color: "var(--wr-mut)" }}>
-              {c.label}
+              {t.resena.categorias[campo]}
             </span>
-            <Estrellas valor={datos[c.campo]} onChange={(v) => setDatos((d) => ({ ...d, [c.campo]: v }))} />
+            <Estrellas valor={datos[campo]} onChange={(v) => setDatos((d) => ({ ...d, [campo]: v }))} aria={t.resena.estrellasAria} />
           </div>
         ))}
       </div>
@@ -109,7 +111,7 @@ export function ResenaForm({ eventoId }: { eventoId: string }) {
         value={datos.comentario}
         onChange={(e) => setDatos((d) => ({ ...d, comentario: e.target.value }))}
         rows={3}
-        placeholder="Contá tu experiencia (opcional)"
+        placeholder={t.resena.comentarioPlaceholder}
         className="w-full rounded-xl px-3 py-2.5 text-sm outline-none resize-none wr-chip"
         style={{ color: "var(--wr-ink)" }}
       />
@@ -124,7 +126,7 @@ export function ResenaForm({ eventoId }: { eventoId: string }) {
         className="rounded-full px-4 py-2.5 text-sm font-semibold disabled:opacity-50"
         style={{ background: "var(--wr-acc)", color: "var(--wr-acc-ink)" }}
       >
-        {pending ? "Guardando…" : "Publicar reseña"}
+        {pending ? t.resena.guardando : t.resena.publicar}
       </button>
     </div>
   );

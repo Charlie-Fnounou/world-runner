@@ -13,6 +13,8 @@ import { marcarCompletada, quitarCompletada, obtenerCompletadaInicial } from "@/
 import { ResenaForm } from "./ResenaForm";
 import { ResenasList } from "./ResenasList";
 import { fmtFecha, nf } from "@/lib/format";
+import { traducirTerreno } from "@/lib/i18n";
+import { useIdioma } from "./LanguageProvider";
 
 // Algunos collectors traen la URL del sitio oficial tal cual la publica la
 // fuente, que a veces viene mal escrita (ej. "http//;sitio.com" en vez de
@@ -26,22 +28,8 @@ function hostnameDe(web: string): string {
   }
 }
 
-const CHECKLIST = [
-  "Inscripción confirmada",
-  "Pasaporte vigente",
-  "Visa (si aplica)",
-  "Seguro de viaje",
-  "Vuelo reservado",
-  "Hotel reservado",
-  "Recogida de dorsal agendada",
-  "Chip / dorsal",
-  "Equipamiento probado",
-  "Plan de hidratación",
-  "Transporte a la salida",
-  "Visita a la Expo",
-];
-
 export function RaceDetailClient({ r }: { r: Carrera }) {
+  const { idioma, t } = useIdioma();
   const { favoritos, alternar } = useFavoritos();
   const { activa: alertaActiva, alternar: alternarAlerta } = useAlertas(r.id);
   const [checks, setChecks] = useState<Record<string, boolean>>({});
@@ -74,14 +62,7 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
     });
   }
 
-  const cta =
-    r.status === "cerrada"
-      ? "Sitio oficial ↗"
-      : r.status === "sorteo"
-        ? "Entrar al sorteo ↗"
-        : r.status === "proximamente"
-          ? "Ver convocatoria ↗"
-          : "Inscribirse ahora ↗";
+  const cta = t.raceDetail.cta[r.status === "abierta" || r.status === "ultimos" ? "abierta" : r.status];
 
   // Varios collectors nuevos no traen distancia, precio, desnivel,
   // corredores o clima exactos (la fuente no los publica): "0 km", "$0" o
@@ -93,14 +74,14 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
   const tempTexto = r.temp !== 0 ? r.temp + " °C" : "—";
 
   const datos: [string, string][] = [
-    ["Distancia", distanciaTexto],
-    ["Precio desde", precioTexto],
-    ["Corredores", corredoresTexto],
-    ["Desnivel +", desnivelTexto],
-    ["Temp. promedio", tempTexto],
-    ["Tiempo límite", r.limit || "—"],
-    ["Dificultad", "●".repeat(r.diff) + "○".repeat(5 - r.diff)],
-    ["Valoración", r.rating > 0 ? "★ " + r.rating + " (" + nf(r.nrev) + ")" : "Sin valoraciones"],
+    [t.raceDetail.datos.distancia, distanciaTexto],
+    [t.raceDetail.datos.precioDesde, precioTexto],
+    [t.raceDetail.datos.corredores, corredoresTexto],
+    [t.raceDetail.datos.desnivel, desnivelTexto],
+    [t.raceDetail.datos.tempPromedio, tempTexto],
+    [t.raceDetail.datos.tiempoLimite, r.limit || "—"],
+    [t.raceDetail.datos.dificultad, "●".repeat(r.diff) + "○".repeat(5 - r.diff)],
+    [t.raceDetail.datos.valoracion, r.rating > 0 ? "★ " + r.rating + " (" + nf(r.nrev) + ")" : t.raceDetail.datos.sinValoraciones],
   ];
 
   const done = Object.values(checks).filter(Boolean).length;
@@ -112,7 +93,7 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
         className="mt-4 mb-3 inline-block text-sm font-medium hover:opacity-70"
         style={{ color: "var(--wr-mut)" }}
       >
-        ← Volver
+        {t.raceDetail.volver}
       </button>
 
       <div className="rounded-3xl overflow-hidden" style={{ background: `linear-gradient(135deg,${r.g[0]},${r.g[1]})` }}>
@@ -124,7 +105,7 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
                 ★ World Marathon Major
               </span>
             )}
-            <span className="text-xs bg-white/15 rounded-full px-3 py-1">{r.type}</span>
+            <span className="text-xs bg-white/15 rounded-full px-3 py-1">{traducirTerreno(r.type, idioma)}</span>
             {r.km > 0 && <span className="text-xs bg-white/15 rounded-full px-3 py-1">{r.km} km</span>}
           </div>
           <h1
@@ -152,7 +133,7 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
               </a>
               <button
                 onClick={alternarAlerta}
-                title="Alertas de esta carrera"
+                title={t.raceDetail.alertasTitulo}
                 className="rounded-xl px-4 py-3.5 text-xl transition-colors"
                 style={{ background: alertaActiva ? "rgba(255,255,255,0.35)" : "rgba(255,255,255,0.15)" }}
               >
@@ -167,10 +148,7 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
             </div>
           </div>
           {alertaActiva && (
-            <p className="mt-3 text-xs text-white/80">
-              🔔 Alertas activas: te avisaremos si cambia el precio, quedan pocos cupos, cambia la fecha o el
-              recorrido, o abre/cierra la inscripción.
-            </p>
+            <p className="mt-3 text-xs text-white/80">{t.raceDetail.alertasActivas}</p>
           )}
         </div>
       </div>
@@ -191,30 +169,28 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
       <div className="grid md:grid-cols-3 gap-4 mt-4">
         <div className="md:col-span-2 flex flex-col gap-4">
           <section className="rounded-2xl p-5 wr-panel">
-            <h3 className="font-bold mb-2">Sobre la carrera</h3>
+            <h3 className="font-bold mb-2">{t.raceDetail.sobreLaCarrera}</h3>
             <p className="text-sm leading-relaxed" style={{ color: "var(--wr-mut)" }}>
               {r.desc}
             </p>
             <div className="mt-4 flex flex-wrap gap-2 text-xs" style={{ color: "var(--wr-mut)" }}>
-              {["🏅 Medalla finisher", "👕 Camiseta oficial", "💧 Hidratación en ruta", "🎪 Expo del corredor", "📸 Fotos oficiales", "🚑 Asistencia médica"].map(
-                (s) => (
-                  <span key={s} className="rounded-full px-3 py-1.5 wr-chip">
-                    {s}
-                  </span>
-                ),
-              )}
+              {t.raceDetail.amenities.map((s) => (
+                <span key={s} className="rounded-full px-3 py-1.5 wr-chip">
+                  {s}
+                </span>
+              ))}
             </div>
           </section>
 
           <section className="rounded-2xl p-5 wr-panel">
-            <h3 className="font-bold mb-3">Historial de ediciones</h3>
+            <h3 className="font-bold mb-3">{t.raceDetail.historialEdiciones}</h3>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="text-left text-xs uppercase tracking-wider" style={{ color: "var(--wr-mut)" }}>
-                    <th className="pb-2 pr-4">Edición</th>
-                    <th className="pb-2 pr-4">Corredores*</th>
-                    <th className="pb-2">Precio*</th>
+                    <th className="pb-2 pr-4">{t.raceDetail.colEdicion}</th>
+                    <th className="pb-2 pr-4">{t.raceDetail.colCorredores}</th>
+                    <th className="pb-2">{t.raceDetail.colPrecio}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -232,33 +208,32 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
               </table>
             </div>
             <p className="text-[11px] mt-2" style={{ color: "var(--wr-mut)" }}>
-              * Estimado a partir de la edición actual. Se reemplaza por datos reales cuando los robots
-              registren cada edición.
+              {t.raceDetail.historialNota}
             </p>
           </section>
 
           {r.profile.length > 1 && (
             <section className="rounded-2xl p-5 wr-panel">
-              <h3 className="font-bold mb-1">Perfil de elevación</h3>
+              <h3 className="font-bold mb-1">{t.raceDetail.perfilElevacion}</h3>
               <p className="text-xs mb-3" style={{ color: "var(--wr-mut)" }}>
-                Desnivel positivo acumulado: {nf(r.elev)} m
+                {t.raceDetail.desnivelAcumulado(nf(r.elev))}
               </p>
               <ElevationChart profile={r.profile} color={r.g[0]} />
             </section>
           )}
 
           <section className="rounded-2xl p-5 wr-panel">
-            <h3 className="font-bold mb-3">Récords</h3>
+            <h3 className="font-bold mb-3">{t.raceDetail.records}</h3>
             <div className="grid sm:grid-cols-2 gap-3 text-sm">
               <div>
                 <div className="text-xs uppercase tracking-wider" style={{ color: "var(--wr-mut)" }}>
-                  Masculino
+                  {t.raceDetail.masculino}
                 </div>
                 <div className="font-mono mt-1">{r.recM}</div>
               </div>
               <div>
                 <div className="text-xs uppercase tracking-wider" style={{ color: "var(--wr-mut)" }}>
-                  Femenino
+                  {t.raceDetail.femenino}
                 </div>
                 <div className="font-mono mt-1">{r.recF}</div>
               </div>
@@ -268,7 +243,7 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
 
         <div className="flex flex-col gap-4">
           <section className="rounded-2xl p-5 wr-panel">
-            <h3 className="font-bold mb-3">¿Ya la corriste?</h3>
+            <h3 className="font-bold mb-3">{t.raceDetail.yaLaCorriste}</h3>
             {completada ? (
               <button
                 onClick={alternarCompletada}
@@ -276,14 +251,14 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
                 className="rounded-full px-4 py-2.5 text-sm font-semibold w-full"
                 style={{ background: "var(--wr-acc)", color: "var(--wr-acc-ink)" }}
               >
-                ✅ Marcada como corrida · quitar
+                {t.raceDetail.marcadaComoCorrida}
               </button>
             ) : (
               <div className="flex flex-col gap-2">
                 <input
                   value={tiempo}
                   onChange={(e) => setTiempo(e.target.value)}
-                  placeholder="Tu tiempo (opcional), ej. 3:45:12"
+                  placeholder={t.raceDetail.tiempoPlaceholder}
                   className="w-full rounded-xl px-3 py-2.5 text-sm outline-none wr-chip"
                   style={{ color: "var(--wr-ink)" }}
                 />
@@ -293,25 +268,25 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
                   className="rounded-full px-4 py-2.5 text-sm font-semibold w-full wr-chip"
                   style={{ color: "var(--wr-ink)" }}
                 >
-                  Marcar como corrida
+                  {t.raceDetail.marcarComoCorrida}
                 </button>
               </div>
             )}
           </section>
 
           <section className="rounded-2xl p-5 wr-panel">
-            <h3 className="font-bold mb-3">Información práctica</h3>
+            <h3 className="font-bold mb-3">{t.raceDetail.informacionPractica}</h3>
             <dl className="text-sm flex flex-col gap-2.5">
               <div className="flex justify-between gap-3">
-                <dt style={{ color: "var(--wr-mut)" }}>Aeropuerto</dt>
+                <dt style={{ color: "var(--wr-mut)" }}>{t.raceDetail.aeropuerto}</dt>
                 <dd className="text-right">{r.airport}</dd>
               </div>
               <div className="flex justify-between gap-3">
-                <dt style={{ color: "var(--wr-mut)" }}>Zona de hoteles</dt>
+                <dt style={{ color: "var(--wr-mut)" }}>{t.raceDetail.zonaHoteles}</dt>
                 <dd className="text-right">{r.hotel}</dd>
               </div>
               <div className="flex justify-between gap-3">
-                <dt style={{ color: "var(--wr-mut)" }}>Sitio oficial</dt>
+                <dt style={{ color: "var(--wr-mut)" }}>{t.raceDetail.sitioOficial}</dt>
                 <dd className="text-right truncate max-w-[55%]">
                   <a href={r.web} target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--wr-acc)" }}>
                     {hostnameDe(r.web)}
@@ -324,19 +299,19 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
               className="inline-block mt-3 text-xs hover:underline"
               style={{ color: "var(--wr-mut)" }}
             >
-              ⚠️ Reportar un error en esta carrera
+              {t.raceDetail.reportarError}
             </Link>
           </section>
 
           <section className="rounded-2xl p-5 wr-panel">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-bold">Checklist del corredor</h3>
+              <h3 className="font-bold">{t.raceDetail.checklistTitulo}</h3>
               <span className="text-xs font-mono" style={{ color: "var(--wr-mut)" }}>
-                {done}/{CHECKLIST.length}
+                {done}/{t.raceDetail.checklist.length}
               </span>
             </div>
             <div className="flex flex-col gap-2">
-              {CHECKLIST.map((item) => (
+              {t.raceDetail.checklist.map((item) => (
                 <label key={item} className="flex items-center gap-2.5 text-sm cursor-pointer">
                   <input
                     type="checkbox"
@@ -356,11 +331,11 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
 
       <div className="grid md:grid-cols-3 gap-4 mt-4">
         <section className="rounded-2xl p-5 wr-panel">
-          <h3 className="font-bold mb-3">Dejá tu reseña</h3>
+          <h3 className="font-bold mb-3">{t.raceDetail.dejaResena}</h3>
           <ResenaForm eventoId={r.id} />
         </section>
         <section className="rounded-2xl p-5 wr-panel md:col-span-2">
-          <h3 className="font-bold mb-3">Reseñas de corredores</h3>
+          <h3 className="font-bold mb-3">{t.raceDetail.resenasCorredores}</h3>
           <ResenasList eventoId={r.id} />
         </section>
       </div>

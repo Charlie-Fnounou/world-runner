@@ -2,13 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { obtenerResenas, type ResenaConUsuario } from "@/app/actions/resenas";
+import { useIdioma } from "./LanguageProvider";
+import type { Idioma } from "@/lib/i18n";
 
-function fmtFechaCorta(iso: string): string {
+function fmtFechaCorta(iso: string, idioma: Idioma): string {
   const d = new Date(iso);
-  return d.toLocaleDateString("es", { day: "numeric", month: "short", year: "numeric" });
+  return d.toLocaleDateString(idioma, { day: "numeric", month: "short", year: "numeric" });
 }
 
 export function ResenasList({ eventoId }: { eventoId: string }) {
+  const { idioma, t } = useIdioma();
   const [resenas, setResenas] = useState<ResenaConUsuario[] | null>(null);
 
   useEffect(() => {
@@ -19,7 +22,7 @@ export function ResenasList({ eventoId }: { eventoId: string }) {
   if (resenas.length === 0) {
     return (
       <p className="text-sm" style={{ color: "var(--wr-mut)" }}>
-        Todavía no hay reseñas de esta carrera. ¡Sé el primero en dejar una!
+        {t.resena.sinResenas}
       </p>
     );
   }
@@ -42,7 +45,7 @@ export function ResenasList({ eventoId }: { eventoId: string }) {
             </p>
           )}
           <span className="text-[11px]" style={{ color: "var(--wr-mut)" }}>
-            {fmtFechaCorta(r.creadoEn)}
+            {fmtFechaCorta(r.creadoEn, idioma)}
           </span>
         </div>
       ))}
