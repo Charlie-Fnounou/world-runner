@@ -5,10 +5,12 @@ import Link from "next/link";
 import type { Carrera, EstadoInscripcion } from "@/lib/types";
 import { DISTANCIAS, CONTINENTES } from "@/lib/types";
 import { traducirDistancia, traducirContinente, traducirEstado } from "@/lib/i18n";
+import { normalizar } from "@/lib/text";
 import { SearchBar } from "./SearchBar";
 import { RaceCard } from "./RaceCard";
 import { MapaMundialLazy } from "./MapaMundialLazy";
 import { Chip } from "./Chip";
+import { SeguimientoUbicacionBanner } from "./SeguimientoUbicacionBanner";
 import { useFavoritos } from "@/hooks/useFavoritos";
 import { buscarCarreras } from "@/lib/search";
 import { useIdioma } from "./LanguageProvider";
@@ -51,6 +53,20 @@ export function HomeClient({
       })
       .sort((a, b) => a.date.localeCompare(b.date));
   }, [buscadas, fDist, fCont, fStat]);
+
+  // Cuando lo que se busca coincide exacto con un país o ciudad presente en
+  // el catálogo (sin importar mayúsculas/tildes), se ofrece seguir ese
+  // lugar entero para recibir un resumen semanal por correo — a diferencia
+  // de "Alertas", que es por carrera puntual (ver SeguimientoUbicacionBanner).
+  const ubicacionEnfocada = useMemo(() => {
+    const q = normalizar(query.trim());
+    if (!q) return null;
+    const porPais = carreras.find((r) => normalizar(r.country) === q);
+    if (porPais) return { tipo: "pais" as const, valor: porPais.country };
+    const porCiudad = carreras.find((r) => normalizar(r.city) === q);
+    if (porCiudad) return { tipo: "ciudad" as const, valor: porCiudad.city };
+    return null;
+  }, [carreras, query]);
 
   const destacadas = useMemo(() => carreras.filter((r) => r.major), [carreras]);
 
@@ -120,6 +136,9 @@ export function HomeClient({
 
       {mostrarExplorador ? (
         <section className="max-w-6xl mx-auto px-4 w-full">
+          {ubicacionEnfocada && (
+            <SeguimientoUbicacionBanner tipo={ubicacionEnfocada.tipo} valor={ubicacionEnfocada.valor} />
+          )}
           <div className="flex items-baseline justify-between mb-4">
             <h2 className="font-display font-bold text-2xl">{t.home.encontradas(resultados.length)}</h2>
             <span className="text-xs font-mono" style={{ color: "var(--wr-mut)" }}>

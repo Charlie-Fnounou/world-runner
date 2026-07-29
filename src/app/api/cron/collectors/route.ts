@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { corregirCalidadDeDatos } from "@/lib/sanidad";
 import { traducirDescripcionesFaltantes } from "@/lib/traducciones";
+import { enviarResumenesUbicacion } from "@/lib/resumenesUbicacion";
 import { correrCollectorRunSignup } from "@/lib/collectors/runsignup";
 import { correrCollectorFidal } from "@/lib/collectors/fidal";
 import { correrCollectorCorro } from "@/lib/collectors/corro";
@@ -274,6 +275,14 @@ export async function GET(request: Request) {
     resultados["_traducciones"] = await traducirDescripcionesFaltantes();
   } catch (e) {
     resultados["_traducciones"] = { error: e instanceof Error ? e.message : "error desconocido" };
+  }
+
+  // Resumen semanal por email a quienes siguen un país/ciudad (ver
+  // resumenesUbicacion.ts — cada suscripción se procesa ~cada 7 días).
+  try {
+    resultados["_resumenesUbicacion"] = await enviarResumenesUbicacion();
+  } catch (e) {
+    resultados["_resumenesUbicacion"] = { error: e instanceof Error ? e.message : "error desconocido" };
   }
 
   return NextResponse.json(resultados);

@@ -320,12 +320,31 @@ model Usuario {
 
   creadoEn DateTime @default(now())
 
-  favoritos   Favorito[]
-  alertas     Alerta[]
-  completadas CarreraCompletada[]
-  resenas     Resena[]
-  logros      UsuarioLogro[]
-  envios      EnvioComunidad[]
+  favoritos             Favorito[]
+  alertas               Alerta[]
+  completadas           CarreraCompletada[]
+  resenas               Resena[]
+  logros                UsuarioLogro[]
+  envios                EnvioComunidad[]
+  seguimientosUbicacion SeguimientoUbicacion[]
+}
+
+// Suscripción a un país o ciudad entero (a diferencia de Alerta, que es
+// por carrera puntual). Dispara un resumen semanal por email con las
+// próximas carreras de ese lugar (ver resumenesUbicacion.ts) en vez de
+// notificar cambios puntuales.
+model SeguimientoUbicacion {
+  id        String  @id @default(cuid())
+  usuarioId String
+  usuario   Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  tipo      String // "pais" | "ciudad"
+  valor     String // nombre tal cual aparece en Evento.pais / Evento.ciudad
+
+  ultimoEnvio DateTime? // para mandar el resumen cada ~7 días, no cada corrida del cron
+  creadoEn    DateTime  @default(now())
+
+  @@unique([usuarioId, tipo, valor])
+  @@index([tipo, valor])
 }
 
 model Favorito {

@@ -59,6 +59,12 @@ export interface Diccionario {
     lista: string;
     mapa: string;
     cualquierEstado: string;
+    viendoPais: (v: string) => string;
+    viendoCiudad: (v: string) => string;
+    seguirLugar: string;
+    siguiendoLugar: string;
+    dejarDeSeguir: string;
+    seguimientoAviso: string;
   };
   raceCard: {
     distancia: string;
@@ -191,6 +197,12 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       lista: "☰ Lista",
       mapa: "🗺 Mapa",
       cualquierEstado: "Cualquier estado",
+      viendoPais: (v) => `Mostrando carreras de ${v}`,
+      viendoCiudad: (v) => `Mostrando carreras en ${v}`,
+      seguirLugar: "🔔 Seguir",
+      siguiendoLugar: "✅ Siguiendo",
+      dejarDeSeguir: "Dejar de seguir",
+      seguimientoAviso: "Te va a llegar un resumen semanal por correo con las próximas carreras de acá.",
     },
     raceCard: { distancia: "distancia", fecha: "fecha", desde: "desde", sinResenas: "sin reseñas", favorito: "Favorito" },
     raceDetail: {
@@ -340,6 +352,12 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       lista: "☰ List",
       mapa: "🗺 Map",
       cualquierEstado: "Any status",
+      viendoPais: (v) => `Showing races in ${v}`,
+      viendoCiudad: (v) => `Showing races in ${v}`,
+      seguirLugar: "🔔 Follow",
+      siguiendoLugar: "✅ Following",
+      dejarDeSeguir: "Unfollow",
+      seguimientoAviso: "You'll get a weekly email summary with upcoming races here.",
     },
     raceCard: { distancia: "distance", fecha: "date", desde: "from", sinResenas: "no reviews yet", favorito: "Favorite" },
     raceDetail: {
@@ -489,6 +507,12 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       lista: "☰ Lista",
       mapa: "🗺 Mapa",
       cualquierEstado: "Qualquer status",
+      viendoPais: (v) => `Mostrando corridas de ${v}`,
+      viendoCiudad: (v) => `Mostrando corridas em ${v}`,
+      seguirLugar: "🔔 Seguir",
+      siguiendoLugar: "✅ Seguindo",
+      dejarDeSeguir: "Deixar de seguir",
+      seguimientoAviso: "Você vai receber um resumo semanal por email com as próximas corridas daqui.",
     },
     raceCard: { distancia: "distância", fecha: "data", desde: "a partir de", sinResenas: "sem avaliações", favorito: "Favorito" },
     raceDetail: {
@@ -638,6 +662,12 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       lista: "☰ Liste",
       mapa: "🗺 Carte",
       cualquierEstado: "Tout statut",
+      viendoPais: (v) => `Affichage des courses en ${v}`,
+      viendoCiudad: (v) => `Affichage des courses à ${v}`,
+      seguirLugar: "🔔 Suivre",
+      siguiendoLugar: "✅ Suivi",
+      dejarDeSeguir: "Ne plus suivre",
+      seguimientoAviso: "Vous recevrez un résumé hebdomadaire par email avec les prochaines courses ici.",
     },
     raceCard: { distancia: "distance", fecha: "date", desde: "à partir de", sinResenas: "aucun avis", favorito: "Favori" },
     raceDetail: {

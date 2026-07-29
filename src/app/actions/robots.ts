@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/admin";
 import { corregirCalidadDeDatos } from "@/lib/sanidad";
 import { traducirDescripcionesFaltantes } from "@/lib/traducciones";
+import { enviarResumenesUbicacion } from "@/lib/resumenesUbicacion";
 import { correrCollectorRunSignup } from "@/lib/collectors/runsignup";
 import { correrCollectorFidal } from "@/lib/collectors/fidal";
 import { correrCollectorCorro } from "@/lib/collectors/corro";
@@ -202,6 +203,7 @@ export async function correrCollectoresAhora() {
 
   await corregirCalidadDeDatos().catch(() => {});
   await traducirDescripcionesFaltantes().catch(() => {});
+  await enviarResumenesUbicacion().catch(() => {});
 
   revalidatePath("/admin/robots");
 }
