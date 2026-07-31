@@ -147,6 +147,81 @@ export interface Diccionario {
     errorGenerico: string;
     ejemplos: string[];
   };
+  mapa: {
+    verCarrera: string;
+  };
+  rankings: {
+    titulo: string;
+    subtitulo: string;
+    tabs: { rapidas: string; populares: string; economicas: string; dificiles: string; valoradas: string; frescas: string };
+    corredoresSufijo: string;
+    sinDatos: string;
+  };
+  comparar: {
+    titulo: string;
+    faltanCarreras: string;
+    verFicha: string;
+    filas: {
+      fecha: string;
+      distancia: string;
+      precio: string;
+      corredores: string;
+      desnivel: string;
+      tempPromedio: string;
+      tiempoLimite: string;
+      dificultad: string;
+      valoracion: string;
+      estado: string;
+    };
+  };
+  viaje: {
+    titulo: string;
+    descripcion: string;
+    destinoLabel: string;
+    destinoPlaceholder: string;
+    desdeLabel: string;
+    hastaLabel: string;
+    vacioTitulo: string;
+    vacioTexto: string;
+    sinResultadosTitulo: string;
+    sinResultadosTexto: string;
+    resultados: (n: number) => string;
+  };
+  perfil: {
+    corredorDesde: (fecha: string) => string;
+    statCarrerasCompletadas: string;
+    statKmEnCarrera: string;
+    statPaises: string;
+    statFavoritas: string;
+    mapaPersonal: string;
+    logrosTitulo: string;
+    logros: {
+      primer10k: string;
+      primeraMedia: string;
+      primerMaraton: string;
+      cincoPaises: string;
+      diezCarreras: string;
+      unaMajor: string;
+      sixStar: string;
+      primerTrail: string;
+      primeraResena: string;
+    };
+    desbloqueado: string;
+    bloqueado: string;
+    carrerasCorridas: string;
+    quitar: string;
+    proximasFavoritos: string;
+    sinFavoritos: string;
+    alertasActivasTitulo: string;
+    sinAlertas: string;
+  };
+  calendario: {
+    titulo: string;
+    diasSemana: [string, string, string, string, string, string, string];
+    ayuda: string;
+    fechaLarga: (dia: number, mes: string) => string;
+    carrerasDia: (n: number) => string;
+  };
 }
 
 export const DICCIONARIOS: Record<Idioma, Diccionario> = {
@@ -304,6 +379,88 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
         "Recomiéndame un trail épico para mi primera ultra",
       ],
     },
+    mapa: { verCarrera: "Ver carrera →" },
+    rankings: {
+      titulo: "Rankings mundiales",
+      subtitulo: "Generados automáticamente a partir de los datos de cada carrera.",
+      tabs: {
+        rapidas: "⚡ Más rápidas",
+        populares: "👥 Más populares",
+        economicas: "💰 Más económicas",
+        dificiles: "🔥 Más difíciles",
+        valoradas: "⭐ Mejor valoradas",
+        frescas: "❄️ Mejor clima frío",
+      },
+      corredoresSufijo: "corredores",
+      sinDatos: "Todavía no hay suficientes carreras para este ranking.",
+    },
+    comparar: {
+      titulo: "Comparador",
+      faltanCarreras: "Hacen falta al menos 2 carreras para comparar.",
+      verFicha: "Ver ficha →",
+      filas: {
+        fecha: "Fecha",
+        distancia: "Distancia",
+        precio: "Precio",
+        corredores: "Corredores",
+        desnivel: "Desnivel +",
+        tempPromedio: "Temp. promedio",
+        tiempoLimite: "Tiempo límite",
+        dificultad: "Dificultad",
+        valoracion: "Valoración",
+        estado: "Estado",
+      },
+    },
+    viaje: {
+      titulo: "Corre durante tu viaje",
+      descripcion:
+        "Decinos a dónde vas y cuándo, y te mostramos todas las carreras disponibles en ese destino y rango de fechas. Ej.: «Japón» del 1 al 15 de marzo.",
+      destinoLabel: "Destino (país, ciudad o continente)",
+      destinoPlaceholder: "p. ej. España, Japón, Europa…",
+      desdeLabel: "Desde",
+      hastaLabel: "Hasta",
+      vacioTitulo: "Planifica tu próximo viaje corriendo",
+      vacioTexto: "Escribe un destino o elige fechas para empezar.",
+      sinResultadosTitulo: "No encontramos carreras en ese destino y fechas",
+      sinResultadosTexto: "Prueba ampliando el rango o buscando por país o continente.",
+      resultados: (n) => `${n} carrera${n !== 1 ? "s" : ""} durante tu viaje:`,
+    },
+    perfil: {
+      corredorDesde: (fecha) => `Corredor/a desde ${fecha}`,
+      statCarrerasCompletadas: "Carreras completadas",
+      statKmEnCarrera: "Km en carrera",
+      statPaises: "Países",
+      statFavoritas: "Favoritas",
+      mapaPersonal: "Mapa personal · dónde has corrido",
+      logrosTitulo: "Logros",
+      logros: {
+        primer10k: "Primer 10K",
+        primeraMedia: "Primera media",
+        primerMaraton: "Primer maratón",
+        cincoPaises: "5 países",
+        diezCarreras: "10 carreras",
+        unaMajor: "Una Major",
+        sixStar: "Six Star Finisher",
+        primerTrail: "Primer trail",
+        primeraResena: "Primera reseña",
+      },
+      desbloqueado: "Desbloqueado",
+      bloqueado: "Bloqueado",
+      carrerasCorridas: "Carreras corridas",
+      quitar: "Quitar",
+      proximasFavoritos: "Próximas carreras (tus favoritos)",
+      sinFavoritos: "Marca ❤️ en cualquier carrera para verla aquí con su cuenta regresiva.",
+      alertasActivasTitulo: "🔔 Alertas activas",
+      sinAlertas:
+        "Activa la campanita 🔔 en la ficha de una carrera para recibir avisos de apertura de inscripciones, cambios de precio, pocos cupos, cambios de fecha o recorrido.",
+    },
+    calendario: {
+      titulo: "Calendario mundial",
+      diasSemana: ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
+      ayuda: "Los colores indican el estado de inscripción. Toca un día con carreras para ver el detalle.",
+      fechaLarga: (dia, mes) => `${dia} de ${mes}`,
+      carrerasDia: (n) => `${n} carrera${n !== 1 ? "s" : ""}`,
+    },
   },
   en: {
     nav: {
@@ -458,6 +615,88 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
         "I want to run 4 races this year on a budget, near Latin America",
         "Recommend an epic trail race for my first ultra",
       ],
+    },
+    mapa: { verCarrera: "View race →" },
+    rankings: {
+      titulo: "World rankings",
+      subtitulo: "Automatically generated from each race's data.",
+      tabs: {
+        rapidas: "⚡ Fastest",
+        populares: "👥 Most popular",
+        economicas: "💰 Most affordable",
+        dificiles: "🔥 Toughest",
+        valoradas: "⭐ Top rated",
+        frescas: "❄️ Coolest climate",
+      },
+      corredoresSufijo: "runners",
+      sinDatos: "Not enough races yet for this ranking.",
+    },
+    comparar: {
+      titulo: "Compare",
+      faltanCarreras: "You need at least 2 races to compare.",
+      verFicha: "View race →",
+      filas: {
+        fecha: "Date",
+        distancia: "Distance",
+        precio: "Price",
+        corredores: "Runners",
+        desnivel: "Elevation +",
+        tempPromedio: "Avg. temp.",
+        tiempoLimite: "Time limit",
+        dificultad: "Difficulty",
+        valoracion: "Rating",
+        estado: "Status",
+      },
+    },
+    viaje: {
+      titulo: "Run during your trip",
+      descripcion:
+        "Tell us where you're going and when, and we'll show you every race available at that destination and date range. E.g.: «Japan» from March 1 to 15.",
+      destinoLabel: "Destination (country, city or continent)",
+      destinoPlaceholder: "e.g. Spain, Japan, Europe…",
+      desdeLabel: "From",
+      hastaLabel: "To",
+      vacioTitulo: "Plan your next running trip",
+      vacioTexto: "Type a destination or pick dates to get started.",
+      sinResultadosTitulo: "We couldn't find races for that destination and dates",
+      sinResultadosTexto: "Try widening the range or searching by country or continent.",
+      resultados: (n) => `${n} race${n !== 1 ? "s" : ""} during your trip:`,
+    },
+    perfil: {
+      corredorDesde: (fecha) => `Runner since ${fecha}`,
+      statCarrerasCompletadas: "Completed races",
+      statKmEnCarrera: "Km raced",
+      statPaises: "Countries",
+      statFavoritas: "Favorites",
+      mapaPersonal: "Personal map · where you've run",
+      logrosTitulo: "Achievements",
+      logros: {
+        primer10k: "First 10K",
+        primeraMedia: "First half",
+        primerMaraton: "First marathon",
+        cincoPaises: "5 countries",
+        diezCarreras: "10 races",
+        unaMajor: "One Major",
+        sixStar: "Six Star Finisher",
+        primerTrail: "First trail",
+        primeraResena: "First review",
+      },
+      desbloqueado: "Unlocked",
+      bloqueado: "Locked",
+      carrerasCorridas: "Races run",
+      quitar: "Remove",
+      proximasFavoritos: "Upcoming races (your favorites)",
+      sinFavoritos: "Mark ❤️ on any race to see it here with its countdown.",
+      alertasActivasTitulo: "🔔 Active alerts",
+      sinAlertas:
+        "Turn on the 🔔 bell on a race's page to get notified about registration opening, price changes, low spots, or date/route changes.",
+    },
+    calendario: {
+      titulo: "World calendar",
+      diasSemana: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      ayuda: "Colors show the registration status. Tap a day with races to see the details.",
+      fechaLarga: (dia, mes) => `${mes} ${dia}`,
+      carrerasDia: (n) => `${n} race${n !== 1 ? "s" : ""}`,
     },
   },
   pt: {
@@ -614,6 +853,88 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
         "Recomende um trail épico para minha primeira ultra",
       ],
     },
+    mapa: { verCarrera: "Ver corrida →" },
+    rankings: {
+      titulo: "Rankings mundiais",
+      subtitulo: "Gerados automaticamente a partir dos dados de cada corrida.",
+      tabs: {
+        rapidas: "⚡ Mais rápidas",
+        populares: "👥 Mais populares",
+        economicas: "💰 Mais baratas",
+        dificiles: "🔥 Mais difíceis",
+        valoradas: "⭐ Melhor avaliadas",
+        frescas: "❄️ Melhor clima frio",
+      },
+      corredoresSufijo: "corredores",
+      sinDatos: "Ainda não há corridas suficientes para este ranking.",
+    },
+    comparar: {
+      titulo: "Comparador",
+      faltanCarreras: "São necessárias pelo menos 2 corridas para comparar.",
+      verFicha: "Ver corrida →",
+      filas: {
+        fecha: "Data",
+        distancia: "Distância",
+        precio: "Preço",
+        corredores: "Corredores",
+        desnivel: "Desnível +",
+        tempPromedio: "Temp. média",
+        tiempoLimite: "Tempo limite",
+        dificultad: "Dificuldade",
+        valoracion: "Avaliação",
+        estado: "Status",
+      },
+    },
+    viaje: {
+      titulo: "Corra durante sua viagem",
+      descripcion:
+        "Diga para onde você vai e quando, e mostramos todas as corridas disponíveis nesse destino e período. Ex.: «Japão» de 1 a 15 de março.",
+      destinoLabel: "Destino (país, cidade ou continente)",
+      destinoPlaceholder: "ex. Espanha, Japão, Europa…",
+      desdeLabel: "De",
+      hastaLabel: "Até",
+      vacioTitulo: "Planeje sua próxima viagem correndo",
+      vacioTexto: "Digite um destino ou escolha datas para começar.",
+      sinResultadosTitulo: "Não encontramos corridas nesse destino e datas",
+      sinResultadosTexto: "Tente ampliar o período ou buscar por país ou continente.",
+      resultados: (n) => `${n} corrida${n !== 1 ? "s" : ""} durante sua viagem:`,
+    },
+    perfil: {
+      corredorDesde: (fecha) => `Corredor(a) desde ${fecha}`,
+      statCarrerasCompletadas: "Corridas concluídas",
+      statKmEnCarrera: "Km em corrida",
+      statPaises: "Países",
+      statFavoritas: "Favoritas",
+      mapaPersonal: "Mapa pessoal · onde você já correu",
+      logrosTitulo: "Conquistas",
+      logros: {
+        primer10k: "Primeiro 10K",
+        primeraMedia: "Primeira meia",
+        primerMaraton: "Primeira maratona",
+        cincoPaises: "5 países",
+        diezCarreras: "10 corridas",
+        unaMajor: "Uma Major",
+        sixStar: "Six Star Finisher",
+        primerTrail: "Primeiro trail",
+        primeraResena: "Primeira avaliação",
+      },
+      desbloqueado: "Desbloqueado",
+      bloqueado: "Bloqueado",
+      carrerasCorridas: "Corridas realizadas",
+      quitar: "Remover",
+      proximasFavoritos: "Próximas corridas (seus favoritos)",
+      sinFavoritos: "Marque ❤️ em qualquer corrida para vê-la aqui com sua contagem regressiva.",
+      alertasActivasTitulo: "🔔 Alertas ativos",
+      sinAlertas:
+        "Ative o sino 🔔 na página de uma corrida para receber avisos de abertura de inscrições, mudanças de preço, poucas vagas, ou mudanças de data/percurso.",
+    },
+    calendario: {
+      titulo: "Calendário mundial",
+      diasSemana: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
+      ayuda: "As cores indicam o status da inscrição. Toque num dia com corridas para ver os detalhes.",
+      fechaLarga: (dia, mes) => `${dia} de ${mes}`,
+      carrerasDia: (n) => `${n} corrida${n !== 1 ? "s" : ""}`,
+    },
   },
   fr: {
     nav: {
@@ -768,6 +1089,88 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
         "Je veux courir 4 courses cette année à petit budget, près de l'Amérique latine",
         "Recommandez-moi un trail épique pour mon premier ultra",
       ],
+    },
+    mapa: { verCarrera: "Voir la course →" },
+    rankings: {
+      titulo: "Classements mondiaux",
+      subtitulo: "Générés automatiquement à partir des données de chaque course.",
+      tabs: {
+        rapidas: "⚡ Les plus rapides",
+        populares: "👥 Les plus populaires",
+        economicas: "💰 Les moins chères",
+        dificiles: "🔥 Les plus difficiles",
+        valoradas: "⭐ Les mieux notées",
+        frescas: "❄️ Meilleur climat frais",
+      },
+      corredoresSufijo: "coureurs",
+      sinDatos: "Pas encore assez de courses pour ce classement.",
+    },
+    comparar: {
+      titulo: "Comparateur",
+      faltanCarreras: "Il faut au moins 2 courses pour comparer.",
+      verFicha: "Voir la course →",
+      filas: {
+        fecha: "Date",
+        distancia: "Distance",
+        precio: "Prix",
+        corredores: "Coureurs",
+        desnivel: "Dénivelé +",
+        tempPromedio: "Temp. moyenne",
+        tiempoLimite: "Temps limite",
+        dificultad: "Difficulté",
+        valoracion: "Note",
+        estado: "Statut",
+      },
+    },
+    viaje: {
+      titulo: "Courez pendant votre voyage",
+      descripcion:
+        "Dites-nous où vous allez et quand, et on vous montre toutes les courses disponibles à cette destination et sur cette période. Ex. : « Japon » du 1er au 15 mars.",
+      destinoLabel: "Destination (pays, ville ou continent)",
+      destinoPlaceholder: "ex. Espagne, Japon, Europe…",
+      desdeLabel: "Du",
+      hastaLabel: "Au",
+      vacioTitulo: "Planifiez votre prochain voyage en courant",
+      vacioTexto: "Saisissez une destination ou choisissez des dates pour commencer.",
+      sinResultadosTitulo: "Aucune course trouvée pour cette destination et ces dates",
+      sinResultadosTexto: "Essayez d'élargir la période ou de chercher par pays ou continent.",
+      resultados: (n) => `${n} course${n !== 1 ? "s" : ""} pendant votre voyage :`,
+    },
+    perfil: {
+      corredorDesde: (fecha) => `Coureur/euse depuis ${fecha}`,
+      statCarrerasCompletadas: "Courses terminées",
+      statKmEnCarrera: "Km parcourus",
+      statPaises: "Pays",
+      statFavoritas: "Favoris",
+      mapaPersonal: "Carte personnelle · où vous avez couru",
+      logrosTitulo: "Succès",
+      logros: {
+        primer10k: "Premier 10K",
+        primeraMedia: "Premier semi",
+        primerMaraton: "Premier marathon",
+        cincoPaises: "5 pays",
+        diezCarreras: "10 courses",
+        unaMajor: "Un Major",
+        sixStar: "Six Star Finisher",
+        primerTrail: "Premier trail",
+        primeraResena: "Premier avis",
+      },
+      desbloqueado: "Débloqué",
+      bloqueado: "Verrouillé",
+      carrerasCorridas: "Courses effectuées",
+      quitar: "Retirer",
+      proximasFavoritos: "Prochaines courses (vos favoris)",
+      sinFavoritos: "Marquez ❤️ sur une course pour la voir ici avec son compte à rebours.",
+      alertasActivasTitulo: "🔔 Alertes actives",
+      sinAlertas:
+        "Activez la cloche 🔔 sur la page d'une course pour être averti de l'ouverture des inscriptions, des changements de prix, du nombre de places restantes, ou des changements de date/parcours.",
+    },
+    calendario: {
+      titulo: "Calendrier mondial",
+      diasSemana: ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"],
+      ayuda: "Les couleurs indiquent le statut d'inscription. Touchez un jour avec des courses pour voir le détail.",
+      fechaLarga: (dia, mes) => `${dia} ${mes}`,
+      carrerasDia: (n) => `${n} course${n !== 1 ? "s" : ""}`,
     },
   },
 };

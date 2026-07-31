@@ -3,11 +3,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import type { Carrera, EstadoInscripcion } from "@/lib/types";
-import { DISTANCIAS, ESTADO_INFO } from "@/lib/types";
+import { DISTANCIAS } from "@/lib/types";
+import { traducirDistancia, traducirEstado } from "@/lib/i18n";
 import { RaceCard } from "./RaceCard";
 import { Chip } from "./Chip";
 import { useFavoritos } from "@/hooks/useFavoritos";
 import { normalizar } from "@/lib/text";
+import { useIdioma } from "./LanguageProvider";
 
 const ESTADOS_FILTRO: (EstadoInscripcion | "Todos")[] = ["Todos", "abierta", "ultimos", "sorteo", "proximamente", "cerrada"];
 
@@ -19,6 +21,7 @@ function coincideDestino(r: Carrera, destino: string): boolean {
 }
 
 export function TripClient({ carreras }: { carreras: Carrera[] }) {
+  const { idioma, t } = useIdioma();
   const { favoritos, alternar } = useFavoritos();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -67,29 +70,28 @@ export function TripClient({ carreras }: { carreras: Carrera[] }) {
   return (
     <div className="max-w-5xl mx-auto px-4 pb-16 w-full">
       <h1 className="font-display font-bold uppercase mt-6 mb-1" style={{ color: "var(--wr-ink)", fontSize: 30 }}>
-        Corre durante tu viaje
+        {t.viaje.titulo}
       </h1>
       <p className="text-sm mb-4" style={{ color: "var(--wr-mut)" }}>
-        Decinos a dónde vas y cuándo, y te mostramos todas las carreras disponibles en ese destino y rango de
-        fechas. Ej.: «Japón» del 1 al 15 de marzo.
+        {t.viaje.descripcion}
       </p>
 
       <div className="grid sm:grid-cols-3 gap-3 mb-5">
         <div className="rounded-xl p-3 wr-panel">
           <label className="text-[11px] uppercase tracking-wider block mb-1" style={{ color: "var(--wr-mut)" }}>
-            Destino (país, ciudad o continente)
+            {t.viaje.destinoLabel}
           </label>
           <input
             value={dest}
             onChange={(e) => setDest(e.target.value)}
-            placeholder="p. ej. España, Japón, Europa…"
+            placeholder={t.viaje.destinoPlaceholder}
             className="w-full bg-transparent outline-none text-sm"
             style={{ color: "var(--wr-ink)" }}
           />
         </div>
         <div className="rounded-xl p-3 wr-panel">
           <label className="text-[11px] uppercase tracking-wider block mb-1" style={{ color: "var(--wr-mut)" }}>
-            Desde
+            {t.viaje.desdeLabel}
           </label>
           <input
             type="date"
@@ -101,7 +103,7 @@ export function TripClient({ carreras }: { carreras: Carrera[] }) {
         </div>
         <div className="rounded-xl p-3 wr-panel">
           <label className="text-[11px] uppercase tracking-wider block mb-1" style={{ color: "var(--wr-mut)" }}>
-            Hasta
+            {t.viaje.hastaLabel}
           </label>
           <input
             type="date"
@@ -117,14 +119,14 @@ export function TripClient({ carreras }: { carreras: Carrera[] }) {
         <div className="flex flex-col gap-2.5 mb-5">
           <div className="flex gap-2 overflow-x-auto pb-1">
             {DISTANCIAS.map((d) => (
-              <Chip key={d} label={d} active={fDist === d} onClick={() => setFDist(d)} />
+              <Chip key={d} label={traducirDistancia(d, idioma)} active={fDist === d} onClick={() => setFDist(d)} />
             ))}
           </div>
           <div className="flex gap-2 overflow-x-auto pb-1">
             {ESTADOS_FILTRO.map((s) => (
               <Chip
                 key={s}
-                label={s === "Todos" ? "Cualquier estado" : ESTADO_INFO[s].label}
+                label={s === "Todos" ? t.home.cualquierEstado : traducirEstado(s, idioma)}
                 active={fStat === s}
                 onClick={() => setFStat(s)}
               />
@@ -137,27 +139,26 @@ export function TripClient({ carreras }: { carreras: Carrera[] }) {
         <div className="rounded-2xl p-10 text-center wr-panel" style={{ borderStyle: "dashed" }}>
           <div className="text-3xl mb-2">🧳</div>
           <p className="font-semibold" style={{ color: "var(--wr-ink)" }}>
-            Planifica tu próximo viaje corriendo
+            {t.viaje.vacioTitulo}
           </p>
           <p className="text-sm mt-1" style={{ color: "var(--wr-mut)" }}>
-            Escribe un destino o elige fechas para empezar.
+            {t.viaje.vacioTexto}
           </p>
         </div>
       ) : resultados.length === 0 ? (
         <div className="rounded-2xl p-10 text-center wr-panel" style={{ borderStyle: "dashed" }}>
           <div className="text-3xl mb-2">🏜️</div>
           <p className="font-semibold" style={{ color: "var(--wr-ink)" }}>
-            No encontramos carreras en ese destino y fechas
+            {t.viaje.sinResultadosTitulo}
           </p>
           <p className="text-sm mt-1" style={{ color: "var(--wr-mut)" }}>
-            Prueba ampliando el rango o buscando por país o continente.
+            {t.viaje.sinResultadosTexto}
           </p>
         </div>
       ) : (
         <>
           <p className="text-sm mb-3" style={{ color: "var(--wr-mut)" }}>
-            <b style={{ color: "var(--wr-ink)" }}>{resultados.length}</b> carrera{resultados.length !== 1 ? "s" : ""}{" "}
-            durante tu viaje:
+            {t.viaje.resultados(resultados.length)}
           </p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {resultados.map((r) => (

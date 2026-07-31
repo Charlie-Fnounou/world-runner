@@ -9,25 +9,29 @@ import { MapaMundialLazy } from "./MapaMundialLazy";
 import { quitarCompletada } from "@/app/actions/completadas";
 import { fmtFecha, diasHasta } from "@/lib/format";
 import { slugify } from "@/lib/races-data";
+import { useIdioma } from "./LanguageProvider";
+import type { Diccionario } from "@/lib/i18n";
+
+type LogroId = keyof Diccionario["perfil"]["logros"];
 
 interface Logro {
   emoji: string;
-  label: string;
+  id: LogroId;
   ok: boolean;
 }
 
 function calcularLogros(completas: Carrera[], paises: string[], tieneResena: boolean): Logro[] {
   const distancias = new Set(completas.map((r) => r.dist));
   return [
-    { emoji: "🥉", label: "Primer 10K", ok: distancias.has("10K") },
-    { emoji: "🥈", label: "Primera media", ok: distancias.has("Media maratón") },
-    { emoji: "🥇", label: "Primer maratón", ok: distancias.has("Maratón") },
-    { emoji: "🌎", label: "5 países", ok: paises.length >= 5 },
-    { emoji: "🔟", label: "10 carreras", ok: completas.length >= 10 },
-    { emoji: "⭐", label: "Una Major", ok: completas.some((r) => r.major) },
-    { emoji: "👑", label: "Six Star Finisher", ok: completas.filter((r) => r.major).length >= 6 },
-    { emoji: "🏔️", label: "Primer trail", ok: distancias.has("Trail") },
-    { emoji: "✍️", label: "Primera reseña", ok: tieneResena },
+    { emoji: "🥉", id: "primer10k", ok: distancias.has("10K") },
+    { emoji: "🥈", id: "primeraMedia", ok: distancias.has("Media maratón") },
+    { emoji: "🥇", id: "primerMaraton", ok: distancias.has("Maratón") },
+    { emoji: "🌎", id: "cincoPaises", ok: paises.length >= 5 },
+    { emoji: "🔟", id: "diezCarreras", ok: completas.length >= 10 },
+    { emoji: "⭐", id: "unaMajor", ok: completas.some((r) => r.major) },
+    { emoji: "👑", id: "sixStar", ok: completas.filter((r) => r.major).length >= 6 },
+    { emoji: "🏔️", id: "primerTrail", ok: distancias.has("Trail") },
+    { emoji: "✍️", id: "primeraResena", ok: tieneResena },
   ];
 }
 
@@ -50,6 +54,7 @@ export function PerfilClient({
   completadas: CompletadaInfo[];
   tieneResena: boolean;
 }) {
+  const { idioma, t } = useIdioma();
   const [, startTransition] = useTransition();
   const completadaIds = new Set(completadas.map((c) => c.eventoId));
   const completas = carreras.filter((r) => completadaIds.has(r.id));
@@ -68,6 +73,13 @@ export function PerfilClient({
     .map((s) => s[0]?.toUpperCase())
     .join("");
 
+  const stats: [string, string][] = [
+    [t.perfil.statCarrerasCompletadas, String(completas.length)],
+    [t.perfil.statKmEnCarrera, km.toFixed(1)],
+    [t.perfil.statPaises, String(paises.length)],
+    [t.perfil.statFavoritas, String(favoritas.length)],
+  ];
+
   return (
     <div className="max-w-5xl mx-auto px-4 pb-16 w-full">
       <div className="flex items-center gap-4 mt-6 mb-5">
@@ -82,18 +94,13 @@ export function PerfilClient({
             {nombre || email}
           </h1>
           <p className="text-sm mt-1" style={{ color: "var(--wr-mut)" }}>
-            {corredorDesde ? `Corredor/a desde ${fmtFecha(corredorDesde)}` : email}
+            {corredorDesde ? t.perfil.corredorDesde(fmtFecha(corredorDesde, idioma)) : email}
           </p>
         </div>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {[
-          ["Carreras completadas", String(completas.length)],
-          ["Km en carrera", km.toFixed(1)],
-          ["Países", String(paises.length)],
-          ["Favoritas", String(favoritas.length)],
-        ].map(([l, v]) => (
+        {stats.map(([l, v]) => (
           <div key={l} className="rounded-xl p-4 wr-panel">
             <div className="font-mono font-bold text-2xl tabular-nums" style={{ color: "var(--wr-ink)" }}>
               {v}
@@ -108,29 +115,29 @@ export function PerfilClient({
       {completas.length > 0 && (
         <>
           <h3 className="font-bold mt-7 mb-3" style={{ color: "var(--wr-ink)" }}>
-            Mapa personal · dónde has corrido
+            {t.perfil.mapaPersonal}
           </h3>
           <MapaMundialLazy carreras={completas} alto={300} />
         </>
       )}
 
       <h3 className="font-bold mt-7 mb-3" style={{ color: "var(--wr-ink)" }}>
-        Logros
+        {t.perfil.logrosTitulo}
       </h3>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {logros.map((l) => (
           <div
-            key={l.label}
+            key={l.id}
             className="rounded-xl p-3.5 flex items-center gap-3 wr-panel"
             style={{ border: `1px solid ${l.ok ? "var(--wr-acc)" : "var(--wr-line)"}`, opacity: l.ok ? 1 : 0.45 }}
           >
             <span className="text-2xl">{l.emoji}</span>
             <div>
               <div className="text-sm font-semibold" style={{ color: "var(--wr-ink)" }}>
-                {l.label}
+                {t.perfil.logros[l.id]}
               </div>
               <div className="text-[11px]" style={{ color: "var(--wr-mut)" }}>
-                {l.ok ? "Desbloqueado" : "Bloqueado"}
+                {l.ok ? t.perfil.desbloqueado : t.perfil.bloqueado}
               </div>
             </div>
           </div>
@@ -140,7 +147,7 @@ export function PerfilClient({
       {completas.length > 0 && (
         <>
           <h3 className="font-bold mt-7 mb-3" style={{ color: "var(--wr-ink)" }}>
-            Carreras corridas
+            {t.perfil.carrerasCorridas}
           </h3>
           <div className="flex flex-col gap-2">
             {completas.map((r) => {
@@ -152,7 +159,7 @@ export function PerfilClient({
                       {r.flag} {r.name}
                     </div>
                     <div className="text-xs mt-0.5" style={{ color: "var(--wr-mut)" }}>
-                      {fmtFecha(r.date)} · {r.city}
+                      {fmtFecha(r.date, idioma)} · {r.city}
                       {info?.tiempoFinal ? ` · ⏱ ${info.tiempoFinal}` : ""}
                     </div>
                   </Link>
@@ -165,7 +172,7 @@ export function PerfilClient({
                     className="text-xs px-3 py-1.5 rounded-full wr-chip shrink-0"
                     style={{ color: "var(--wr-mut)" }}
                   >
-                    Quitar
+                    {t.perfil.quitar}
                   </button>
                 </div>
               );
@@ -175,11 +182,11 @@ export function PerfilClient({
       )}
 
       <h3 className="font-bold mt-7 mb-3" style={{ color: "var(--wr-ink)" }}>
-        Próximas carreras (tus favoritos)
+        {t.perfil.proximasFavoritos}
       </h3>
       {proximas.length === 0 ? (
         <div className="rounded-xl p-6 text-center text-sm wr-panel" style={{ borderStyle: "dashed", color: "var(--wr-mut)" }}>
-          Marca ❤️ en cualquier carrera para verla aquí con su cuenta regresiva.
+          {t.perfil.sinFavoritos}
         </div>
       ) : (
         <div className="flex flex-col gap-3">
@@ -194,7 +201,7 @@ export function PerfilClient({
                   {r.flag} {r.name}
                 </div>
                 <div className="text-xs mt-0.5" style={{ color: "var(--wr-mut)" }}>
-                  {fmtFecha(r.date)} · {r.city}
+                  {fmtFecha(r.date, idioma)} · {r.city}
                 </div>
               </div>
               <Countdown date={r.date} />
@@ -204,12 +211,11 @@ export function PerfilClient({
       )}
 
       <h3 className="font-bold mt-7 mb-3" style={{ color: "var(--wr-ink)" }}>
-        🔔 Alertas activas
+        {t.perfil.alertasActivasTitulo}
       </h3>
       {alertList.length === 0 ? (
         <div className="rounded-xl p-6 text-center text-sm wr-panel" style={{ borderStyle: "dashed", color: "var(--wr-mut)" }}>
-          Activa la campanita 🔔 en la ficha de una carrera para recibir avisos de apertura de inscripciones, cambios
-          de precio, pocos cupos, cambios de fecha o recorrido.
+          {t.perfil.sinAlertas}
         </div>
       ) : (
         <div className="flex flex-wrap gap-2">

@@ -6,10 +6,14 @@ import type { Carrera } from "@/lib/types";
 import { Badge } from "./Badge";
 import { fmtFecha, nf } from "@/lib/format";
 import { slugify } from "@/lib/races-data";
+import { useIdioma } from "./LanguageProvider";
+import type { Diccionario, Idioma } from "@/lib/i18n";
+
+type FilaId = keyof Diccionario["comparar"]["filas"];
 
 type Fila = {
-  label: string;
-  valor: (r: Carrera) => ReactNode;
+  id: FilaId;
+  valor: (r: Carrera, idioma: Idioma) => ReactNode;
   mejor?: (x: Carrera, y: Carrera) => boolean;
 };
 
@@ -20,24 +24,24 @@ type Fila = {
 // que sí tiene el dato cargado — por eso esos comparadores exigen que
 // ambos valores sean mayores a 0 antes de declarar un ganador.
 const FILAS: Fila[] = [
-  { label: "Fecha", valor: (r) => fmtFecha(r.date) },
-  { label: "Distancia", valor: (r) => (r.km > 0 ? r.km + " km" : "—") },
+  { id: "fecha", valor: (r, idioma) => fmtFecha(r.date, idioma) },
+  { id: "distancia", valor: (r) => (r.km > 0 ? r.km + " km" : "—") },
   {
-    label: "Precio",
-    valor: (r) => (r.price > 0 ? r.cur + nf(r.price) : "—"),
+    id: "precio",
+    valor: (r, idioma) => (r.price > 0 ? r.cur + nf(r.price, idioma) : "—"),
     mejor: (x, y) => x.price > 0 && y.price > 0 && x.price < y.price,
   },
-  { label: "Corredores", valor: (r) => nf(r.runners), mejor: (x, y) => x.runners > y.runners },
+  { id: "corredores", valor: (r, idioma) => nf(r.runners, idioma), mejor: (x, y) => x.runners > y.runners },
   {
-    label: "Desnivel +",
-    valor: (r) => (r.elev > 0 ? nf(r.elev) + " m" : "—"),
+    id: "desnivel",
+    valor: (r, idioma) => (r.elev > 0 ? nf(r.elev, idioma) + " m" : "—"),
     mejor: (x, y) => x.elev > 0 && y.elev > 0 && x.elev < y.elev,
   },
-  { label: "Temp. promedio", valor: (r) => r.temp + " °C" },
-  { label: "Tiempo límite", valor: (r) => r.limit },
-  { label: "Dificultad", valor: (r) => "●".repeat(r.diff) + "○".repeat(5 - r.diff), mejor: (x, y) => x.diff < y.diff },
-  { label: "Valoración", valor: (r) => "★ " + r.rating, mejor: (x, y) => x.rating > y.rating },
-  { label: "Estado", valor: (r) => <Badge estado={r.status} sm /> },
+  { id: "tempPromedio", valor: (r) => r.temp + " °C" },
+  { id: "tiempoLimite", valor: (r) => r.limit },
+  { id: "dificultad", valor: (r) => "●".repeat(r.diff) + "○".repeat(5 - r.diff), mejor: (x, y) => x.diff < y.diff },
+  { id: "valoracion", valor: (r) => "★ " + r.rating, mejor: (x, y) => x.rating > y.rating },
+  { id: "estado", valor: (r) => <Badge estado={r.status} sm /> },
 ];
 
 function Selector({
@@ -71,6 +75,7 @@ function Selector({
 }
 
 export function CompareClient({ carreras, inicialA, inicialB }: { carreras: Carrera[]; inicialA: string; inicialB: string }) {
+  const { idioma, t } = useIdioma();
   const [a, setA] = useState(inicialA);
   const [b, setB] = useState(inicialB);
   const A = carreras.find((r) => r.id === a) ?? carreras[0];
@@ -80,7 +85,7 @@ export function CompareClient({ carreras, inicialA, inicialB }: { carreras: Carr
     return (
       <div className="max-w-4xl mx-auto px-4 pb-16 w-full">
         <p className="text-sm py-10 text-center" style={{ color: "var(--wr-mut)" }}>
-          Hacen falta al menos 2 carreras para comparar.
+          {t.comparar.faltanCarreras}
         </p>
       </div>
     );
@@ -89,7 +94,7 @@ export function CompareClient({ carreras, inicialA, inicialB }: { carreras: Carr
   return (
     <div className="max-w-4xl mx-auto px-4 pb-16 w-full">
       <h1 className="font-display font-bold uppercase mt-6 mb-4" style={{ color: "var(--wr-ink)", fontSize: 30 }}>
-        Comparador
+        {t.comparar.titulo}
       </h1>
 
       <div className="grid grid-cols-2 gap-3 mb-4">
@@ -107,7 +112,7 @@ export function CompareClient({ carreras, inicialA, inicialB }: { carreras: Carr
           >
             {r.name}
             <div className="text-xs font-normal opacity-80 mt-1" style={{ fontFamily: "system-ui" }}>
-              {r.flag} {r.city} · Ver ficha →
+              {r.flag} {r.city} · {t.comparar.verFicha}
             </div>
           </Link>
         ))}
@@ -119,20 +124,20 @@ export function CompareClient({ carreras, inicialA, inicialB }: { carreras: Carr
           const ganaB = f.mejor?.(B, A) ?? false;
           return (
             <div
-              key={f.label}
+              key={f.id}
               className="grid grid-cols-[1fr_110px_1fr] items-center text-sm"
               style={{ background: i % 2 ? "var(--wr-panel)" : "var(--wr-panel-2)", borderTop: i ? "1px solid var(--wr-line)" : "none" }}
             >
               <div className="p-3 text-right font-mono tabular-nums" style={{ color: ganaA ? "#16A34A" : "var(--wr-ink)", fontWeight: ganaA ? 700 : 400 }}>
-                {f.valor(A)}
+                {f.valor(A, idioma)}
                 {ganaA ? " ✓" : ""}
               </div>
               <div className="p-3 text-center text-[11px] uppercase tracking-wider" style={{ color: "var(--wr-mut)" }}>
-                {f.label}
+                {t.comparar.filas[f.id]}
               </div>
               <div className="p-3 font-mono tabular-nums" style={{ color: ganaB ? "#16A34A" : "var(--wr-ink)", fontWeight: ganaB ? 700 : 400 }}>
                 {ganaB ? "✓ " : ""}
-                {f.valor(B)}
+                {f.valor(B, idioma)}
               </div>
             </div>
           );

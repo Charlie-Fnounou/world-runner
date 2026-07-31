@@ -8,8 +8,11 @@ import { ESTADO_INFO } from "@/lib/types";
 import { Badge } from "./Badge";
 import { fmtFecha } from "@/lib/format";
 import { slugify } from "@/lib/races-data";
+import { traducirDistancia } from "@/lib/i18n";
+import { useIdioma } from "./LanguageProvider";
 
 export function MapaMundial({ carreras, alto = 460 }: { carreras: Carrera[]; alto?: number }) {
+  const { idioma, t } = useIdioma();
   return (
     <div className="rounded-2xl overflow-hidden wr-panel" style={{ height: alto }}>
       <MapContainer
@@ -40,7 +43,7 @@ export function MapaMundial({ carreras, alto = 460 }: { carreras: Carrera[]; alt
                     {r.flag} {r.name}
                   </div>
                   <div className="text-xs mt-0.5 text-gray-500">
-                    {fmtFecha(r.date)} · {r.dist}
+                    {fmtFecha(r.date, idioma)} · {traducirDistancia(r.dist, idioma)}
                   </div>
                   <div className="mt-1.5 mb-2">
                     <Badge estado={r.status} sm />
@@ -49,7 +52,7 @@ export function MapaMundial({ carreras, alto = 460 }: { carreras: Carrera[]; alt
                     href={`/carreras/${slugify(r.id, r.name)}`}
                     className="text-xs font-semibold text-blue-600 hover:underline"
                   >
-                    Ver carrera →
+                    {t.mapa.verCarrera}
                   </Link>
                 </div>
               </Popup>

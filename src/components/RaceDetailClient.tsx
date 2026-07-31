@@ -68,9 +68,9 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
   // corredores o clima exactos (la fuente no los publica): "0 km", "$0" o
   // "0 m" sería engañoso, mejor un guion.
   const distanciaTexto = r.km > 0 ? r.km + " km" : "—";
-  const precioTexto = r.price > 0 ? r.cur + nf(r.price) : "—";
-  const corredoresTexto = r.runners > 0 ? nf(r.runners) : "—";
-  const desnivelTexto = r.elev > 0 ? nf(r.elev) + " m" : "—";
+  const precioTexto = r.price > 0 ? r.cur + nf(r.price, idioma) : "—";
+  const corredoresTexto = r.runners > 0 ? nf(r.runners, idioma) : "—";
+  const desnivelTexto = r.elev > 0 ? nf(r.elev, idioma) + " m" : "—";
   const tempTexto = r.temp !== 0 ? r.temp + " °C" : "—";
 
   const datos: [string, string][] = [
@@ -81,7 +81,7 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
     [t.raceDetail.datos.tempPromedio, tempTexto],
     [t.raceDetail.datos.tiempoLimite, r.limit || "—"],
     [t.raceDetail.datos.dificultad, "●".repeat(r.diff) + "○".repeat(5 - r.diff)],
-    [t.raceDetail.datos.valoracion, r.rating > 0 ? "★ " + r.rating + " (" + nf(r.nrev) + ")" : t.raceDetail.datos.sinValoraciones],
+    [t.raceDetail.datos.valoracion, r.rating > 0 ? "★ " + r.rating + " (" + nf(r.nrev, idioma) + ")" : t.raceDetail.datos.sinValoraciones],
   ];
 
   const done = Object.values(checks).filter(Boolean).length;
@@ -116,7 +116,7 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
             {r.name}
           </h1>
           <p className="mt-1 text-white/85 text-lg">
-            {r.flag} {r.city}, {r.country} · {fmtFecha(r.date)}
+            {r.flag} {r.city}, {r.country} · {fmtFecha(r.date, idioma)}
           </p>
           <div className="mt-6 flex flex-wrap items-end justify-between gap-6">
             <div className="rounded-2xl bg-black/25 px-5 py-4">
@@ -198,10 +198,10 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
                   {r.history.map((h) => (
                     <tr key={h.y} style={{ borderTop: "1px solid var(--wr-line)" }}>
                       <td className="py-2.5 pr-4 font-semibold">{h.y}</td>
-                      <td className="py-2.5 pr-4 font-mono tabular-nums">{nf(h.r)}</td>
+                      <td className="py-2.5 pr-4 font-mono tabular-nums">{nf(h.r, idioma)}</td>
                       <td className="py-2.5 font-mono tabular-nums">
                         {r.cur}
-                        {nf(h.p)}
+                        {nf(h.p, idioma)}
                       </td>
                     </tr>
                   ))}
@@ -217,7 +217,7 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
             <section className="rounded-2xl p-5 wr-panel">
               <h3 className="font-bold mb-1">{t.raceDetail.perfilElevacion}</h3>
               <p className="text-xs mb-3" style={{ color: "var(--wr-mut)" }}>
-                {t.raceDetail.desnivelAcumulado(nf(r.elev))}
+                {t.raceDetail.desnivelAcumulado(nf(r.elev, idioma))}
               </p>
               <ElevationChart profile={r.profile} color={r.g[0]} />
             </section>

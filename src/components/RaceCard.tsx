@@ -31,10 +31,10 @@ export function RaceCard({
   // Casi todas las carreras nuevas todavía no tienen ninguna reseña: "★ 0
   // (0)" en cada tarjeta parece un dato roto, no "sin calificar todavía".
   const ratingTexto = r.rating > 0 ? "★ " + r.rating : "—";
-  const ratingLabel = r.rating > 0 ? "(" + nf(r.nrev) + ")" : t.raceCard.sinResenas;
+  const ratingLabel = r.rating > 0 ? "(" + nf(r.nrev, idioma) + ")" : t.raceCard.sinResenas;
   const stats: [string, string][] = [
     [distanciaTexto, t.raceCard.distancia],
-    [fmtFecha(r.date).slice(0, 6), t.raceCard.fecha],
+    [fmtFecha(r.date, idioma).slice(0, 6), t.raceCard.fecha],
     [precioTexto, t.raceCard.desde],
     [ratingTexto, ratingLabel],
   ];

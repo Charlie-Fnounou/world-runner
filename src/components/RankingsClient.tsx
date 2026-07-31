@@ -6,6 +6,7 @@ import type { Carrera } from "@/lib/types";
 import { Badge } from "./Badge";
 import { fmtFecha, nf } from "@/lib/format";
 import { slugify } from "@/lib/races-data";
+import { useIdioma } from "./LanguageProvider";
 
 type TabId = "rapidas" | "populares" | "economicas" | "dificiles" | "valoradas" | "frescas";
 
@@ -15,23 +16,20 @@ type TabId = "rapidas" | "populares" | "economicas" | "dificiles" | "valoradas" 
 // más económicas = menos precio, mejor clima frío = menos temperatura)
 // tienen que excluir esos ceros o el top-10 termina lleno de carreras sin
 // datos en vez de las que de verdad tienen el mejor valor.
-const TABS: { id: TabId; label: string; ordenar: (rs: Carrera[]) => Carrera[] }[] = [
+const TABS: { id: TabId; ordenar: (rs: Carrera[]) => Carrera[] }[] = [
   {
     id: "rapidas",
-    label: "⚡ Más rápidas",
     ordenar: (rs) => [...rs].filter((r) => r.dist === "Maratón" && r.elev > 0).sort((a, b) => a.elev - b.elev),
   },
-  { id: "populares", label: "👥 Más populares", ordenar: (rs) => [...rs].sort((a, b) => b.runners - a.runners) },
+  { id: "populares", ordenar: (rs) => [...rs].sort((a, b) => b.runners - a.runners) },
   {
     id: "economicas",
-    label: "💰 Más económicas",
     ordenar: (rs) => [...rs].filter((r) => r.price > 0).sort((a, b) => a.price - b.price),
   },
-  { id: "dificiles", label: "🔥 Más difíciles", ordenar: (rs) => [...rs].sort((a, b) => b.diff * 1000 + b.elev - (a.diff * 1000 + a.elev)) },
-  { id: "valoradas", label: "⭐ Mejor valoradas", ordenar: (rs) => [...rs].filter((r) => r.rating > 0).sort((a, b) => b.rating - a.rating) },
+  { id: "dificiles", ordenar: (rs) => [...rs].sort((a, b) => b.diff * 1000 + b.elev - (a.diff * 1000 + a.elev)) },
+  { id: "valoradas", ordenar: (rs) => [...rs].filter((r) => r.rating > 0).sort((a, b) => b.rating - a.rating) },
   {
     id: "frescas",
-    label: "❄️ Mejor clima frío",
     ordenar: (rs) => [...rs].filter((r) => r.temp !== 0).sort((a, b) => a.temp - b.temp),
   },
 ];
@@ -40,50 +38,51 @@ function medalla(i: number): string {
   return i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : String(i + 1);
 }
 
-function metrica(tab: TabId, r: Carrera): string {
-  switch (tab) {
-    case "rapidas":
-      return `${nf(r.elev)} m D+`;
-    case "populares":
-      return `${nf(r.runners)} corredores`;
-    case "economicas":
-      return `${r.cur}${r.price}`;
-    case "dificiles":
-      return `${"●".repeat(r.diff)} · ${nf(r.elev)} m D+`;
-    case "valoradas":
-      return `★ ${r.rating}`;
-    case "frescas":
-      return `${r.temp} °C`;
-  }
-}
-
 export function RankingsClient({ carreras }: { carreras: Carrera[] }) {
+  const { idioma, t } = useIdioma();
   const [tab, setTab] = useState<TabId>("rapidas");
-  const actual = TABS.find((t) => t.id === tab)!;
+  const actual = TABS.find((tt) => tt.id === tab)!;
   const lista = actual.ordenar(carreras).slice(0, 10);
+
+  function metrica(r: Carrera): string {
+    switch (tab) {
+      case "rapidas":
+        return `${nf(r.elev, idioma)} m D+`;
+      case "populares":
+        return `${nf(r.runners, idioma)} ${t.rankings.corredoresSufijo}`;
+      case "economicas":
+        return `${r.cur}${r.price}`;
+      case "dificiles":
+        return `${"●".repeat(r.diff)} · ${nf(r.elev, idioma)} m D+`;
+      case "valoradas":
+        return `★ ${r.rating}`;
+      case "frescas":
+        return `${r.temp} °C`;
+    }
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-4 pb-16 w-full">
       <h1 className="font-display font-bold uppercase mt-6 mb-1" style={{ color: "var(--wr-ink)", fontSize: 30 }}>
-        Rankings mundiales
+        {t.rankings.titulo}
       </h1>
       <p className="text-sm mb-4" style={{ color: "var(--wr-mut)" }}>
-        Generados automáticamente a partir de los datos de cada carrera.
+        {t.rankings.subtitulo}
       </p>
 
       <div className="flex gap-2 overflow-x-auto pb-2 mb-4">
-        {TABS.map((t) => (
+        {TABS.map((tt) => (
           <button
-            key={t.id}
-            onClick={() => setTab(t.id)}
+            key={tt.id}
+            onClick={() => setTab(tt.id)}
             className="rounded-full px-4 py-2 text-[13px] font-semibold whitespace-nowrap"
             style={{
-              background: tab === t.id ? "var(--wr-acc)" : "var(--wr-chip)",
-              color: tab === t.id ? "var(--wr-acc-ink)" : "var(--wr-mut)",
-              border: `1px solid ${tab === t.id ? "var(--wr-acc)" : "var(--wr-line)"}`,
+              background: tab === tt.id ? "var(--wr-acc)" : "var(--wr-chip)",
+              color: tab === tt.id ? "var(--wr-acc-ink)" : "var(--wr-mut)",
+              border: `1px solid ${tab === tt.id ? "var(--wr-acc)" : "var(--wr-line)"}`,
             }}
           >
-            {t.label}
+            {t.rankings.tabs[tt.id]}
           </button>
         ))}
       </div>
@@ -105,12 +104,12 @@ export function RankingsClient({ carreras }: { carreras: Carrera[] }) {
                 {r.flag} {r.name}
               </div>
               <div className="text-xs" style={{ color: "var(--wr-mut)" }}>
-                {r.city}, {r.country} · {fmtFecha(r.date)}
+                {r.city}, {r.country} · {fmtFecha(r.date, idioma)}
               </div>
             </div>
             <div className="text-right shrink-0">
               <div className="font-mono font-bold tabular-nums text-sm" style={{ color: "var(--wr-acc)" }}>
-                {metrica(tab, r)}
+                {metrica(r)}
               </div>
               <Badge estado={r.status} sm />
             </div>
@@ -118,7 +117,7 @@ export function RankingsClient({ carreras }: { carreras: Carrera[] }) {
         ))}
         {lista.length === 0 && (
           <p className="text-sm text-center py-10" style={{ color: "var(--wr-mut)" }}>
-            Todavía no hay suficientes carreras para este ranking.
+            {t.rankings.sinDatos}
           </p>
         )}
       </div>
