@@ -73,16 +73,20 @@ export async function enviarLinkMagico(_prevState: unknown, formData: FormData) 
   return { ok: true };
 }
 
-export async function iniciarConGoogle(formData: FormData) {
-  const next = String(formData.get("next") || "/");
+// Devuelve la URL en vez de usar redirect(): en esta versión de Next.js,
+// redirect() dentro de una Server Action espera poder transmitir el RSC
+// payload del destino, lo cual no existe para una URL externa (Google) —
+// el resultado es que el redirect queda "tragado" y el botón no hace nada.
+// Por eso el cliente (LoginForm) hace el salto con window.location.href.
+export async function iniciarConGoogle(next: string): Promise<{ url?: string; error?: string }> {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: { redirectTo: `${await origen()}/auth/callback?next=${encodeURIComponent(next)}` },
   });
 
-  if (error || !data.url) redirect("/login?error=Google no está configurado todavía");
-  redirect(data.url);
+  if (error || !data.url) return { error: "Google no está configurado todavía" };
+  return { url: data.url };
 }
 
 export async function cerrarSesion() {

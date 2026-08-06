@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState, useTransition } from "react";
 import Image from "next/image";
 import { enviarLinkMagico, iniciarConGoogle } from "@/app/login/actions";
 import { useIdioma } from "./LanguageProvider";
@@ -10,6 +10,17 @@ const ESTADO_INICIAL: { error?: string; ok?: boolean } = {};
 export function LoginForm({ next = "/" }: { next?: string }) {
   const { t } = useIdioma();
   const [estado, formAction, pendiente] = useActionState(enviarLinkMagico, ESTADO_INICIAL);
+  const [errorGoogle, setErrorGoogle] = useState("");
+  const [pendienteGoogle, startGoogle] = useTransition();
+
+  function continuarConGoogle() {
+    setErrorGoogle("");
+    startGoogle(async () => {
+      const res = await iniciarConGoogle(next);
+      if (res.url) window.location.href = res.url;
+      else setErrorGoogle(res.error ?? "Google no está configurado todavía");
+    });
+  }
 
   return (
     <div className="max-w-sm mx-auto px-4 py-20 w-full flex flex-col gap-6">
@@ -54,16 +65,20 @@ export function LoginForm({ next = "/" }: { next?: string }) {
         <div className="flex-1 h-px" style={{ background: "var(--wr-line)" }} />
       </div>
 
-      <form action={iniciarConGoogle}>
-        <input type="hidden" name="next" value={next} />
-        <button
-          type="submit"
-          className="w-full rounded-full px-5 py-3.5 text-sm font-semibold wr-panel"
-          style={{ color: "var(--wr-ink)" }}
-        >
-          {t.login.continuarGoogle}
-        </button>
-      </form>
+      <button
+        type="button"
+        onClick={continuarConGoogle}
+        disabled={pendienteGoogle}
+        className="w-full rounded-full px-5 py-3.5 text-sm font-semibold wr-panel disabled:opacity-60"
+        style={{ color: "var(--wr-ink)" }}
+      >
+        {t.login.continuarGoogle}
+      </button>
+      {errorGoogle && (
+        <p className="text-sm text-center rounded-xl px-4 py-3" style={{ background: "#EF444422", color: "#EF4444" }}>
+          {errorGoogle}
+        </p>
+      )}
     </div>
   );
 }
