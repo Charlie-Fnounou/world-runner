@@ -16,17 +16,9 @@ export function LoginForm({ next = "/" }: { next?: string }) {
   function continuarConGoogle() {
     setErrorGoogle("");
     startGoogle(async () => {
-      try {
-        const res = await iniciarConGoogle(next);
-        // eslint-disable-next-line no-console
-        console.log("DEBUG iniciarConGoogle res:", res);
-        if (res?.url) window.location.href = res.url;
-        else setErrorGoogle(res?.error ?? "Google no está configurado todavía");
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.log("DEBUG iniciarConGoogle threw:", e);
-        setErrorGoogle("Error inesperado: " + String(e));
-      }
+      const res = await iniciarConGoogle(next);
+      if (res.url) window.location.href = res.url;
+      else setErrorGoogle(res.error ?? "Google no está configurado todavía");
     });
   }
 
