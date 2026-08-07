@@ -210,7 +210,12 @@ function leTocaHoy(indiceEnSemanales: number): boolean {
 // cerrar la conexión), sin este límite el collector se queda esperando
 // para siempre y, como corren uno detrás del otro, bloquea a todos los
 // que le siguen ese día. 60s alcanza de sobra para cualquier fuente que
-// esté respondiendo normal.
+// esté respondiendo normal — salvo RunSignup (EE. UU.), que es órdenes
+// de magnitud más grande que el resto y necesita más tiempo para poder
+// cubrir su catálogo en un plazo razonable (ver runsignup.ts).
+const TIEMPOS_ESPECIALES: Record<string, number> = {
+  runsignup: 130_000,
+};
 function conLimiteDeTiempo<T>(promesa: Promise<T>, ms: number): Promise<T> {
   return Promise.race([
     promesa,
@@ -254,7 +259,7 @@ export async function GET(request: Request) {
     if (!corresponde) continue;
 
     try {
-      resultados[clave] = await conLimiteDeTiempo(correr(), 60_000);
+      resultados[clave] = await conLimiteDeTiempo(correr(), TIEMPOS_ESPECIALES[clave] ?? 60_000);
     } catch (e) {
       resultados[clave] = { error: e instanceof Error ? e.message : "error desconocido" };
     }

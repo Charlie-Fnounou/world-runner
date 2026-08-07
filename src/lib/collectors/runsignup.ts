@@ -31,16 +31,19 @@ import type { CarreraExterna } from "./types";
 const BASE_URL = "https://api.runsignup.com/rest/races";
 // upsertCarreraExterna hace ~6-8 consultas secuenciales a la base por
 // carrera (findUnique + update/create de evento, edicion, fuenteDato,
-// historial de cambios...). Contra una base remota eso da algo así
-// como 300-800ms por carrera. El cron le da a cada collector un límite
-// de 60s (ver conLimiteDeTiempo en route.ts), así que una sola página
-// de 1000 podía tardar varios minutos y nunca terminaba a tiempo — la
-// corrida quedaba abandonada sin guardar nada. Con 35 carreras y
-// concurrencia moderada entra cómodo en la ventana de 60s, y al correr
-// todos los días igual se cubre el catálogo con el tiempo.
-const RESULTS_PER_PAGE = 35;
-const PAGINAS_POR_CORRIDA = 1;
-const CONCURRENCIA = 8; // upserts en simultáneo, para no saturar el pool de conexiones
+// historial de cambios...). Medido contra la base real: ~640ms/carrera
+// con concurrencia 8, ~345ms/carrera con concurrencia 16 (el pool de
+// Supabase soporta hasta 17 conexiones simultáneas). Este collector es,
+// con diferencia, la fuente más grande (EE. UU. tiene miles de carreras
+// por mes) y por eso recibe un límite de tiempo propio y más alto en el
+// cron (ver TIEMPOS_ESPECIALES en route.ts) en vez del de 60s parejo
+// que usan el resto de los ~90 collectors más chicos. 300 carreras/día
+// a ~345ms c/u son ~103s, cómodo dentro de ese presupuesto extendido.
+// Antes esto estaba en 35 carreras/día (limitado al viejo tope de 60s):
+// a ese ritmo, cubrir el horizonte de 18 meses tardaba casi 3 años.
+const RESULTS_PER_PAGE = 100;
+const PAGINAS_POR_CORRIDA = 3;
+const CONCURRENCIA = 14; // upserts en simultáneo, por debajo del límite de 17 conexiones del pool
 const HORIZONTE_MESES = 18; // no ir más allá de año y medio adelante antes de reiniciar
 const COLLECTOR_ID = "runsignup";
 

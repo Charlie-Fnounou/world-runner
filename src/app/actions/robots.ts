@@ -198,7 +198,11 @@ export async function correrCollectoresAhora() {
   await requireAdmin();
 
   for (const correr of COLLECTORES) {
-    await conLimiteDeTiempo(correr(), 60_000).catch(() => {});
+    // RunSignup (EE. UU.) es la fuente más grande con diferencia y
+    // necesita más tiempo que el resto (ver TIEMPOS_ESPECIALES en
+    // api/cron/collectors/route.ts).
+    const limite = correr === correrCollectorRunSignup ? 130_000 : 60_000;
+    await conLimiteDeTiempo(correr(), limite).catch(() => {});
   }
 
   await corregirCalidadDeDatos().catch(() => {});
