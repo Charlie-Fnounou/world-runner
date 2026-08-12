@@ -90,6 +90,8 @@ import { correrCollectorDatasportPl } from "@/lib/collectors/datasportpl";
 import { correrCollectorEqTimingNo } from "@/lib/collectors/eqtiming-no";
 import { correrCollectorRfea } from "@/lib/collectors/rfea";
 import { correrCollectorUltraPanamaTrailSeries } from "@/lib/collectors/ultrapanamatrailseries";
+import { correrCollectorRunningCalendarIe } from "@/lib/collectors/irlanda";
+import { correrCollectorSportsnetTw } from "@/lib/collectors/taiwan";
 
 // Los collectors pueden tardar varios minutos (cientos de carreras, una
 // consulta a la base de datos por cada una). Se le da el máximo de
@@ -197,6 +199,8 @@ const COLLECTORES: {
   { clave: "kilpailukalenteri", correr: correrCollectorKilpailukalenteri, frecuencia: "semanal" }, // Finlandia
   { clave: "oelv-athmin", correr: correrCollectorOelvAthmin, frecuencia: "semanal" }, // Austria
   { clave: "racetime-ro", correr: correrCollectorRacetimeRo, frecuencia: "semanal" }, // Rumania
+  { clave: "runningcalendar-ie", correr: correrCollectorRunningCalendarIe, frecuencia: "semanal" }, // Irlanda
+  { clave: "sportsnet-tw", correr: correrCollectorSportsnetTw, frecuencia: "semanal" }, // Taiwán
 ];
 
 // Reparte los collectors "semanal" entre los 7 días de la semana según su
