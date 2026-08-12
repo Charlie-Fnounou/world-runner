@@ -1,0 +1,53 @@
+name: Agente de recolectores (borrador semanal)
+
+# Corre solo en los servidores de GitHub — no depende de que nadie tenga
+# la computadora prendida. Ver scripts/agente-recolectores/README.md.
+on:
+  schedule:
+    - cron: "0 9 * * 1" # lunes 9:00 UTC
+  workflow_dispatch: {} # para poder correrlo a mano desde la pestaña "Actions"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  generar-borrador:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Correr agente
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: node scripts/agente-recolectores/procesar.mjs
+
+      - name: Abrir Pull Request si hay cambios
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "Borrador de collector generado por el agente automático"
+          title: "🤖 Borrador de collector nuevo — revisar antes de activar"
+          body: |
+            Este Pull Request lo generó el agente automático semanal, **sin
+            supervisión humana**. El archivo nuevo en `src/lib/collectors/`
+            no está conectado a nada todavía (no lo importa `route.ts` ni
+            `robots.ts`), así que no hace nada hasta que alguien lo revise.
+
+            ### Antes de mergear
+            1. Leé el código del collector nuevo.
+            2. Probalo a mano:
+               ```bash
+               npx tsx -e "import { correrCollectorXxx } from './src/lib/collectors/archivo.ts'; correrCollectorXxx().then(r => console.log(JSON.stringify(r)))"
+               ```
+            3. Si trae carreras reales sin errores raros, agregalo a la
+               lista `COLLECTORES` en `src/app/api/cron/collectors/route.ts`
+               y `src/app/actions/robots.ts`.
+            4. Si no sirve, cerrá este PR sin mergear.
+
+            Más detalles: `scripts/agente-recolectores/README.md`.
+          branch: agente/borrador-collector
+          delete-branch: true
