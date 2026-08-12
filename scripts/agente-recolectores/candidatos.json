@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "pais": "Hong Kong",
+    "codigoPais": "HK",
+    "url": "https://www.paobaodao.com/hong-kong/en/",
+    "notas": "Calendario dedicado de carreras de Hong Kong, con fechas reales 2026 en HTML plano. Su robots.txt tiene una regla específica para ClaudeBot (Crawl-delay: 60, permite todo salvo /data/ y /account/) — igual nos identificamos como WorldRunnerBot, que cae bajo la regla general '*' (permitida)."
+  },
+  {
+    "pais": "Luxemburgo",
+    "codigoPais": "LU",
+    "url": "https://www.fla.lu/calendrier-80552v4",
+    "notas": "Calendario oficial de la Fédération Luxembourgeoise d'Athlétisme (mismo tipo de fuente que FIDAL/RFEA ya usados en este repo). robots.txt solo bloquea bots de SEO conocidos (MJ12bot, SemrushBot, AhrefsBot, DotBot, PetalBot); todo lo demás permitido. Contenido en francés/alemán/luxemburgués."
+  }
+]
