@@ -8,9 +8,25 @@ import path from "node:path";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const QUEUE_PATH = path.join(__dirname, "candidatos.json");
+const DESCARTADOS_PATH = path.join(__dirname, "descartados.json");
 const EJEMPLO_PATH = path.join(__dirname, "../../src/lib/collectors/runningcalendar-au.ts");
 const TIPOS_PATH = path.join(__dirname, "../../src/lib/collectors/types.ts");
 const COLLECTORS_DIR = path.join(__dirname, "../../src/lib/collectors");
+const ROUTE_PATH = path.join(__dirname, "../../src/app/api/cron/collectors/route.ts");
+
+// Agregadores/revendedores que este proyecto nunca scrapea (ver AGENTS.md
+// y los comentarios éticos en los collectors existentes) — no son fuentes
+// primarias, revenden inscripciones de organizadores de todo el mundo.
+const BLACKLIST = [
+  "ahotu.com",
+  "finishers.com",
+  "running.life",
+  "race-calendar.com",
+  "myraceland.com",
+  "runme.com",
+  "worldsmarathons.com",
+  "findarace.com",
+];
 
 const MODELO = "gemini-flash-latest";
 const ADVERTENCIA = `// ⚠️ BORRADOR GENERADO POR EL AGENTE AUTOMÁTICO — NO PROBADO TODAVÍA.
@@ -21,6 +37,121 @@ const ADVERTENCIA = `// ⚠️ BORRADOR GENERADO POR EL AGENTE AUTOMÁTICO — N
 
 function guardarCola(cola) {
   writeFileSync(QUEUE_PATH, JSON.stringify(cola, null, 2) + "\n");
+}
+
+function leerDescartados() {
+  if (!existsSync(DESCARTADOS_PATH)) return [];
+  try {
+    return JSON.parse(readFileSync(DESCARTADOS_PATH, "utf8"));
+  } catch {
+    return [];
+  }
+}
+
+function agregarDescartado(pais, motivo) {
+  const descartados = leerDescartados();
+  descartados.push({ pais, motivo, fecha: new Date().toISOString().slice(0, 10) });
+  writeFileSync(DESCARTADOS_PATH, JSON.stringify(descartados, null, 2) + "\n");
+}
+
+// Lee route.ts y saca los nombres de país de los comentarios "// País" al
+// lado de cada entrada de COLLECTORES — así el descubrimiento sabe qué ya
+// está cubierto sin necesitar acceso a la base de datos (este script no
+// tiene DATABASE_URL disponible, ni falta que le haga).
+function paisesCubiertos() {
+  const contenido = readFileSync(ROUTE_PATH, "utf8");
+  const paises = new Set();
+  const re = /frecuencia:\s*"(?:diaria|semanal)"\s*},?\s*\/\/\s*([^(\n]+)/g;
+  let m;
+  while ((m = re.exec(contenido))) {
+    const nombre = m[1]
+      .trim()
+      .replace(/\s*\(.*$/, "")
+      .replace(/\s*—.*$/, "");
+    if (nombre) paises.add(nombre);
+  }
+  return [...paises];
+}
+
+// Le pide a Gemini que busque de verdad en internet (grounding con Google
+// Search, no inventar de memoria) un país sin cubrir con una fuente real y
+// ética. Devuelve null si no encontró nada confiable — en ese caso el
+// workflow simplemente no hace nada esa semana, no es un error.
+async function descubrirCandidato(key) {
+  const cubiertos = paisesCubiertos();
+  const descartados = leerDescartados();
+
+  const prompt = `Buscá en internet (usá la búsqueda, no inventes de memoria) UN país que TODAVÍA NO esté en esta lista de países ya cubiertos por The World Runner:
+
+${cubiertos.join(", ")}
+
+${descartados.length > 0 ? `Estos países/fuentes ya se intentaron antes y no funcionaron — no los vuelvas a sugerir salvo que encuentres una fuente distinta a la que falló:\n${descartados.map((d) => `- ${d.pais}: ${d.motivo}`).join("\n")}\n` : ""}
+
+Encontrale UNA fuente real de datos de carreras de running para ese país: puede ser la federación nacional de atletismo, un calendario comunitario dedicado a ese país (no global), o el sitio de un club/organizador con calendario propio.
+
+PROHIBIDO sugerir cualquier página de estos sitios (son revendedores globales de inscripciones, no fuentes primarias): ${BLACKLIST.join(", ")}.
+
+La fuente tiene que:
+- Ser un sitio real que exista (verificalo buscando, no supongas la URL).
+- Publicar fechas y nombres de carreras en HTML visible (no una app que solo funciona con JavaScript, hasta donde puedas juzgar por la búsqueda).
+- No ser un revendedor global de inscripciones.
+
+Respondé ÚNICAMENTE en este formato exacto, sin nada más antes ni después:
+
+PAIS: <nombre del país en español>
+CODIGO: <código ISO de 2 letras>
+URL: <la URL exacta que encontraste>
+NOTAS: <1-2 frases sobre qué es esta fuente y por qué la elegiste>
+
+Si de verdad no encontrás ninguna fuente confiable después de buscar, respondé únicamente: SIN_RESULTADOS`;
+
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${MODELO}:generateContent?key=${key}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        tools: [{ google_search: {} }],
+        generationConfig: { temperature: 0.4 },
+      }),
+    },
+  );
+
+  if (!res.ok) {
+    console.error(`Gemini (descubrimiento) respondió ${res.status}: ${(await res.text()).slice(0, 500)}`);
+    return null;
+  }
+
+  const data = await res.json();
+  const texto = data.candidates?.[0]?.content?.parts
+    ?.map((p) => p.text)
+    .filter(Boolean)
+    .join("");
+
+  if (!texto || texto.includes("SIN_RESULTADOS")) {
+    console.log("Gemini no encontró ningún país nuevo confiable esta vez.");
+    return null;
+  }
+
+  const pais = texto.match(/PAIS:\s*(.+)/)?.[1]?.trim();
+  const codigoPais = texto.match(/CODIGO:\s*([A-Za-z]{2})/)?.[1]?.trim().toUpperCase();
+  const url = texto.match(/URL:\s*(\S+)/)?.[1]?.trim();
+  const notas = texto.match(/NOTAS:\s*(.+)/)?.[1]?.trim();
+
+  if (!pais || !codigoPais || !url || !url.startsWith("http")) {
+    console.error("La respuesta de descubrimiento no vino en el formato esperado:\n" + texto.slice(0, 800));
+    return null;
+  }
+
+  if (BLACKLIST.some((dominio) => url.includes(dominio))) {
+    console.log(`Gemini sugirió un dominio de la lista negra (${url}), se descarta.`);
+    agregarDescartado(pais, `Sugirió un dominio en la lista negra: ${url}`);
+    return null;
+  }
+
+  console.log(`Descubrimiento encontró: ${pais} (${codigoPais}) — ${url}`);
+  return { pais, codigoPais, url, notas: notas || "" };
 }
 
 // Mismo enfoque que src/lib/text.ts (quitarAcentos): recorrer code points
@@ -50,10 +181,21 @@ async function main() {
     process.exit(1);
   }
 
-  const cola = JSON.parse(readFileSync(QUEUE_PATH, "utf8"));
+  let cola = JSON.parse(readFileSync(QUEUE_PATH, "utf8"));
+
+  // Si no hay nada cargado a mano, el agente busca un país nuevo por su
+  // cuenta (grounding real con Google Search, no inventado) en vez de
+  // quedarse sin hacer nada — así no hace falta que nadie esté cargando
+  // candidatos.json manualmente semana a semana.
   if (cola.length === 0) {
-    console.log("No hay candidatos pendientes en candidatos.json. Nada que hacer esta semana.");
-    return;
+    console.log("Cola vacía: el agente va a buscar un país nuevo por su cuenta.");
+    const descubierto = await descubrirCandidato(key);
+    if (!descubierto) {
+      console.log("No se encontró ningún candidato nuevo confiable esta semana. Nada más que hacer.");
+      return;
+    }
+    cola = [descubierto];
+    guardarCola(cola);
   }
 
   const candidato = cola[0];
@@ -75,6 +217,7 @@ async function main() {
     html = await resHtml.text();
   } catch (e) {
     console.error(`No se pudo descargar ${candidato.url}: ${e}`);
+    agregarDescartado(candidato.pais, `Fuente no accesible (${candidato.url}): ${e}`);
     cola.shift();
     guardarCola(cola);
     console.log("Se descartó el candidato (fuente no accesible con nuestro User-Agent real) para no reintentar en loop.");
@@ -154,6 +297,7 @@ ${ADVERTENCIA}
 
   if (limpio.startsWith("NO_VIABLE")) {
     console.log(`Candidato descartado por el modelo: ${limpio}`);
+    agregarDescartado(candidato.pais, limpio.replace(/^NO_VIABLE:\s*/, ""));
     cola.shift();
     guardarCola(cola);
     return;
