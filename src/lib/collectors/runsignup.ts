@@ -191,3 +191,154 @@ export async function correrCollectorRunSignup() {
     return { nuevas, actualizadas, errores };
   });
 }
+
+// ============================================================
+// Enriquecimiento: /rest/race/{id} trae precio real, distancia y cupo
+// por carrera — datos que el listado básico de arriba no incluye (por
+// eso la gran mayoría de las carreras de RunSignup se ven con "—" en
+// vez de precio/distancia real). Es un paso APARTE del listado: no
+// pisa nada que el listado ya haya guardado (upsert.ts ignora los
+// campos que este collector no toca), así que una vez enriquecida una
+// carrera, queda así aunque el listado la vuelva a tocar después.
+const LOTE_ENRIQUECIMIENTO = 40;
+const CONCURRENCIA_ENRIQUECIMIENTO = 10;
+
+interface EventoDetalleRunSignup {
+  event_type: string;
+  distance?: string;
+  participant_cap?: number;
+  registration_periods?: { race_fee?: string; registration_closes: string }[];
+}
+
+interface RaceDetalleRunSignup {
+  race: {
+    description?: string;
+    logo_url?: string;
+    events?: EventoDetalleRunSignup[];
+  };
+}
+
+function textoSinHtml(html: string): string {
+  return html
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 600);
+}
+
+function kmDesdeTextoDistancia(texto: string): number {
+  const t = texto.toLowerCase();
+  if (/half\s*marathon/.test(t)) return 21.0975;
+  if (/marathon/.test(t) && !/half/.test(t)) return 42.195;
+  const millas = t.match(/(\d+(?:\.\d+)?)\s*mile/);
+  if (millas) return Math.round(parseFloat(millas[1]) * 1.60934 * 100) / 100;
+  const km = t.match(/(\d+(?:\.\d+)?)\s*k(?:m)?\b/);
+  return km ? parseFloat(km[1]) : 0;
+}
+
+function tipoDistanciaDesdeKm(km: number): TipoDistancia {
+  if (km <= 0) return TipoDistancia.OTRA;
+  if (km <= 6) return TipoDistancia.KM_5;
+  if (km <= 12) return TipoDistancia.KM_10;
+  if (km <= 17) return TipoDistancia.KM_15;
+  if (km <= 20.5) return TipoDistancia.KM_20;
+  if (km <= 22) return TipoDistancia.MEDIA_MARATON;
+  if (km <= 27) return TipoDistancia.KM_25;
+  if (km <= 35) return TipoDistancia.KM_30;
+  if (km <= 43) return TipoDistancia.MARATON;
+  return TipoDistancia.ULTRA;
+}
+
+// El precio cambia con el tiempo (early bird, etc.) — se toma el de la
+// franja vigente ahora mismo; si la carrera ya pasó (todas las franjas
+// vencidas), se toma la última conocida como referencia igual.
+function precioActualDeEvento(ev: EventoDetalleRunSignup): number | null {
+  const ahora = Date.now();
+  const periodos = ev.registration_periods ?? [];
+  const vigente = periodos.find((p) => new Date(p.registration_closes).getTime() >= ahora);
+  const elegido = vigente ?? periodos[periodos.length - 1];
+  if (!elegido?.race_fee) return null;
+  const n = parseFloat(elegido.race_fee.replace(/[^0-9.]/g, ""));
+  return isNaN(n) ? null : n;
+}
+
+export async function enriquecerCarrerasRunSignup() {
+  return registrarEjecucion("runsignup-enriquecer", async () => {
+    const pendientes = await prisma.evento.findMany({
+      where: { descripcion: null, fuentes: { some: { tipo: "runsignup" } } },
+      select: { id: true, fuentes: { where: { tipo: "runsignup" }, select: { externalId: true } } },
+      take: LOTE_ENRIQUECIMIENTO,
+    });
+
+    let actualizadas = 0;
+    let errores = 0;
+
+    for (let i = 0; i < pendientes.length; i += CONCURRENCIA_ENRIQUECIMIENTO) {
+      const lote = pendientes.slice(i, i + CONCURRENCIA_ENRIQUECIMIENTO);
+      await Promise.all(
+        lote.map(async (evento) => {
+          const externalId = evento.fuentes[0]?.externalId;
+          if (!externalId) {
+            errores++;
+            return;
+          }
+          try {
+            const res = await fetch(`https://api.runsignup.com/rest/race/${externalId}?format=json`, {
+              headers: { "User-Agent": "WorldRunnerBot/1.0 (+https://theworldrunner.com)" },
+            });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data: RaceDetalleRunSignup = await res.json();
+            const race = data.race;
+
+            const eventos = (race.events ?? []).filter(
+              (e) => e.event_type === "running_race" || e.event_type === "virtual_race",
+            );
+            const distancias = eventos
+              .map((e) => kmDesdeTextoDistancia(e.distance ?? ""))
+              .filter((km) => km > 0);
+            const precios = eventos.map(precioActualDeEvento).filter((p): p is number => p !== null);
+            const cuposTotales = eventos.reduce((s, e) => s + (e.participant_cap ?? 0), 0) || null;
+
+            await prisma.evento.update({
+              where: { id: evento.id },
+              data: {
+                descripcion: race.description ? textoSinHtml(race.description) : "",
+                logoUrl: race.logo_url || undefined,
+              },
+            });
+
+            const precioMinimo = precios.length > 0 ? Math.min(...precios) : null;
+            if (precioMinimo !== null || cuposTotales !== null) {
+              await prisma.edicion.updateMany({
+                where: { eventoId: evento.id },
+                data: {
+                  ...(precioMinimo !== null ? { precioDesde: precioMinimo, moneda: "USD" } : {}),
+                  ...(cuposTotales !== null ? { cuposTotales } : {}),
+                },
+              });
+            }
+
+            if (distancias.length > 0) {
+              const distanciaExistente = await prisma.distancia.findFirst({ where: { eventoId: evento.id } });
+              if (distanciaExistente && distanciaExistente.km === 0) {
+                const kmPrincipal = Math.max(...distancias);
+                await prisma.distancia.update({
+                  where: { id: distanciaExistente.id },
+                  data: { km: kmPrincipal, tipo: tipoDistanciaDesdeKm(kmPrincipal) },
+                });
+              }
+            }
+
+            actualizadas++;
+          } catch {
+            errores++;
+          }
+        }),
+      );
+    }
+
+    return { nuevas: 0, actualizadas, errores };
+  });
+}

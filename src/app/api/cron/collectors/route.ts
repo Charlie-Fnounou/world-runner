@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { corregirCalidadDeDatos } from "@/lib/sanidad";
 import { traducirDescripcionesFaltantes } from "@/lib/traducciones";
 import { enviarResumenesUbicacion } from "@/lib/resumenesUbicacion";
-import { correrCollectorRunSignup } from "@/lib/collectors/runsignup";
+import { correrCollectorRunSignup, enriquecerCarrerasRunSignup } from "@/lib/collectors/runsignup";
 import { correrCollectorFidal } from "@/lib/collectors/fidal";
 import { correrCollectorCorro } from "@/lib/collectors/corro";
 import { correrCollectorRunchile } from "@/lib/collectors/runchile";
@@ -292,6 +292,14 @@ export async function GET(request: Request) {
     resultados["_resumenesUbicacion"] = await enviarResumenesUbicacion();
   } catch (e) {
     resultados["_resumenesUbicacion"] = { error: e instanceof Error ? e.message : "error desconocido" };
+  }
+
+  // Completa precio/distancia/cupo real de carreras de RunSignup que
+  // solo tienen los datos básicos del listado (ver runsignup.ts).
+  try {
+    resultados["_enriquecerRunSignup"] = await enriquecerCarrerasRunSignup();
+  } catch (e) {
+    resultados["_enriquecerRunSignup"] = { error: e instanceof Error ? e.message : "error desconocido" };
   }
 
   return NextResponse.json(resultados);

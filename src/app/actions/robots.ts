@@ -5,7 +5,7 @@ import { requireAdmin } from "@/lib/admin";
 import { corregirCalidadDeDatos } from "@/lib/sanidad";
 import { traducirDescripcionesFaltantes } from "@/lib/traducciones";
 import { enviarResumenesUbicacion } from "@/lib/resumenesUbicacion";
-import { correrCollectorRunSignup } from "@/lib/collectors/runsignup";
+import { correrCollectorRunSignup, enriquecerCarrerasRunSignup } from "@/lib/collectors/runsignup";
 import { correrCollectorFidal } from "@/lib/collectors/fidal";
 import { correrCollectorCorro } from "@/lib/collectors/corro";
 import { correrCollectorRunchile } from "@/lib/collectors/runchile";
@@ -212,6 +212,7 @@ export async function correrCollectoresAhora() {
   await corregirCalidadDeDatos().catch(() => {});
   await traducirDescripcionesFaltantes().catch(() => {});
   await enviarResumenesUbicacion().catch(() => {});
+  await enriquecerCarrerasRunSignup().catch(() => {});
 
   revalidatePath("/admin/robots");
 }
