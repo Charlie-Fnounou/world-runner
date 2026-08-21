@@ -29,6 +29,19 @@ const BLACKLIST = [
 ];
 
 const MODELO = "gemini-flash-latest";
+
+// Gemini devuelve 503 ("modelo con mucha demanda") de vez en cuando —
+// es transitorio, no un error real del pedido, así que vale la pena
+// reintentar un par de veces con backoff antes de darnos por vencidos.
+async function fetchConReintentos(url, opciones, intentos = 3) {
+  for (let i = 0; i < intentos; i++) {
+    const res = await fetch(url, opciones);
+    if (res.status !== 503 || i === intentos - 1) return res;
+    const espera = 5000 * 2 ** i;
+    console.log(`Gemini respondió 503 (con mucha demanda), reintentando en ${espera / 1000}s...`);
+    await new Promise((r) => setTimeout(r, espera));
+  }
+}
 const ADVERTENCIA = `// ⚠️ BORRADOR GENERADO POR EL AGENTE AUTOMÁTICO — NO PROBADO TODAVÍA.
 // Nadie lo revisó ni lo corrió todavía. No está conectado a route.ts ni a
 // robots.ts, así que no hace nada hasta que alguien lo revise a mano, lo
@@ -105,7 +118,7 @@ NOTAS: <1-2 frases sobre qué es esta fuente y por qué la elegiste>
 
 Si de verdad no encontrás ninguna fuente confiable después de buscar, respondé únicamente: SIN_RESULTADOS`;
 
-  const res = await fetch(
+  const res = await fetchConReintentos(
     `https://generativelanguage.googleapis.com/v1beta/models/${MODELO}:generateContent?key=${key}`,
     {
       method: "POST",
@@ -269,7 +282,7 @@ Reglas estrictas:
 ${ADVERTENCIA}
 `;
 
-  const res = await fetch(
+  const res = await fetchConReintentos(
     `https://generativelanguage.googleapis.com/v1beta/models/${MODELO}:generateContent?key=${key}`,
     {
       method: "POST",

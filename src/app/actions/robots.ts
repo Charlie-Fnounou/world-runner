@@ -58,6 +58,7 @@ import { correrCollectorOelvAthmin } from "@/lib/collectors/oelvathmin";
 import { correrCollectorRacetimeRo } from "@/lib/collectors/racetime-ro";
 import { correrCollectorRunningCalendarIe } from "@/lib/collectors/irlanda";
 import { correrCollectorSportsnetTw } from "@/lib/collectors/taiwan";
+import { correrCollectorPaobaodaoHk } from "@/lib/collectors/hong-kong";
 import { correrCollectorAtletikaCz } from "@/lib/collectors/atletikacz";
 import { correrCollectorConnectAtletik } from "@/lib/collectors/connect-atletik";
 import { correrCollectorAimsCa } from "@/lib/collectors/aims-ca";
@@ -187,6 +188,7 @@ const COLLECTORES = [
   correrCollectorRacetimeRo,
   correrCollectorRunningCalendarIe,
   correrCollectorSportsnetTw,
+  correrCollectorPaobaodaoHk,
 ];
 
 // Si un fetch de algún collector nunca responde, sin este límite se

@@ -1,1 +1,7 @@
-[]
+[
+  {
+    "pais": "Luxemburgo",
+    "motivo": "El listado del calendario se carga por JavaScript del lado del cliente (Next.js client-side rendering) y el HTML crudo no contiene datos de eventos ni carreras, únicamente el esqueleto con un spinner de carga.",
+    "fecha": "2026-08-21"
+  }
+]
