@@ -196,6 +196,14 @@ model Edicion {
   fallosConsecutivos Int       @default(0)
   requiereRevision   Boolean   @default(false)
 
+  // Cuándo el agente de IA (ver rellenoDatos.ts) buscó por última vez en
+  // internet para completar campos vacíos (precio, cupo, desnivel, tiempo
+  // límite) — null significa "todavía nunca". Se usa para rotar: cada
+  // corrida semanal atiende primero lo que hace más tiempo (o nunca) se
+  // revisó, así con el tiempo termina pasando por todo el catálogo en vez
+  // de reintentar siempre las mismas carreras sin dato disponible.
+  ultimaRevisionIA DateTime?
+
   creadoEn      DateTime @default(now())
   actualizadoEn DateTime @updatedAt
 

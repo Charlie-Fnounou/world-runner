@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { corregirCalidadDeDatos } from "@/lib/sanidad";
 import { traducirDescripcionesFaltantes } from "@/lib/traducciones";
+import { rellenarDatosFaltantes } from "@/lib/rellenoDatos";
 import { enviarResumenesUbicacion } from "@/lib/resumenesUbicacion";
 import { correrCollectorRunSignup, enriquecerCarrerasRunSignup } from "@/lib/collectors/runsignup";
 import { correrCollectorFidal } from "@/lib/collectors/fidal";
@@ -302,6 +303,19 @@ export async function GET(request: Request) {
     resultados["_enriquecerRunSignup"] = await enriquecerCarrerasRunSignup();
   } catch (e) {
     resultados["_enriquecerRunSignup"] = { error: e instanceof Error ? e.message : "error desconocido" };
+  }
+
+  // Agente de IA que revisa toda la web para completar huecos (precio,
+  // cupo, desnivel, tiempo límite, descripción) que ningún collector pudo
+  // llenar — 1 vez por semana (lunes), no todos los días: cada carrera le
+  // cuesta una búsqueda real en internet, no se puede hacer en lote como
+  // las traducciones (ver rellenoDatos.ts).
+  if (forzarTodos || new Date().getDay() === 1) {
+    try {
+      resultados["_rellenoDatos"] = await rellenarDatosFaltantes();
+    } catch (e) {
+      resultados["_rellenoDatos"] = { error: e instanceof Error ? e.message : "error desconocido" };
+    }
   }
 
   return NextResponse.json(resultados);
