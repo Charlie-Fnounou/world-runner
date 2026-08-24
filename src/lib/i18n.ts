@@ -148,7 +148,10 @@ export interface Diccionario {
     ejemplos: string[];
   };
   mapa: {
-    verCarrera: string;
+    ayuda: string;
+    limpiarSeleccion: string;
+    quitar: string;
+    carrerasEnSeleccion: (n: number) => string;
   };
   rankings: {
     titulo: string;
@@ -379,7 +382,12 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
         "Recomiéndame un trail épico para mi primera ultra",
       ],
     },
-    mapa: { verCarrera: "Ver carrera →" },
+    mapa: {
+      ayuda: "Tocá uno o más países para ver todas sus carreras.",
+      limpiarSeleccion: "Limpiar selección",
+      quitar: "quitar",
+      carrerasEnSeleccion: (n) => `${n} carrera${n === 1 ? "" : "s"} en los países seleccionados`,
+    },
     rankings: {
       titulo: "Rankings mundiales",
       subtitulo: "Generados automáticamente a partir de los datos de cada carrera.",
@@ -616,7 +624,12 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
         "Recommend an epic trail race for my first ultra",
       ],
     },
-    mapa: { verCarrera: "View race →" },
+    mapa: {
+      ayuda: "Tap one or more countries to see all their races.",
+      limpiarSeleccion: "Clear selection",
+      quitar: "remove",
+      carrerasEnSeleccion: (n) => `${n} race${n === 1 ? "" : "s"} in the selected countries`,
+    },
     rankings: {
       titulo: "World rankings",
       subtitulo: "Automatically generated from each race's data.",
@@ -853,7 +866,12 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
         "Recomende um trail épico para minha primeira ultra",
       ],
     },
-    mapa: { verCarrera: "Ver corrida →" },
+    mapa: {
+      ayuda: "Toque um ou mais países para ver todas as suas corridas.",
+      limpiarSeleccion: "Limpar seleção",
+      quitar: "remover",
+      carrerasEnSeleccion: (n) => `${n} corrida${n === 1 ? "" : "s"} nos países selecionados`,
+    },
     rankings: {
       titulo: "Rankings mundiais",
       subtitulo: "Gerados automaticamente a partir dos dados de cada corrida.",
@@ -1090,7 +1108,12 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
         "Recommandez-moi un trail épique pour mon premier ultra",
       ],
     },
-    mapa: { verCarrera: "Voir la course →" },
+    mapa: {
+      ayuda: "Touchez un ou plusieurs pays pour voir toutes leurs courses.",
+      limpiarSeleccion: "Effacer la sélection",
+      quitar: "retirer",
+      carrerasEnSeleccion: (n) => `${n} course${n === 1 ? "" : "s"} dans les pays sélectionnés`,
+    },
     rankings: {
       titulo: "Classements mondiaux",
       subtitulo: "Générés automatiquement à partir des données de chaque course.",
