@@ -382,6 +382,7 @@ model Alerta {
   avisaPocosCupos          Boolean @default(true)
   avisaCambioFecha         Boolean @default(true)
   avisaCancelacion         Boolean @default(true)
+  avisaCierre              Boolean @default(true)
 
   creadoEn DateTime @default(now())
 

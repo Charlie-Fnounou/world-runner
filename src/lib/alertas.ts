@@ -20,7 +20,7 @@ export async function getAlertaIds(): Promise<string[]> {
   return alertas.map((a) => a.eventoId);
 }
 
-export type TipoCambio = "apertura" | "pocosCupos" | "precio" | "fecha" | "cancelacion";
+export type TipoCambio = "apertura" | "pocosCupos" | "precio" | "fecha" | "cancelacion" | "cierre";
 
 interface PreferenciasAlerta {
   avisaAperturaInscripcion: boolean;
@@ -28,6 +28,7 @@ interface PreferenciasAlerta {
   avisaCambioPrecio: boolean;
   avisaCambioFecha: boolean;
   avisaCancelacion: boolean;
+  avisaCierre: boolean;
 }
 
 function quiereAviso(prefs: PreferenciasAlerta, tipo: TipoCambio): boolean {
@@ -42,6 +43,8 @@ function quiereAviso(prefs: PreferenciasAlerta, tipo: TipoCambio): boolean {
       return prefs.avisaCambioFecha;
     case "cancelacion":
       return prefs.avisaCancelacion;
+    case "cierre":
+      return prefs.avisaCierre;
   }
 }
 
@@ -77,6 +80,11 @@ export async function detectarYNotificarCambios(
       cambios.push({ tipo: "pocosCupos", mensaje: "⚠️ Quedan últimos cupos." });
     } else if (despues.estado === "CANCELADA") {
       cambios.push({ tipo: "cancelacion", mensaje: "❌ La carrera fue cancelada." });
+    } else if (despues.estado === "CERRADA" && despues.fecha.getTime() >= Date.now()) {
+      // Solo avisa "se cerró la inscripción" si la carrera todavía no pasó
+      // — si ya pasó, CERRADA es solo el estado final normal (ver
+      // sanidad.ts) y no una noticia real para nadie.
+      cambios.push({ tipo: "cierre", mensaje: "🔒 Se cerró la inscripción." });
     }
   }
 
