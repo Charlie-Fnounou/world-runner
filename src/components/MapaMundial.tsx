@@ -98,7 +98,7 @@ function Globo({
       attributionControl: { compact: true },
     });
     map.addControl(new NavigationControl({ showCompass: false }), "top-right");
-    const popup = new Popup({ closeButton: false, closeOnClick: false, offset: 12 });
+    const popup = new Popup({ closeButton: false, closeOnClick: false, offset: 12, className: "wr-popup" });
 
     map.on("style.load", () => {
       map.setProjection({ type: "globe" });

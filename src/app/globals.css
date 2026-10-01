@@ -61,9 +61,10 @@ body {
   animation: wr-ping 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
-/* Cartel al pasar el mouse sobre un país del mapa (MapLibre trae fondo
-   blanco fijo, y el texto heredaba el color claro del tema oscuro). */
-.maplibregl-popup-content {
+/* Cartel al pasar el mouse sobre un país del mapa. MapLibre trae fondo
+   blanco fijo y su CSS se carga después que este archivo, así que los
+   selectores llevan la clase propia "wr-popup" para ganarle. */
+.wr-popup .maplibregl-popup-content {
   background: #12151b;
   color: #f2f4f8;
   border: 1px solid #252b36;
@@ -72,7 +73,7 @@ body {
   font-size: 12px;
   font-weight: 600;
 }
-.maplibregl-popup-anchor-bottom .maplibregl-popup-tip { border-top-color: #12151b; }
-.maplibregl-popup-anchor-top .maplibregl-popup-tip { border-bottom-color: #12151b; }
-.maplibregl-popup-anchor-left .maplibregl-popup-tip { border-right-color: #12151b; }
-.maplibregl-popup-anchor-right .maplibregl-popup-tip { border-left-color: #12151b; }
+.wr-popup.maplibregl-popup-anchor-bottom .maplibregl-popup-tip { border-top-color: #12151b; }
+.wr-popup.maplibregl-popup-anchor-top .maplibregl-popup-tip { border-bottom-color: #12151b; }
+.wr-popup.maplibregl-popup-anchor-left .maplibregl-popup-tip { border-right-color: #12151b; }
+.wr-popup.maplibregl-popup-anchor-right .maplibregl-popup-tip { border-left-color: #12151b; }
