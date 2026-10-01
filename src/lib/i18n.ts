@@ -148,10 +148,19 @@ export interface Diccionario {
     ejemplos: string[];
   };
   mapa: {
-    ayuda: string;
+    desde: string;
+    hasta: string;
+    resumen: (carreras: number, paises: number) => string;
+    abiertasAhora: (n: number) => string;
+    tocaUnPais: string;
+    podesVarios: string;
+    paisesElegidos: string;
     limpiarSeleccion: string;
-    quitar: string;
-    carrerasEnSeleccion: (n: number) => string;
+    proximaCarrera: string;
+    todas: (n: number) => string;
+    sinCarrerasEnRango: string;
+    verCarrera: string;
+    verMas: (n: number) => string;
   };
   rankings: {
     titulo: string;
@@ -383,10 +392,19 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       ],
     },
     mapa: {
-      ayuda: "Tocá uno o más países para ver todas sus carreras.",
-      limpiarSeleccion: "Limpiar selección",
-      quitar: "quitar",
-      carrerasEnSeleccion: (n) => `${n} carrera${n === 1 ? "" : "s"} en los países seleccionados`,
+      desde: "Desde",
+      hasta: "Hasta",
+      resumen: (c, p) => `${c} carrera${c === 1 ? "" : "s"} · ${p} país${p === 1 ? "" : "es"}`,
+      abiertasAhora: (n) => `${n} inscripcion${n === 1 ? "" : "es"} abierta${n === 1 ? "" : "s"}`,
+      tocaUnPais: "Tocá un país en el mapa para ver sus carreras.",
+      podesVarios: "Podés elegir varios a la vez.",
+      paisesElegidos: "Países elegidos",
+      limpiarSeleccion: "Limpiar",
+      proximaCarrera: "Próxima carrera",
+      todas: (n) => `Todas las carreras (${n})`,
+      sinCarrerasEnRango: "No hay carreras en estas fechas. Probá ampliar el rango.",
+      verCarrera: "Ver carrera →",
+      verMas: (n) => `Ver ${n} más`,
     },
     rankings: {
       titulo: "Rankings mundiales",
@@ -625,10 +643,19 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       ],
     },
     mapa: {
-      ayuda: "Tap one or more countries to see all their races.",
-      limpiarSeleccion: "Clear selection",
-      quitar: "remove",
-      carrerasEnSeleccion: (n) => `${n} race${n === 1 ? "" : "s"} in the selected countries`,
+      desde: "From",
+      hasta: "To",
+      resumen: (c, p) => `${c} race${c === 1 ? "" : "s"} · ${p} countr${p === 1 ? "y" : "ies"}`,
+      abiertasAhora: (n) => `${n} open registration${n === 1 ? "" : "s"}`,
+      tocaUnPais: "Tap a country on the map to see its races.",
+      podesVarios: "You can pick several at once.",
+      paisesElegidos: "Selected countries",
+      limpiarSeleccion: "Clear",
+      proximaCarrera: "Next race",
+      todas: (n) => `All races (${n})`,
+      sinCarrerasEnRango: "No races in these dates. Try a wider range.",
+      verCarrera: "View race →",
+      verMas: (n) => `Show ${n} more`,
     },
     rankings: {
       titulo: "World rankings",
@@ -867,10 +894,19 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       ],
     },
     mapa: {
-      ayuda: "Toque um ou mais países para ver todas as suas corridas.",
-      limpiarSeleccion: "Limpar seleção",
-      quitar: "remover",
-      carrerasEnSeleccion: (n) => `${n} corrida${n === 1 ? "" : "s"} nos países selecionados`,
+      desde: "De",
+      hasta: "Até",
+      resumen: (c, p) => `${c} corrida${c === 1 ? "" : "s"} · ${p} país${p === 1 ? "" : "es"}`,
+      abiertasAhora: (n) => `${n} inscriç${n === 1 ? "ão aberta" : "ões abertas"}`,
+      tocaUnPais: "Toque um país no mapa para ver suas corridas.",
+      podesVarios: "Você pode escolher vários ao mesmo tempo.",
+      paisesElegidos: "Países escolhidos",
+      limpiarSeleccion: "Limpar",
+      proximaCarrera: "Próxima corrida",
+      todas: (n) => `Todas as corridas (${n})`,
+      sinCarrerasEnRango: "Não há corridas nessas datas. Tente ampliar o período.",
+      verCarrera: "Ver corrida →",
+      verMas: (n) => `Ver mais ${n}`,
     },
     rankings: {
       titulo: "Rankings mundiais",
@@ -1109,10 +1145,19 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       ],
     },
     mapa: {
-      ayuda: "Touchez un ou plusieurs pays pour voir toutes leurs courses.",
-      limpiarSeleccion: "Effacer la sélection",
-      quitar: "retirer",
-      carrerasEnSeleccion: (n) => `${n} course${n === 1 ? "" : "s"} dans les pays sélectionnés`,
+      desde: "Du",
+      hasta: "Au",
+      resumen: (c, p) => `${c} course${c === 1 ? "" : "s"} · ${p} pays`,
+      abiertasAhora: (n) => `${n} inscription${n === 1 ? "" : "s"} ouverte${n === 1 ? "" : "s"}`,
+      tocaUnPais: "Touchez un pays sur la carte pour voir ses courses.",
+      podesVarios: "Vous pouvez en choisir plusieurs.",
+      paisesElegidos: "Pays choisis",
+      limpiarSeleccion: "Effacer",
+      proximaCarrera: "Prochaine course",
+      todas: (n) => `Toutes les courses (${n})`,
+      sinCarrerasEnRango: "Aucune course à ces dates. Élargissez la période.",
+      verCarrera: "Voir la course →",
+      verMas: (n) => `Voir ${n} de plus`,
     },
     rankings: {
       titulo: "Classements mondiaux",
@@ -1203,10 +1248,10 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
 // traduce el VALOR guardado en el estado del filtro, solo lo que se
 // muestra en pantalla, para no romper ninguna comparación existente.
 const ETIQUETAS_DISTANCIA: Record<Idioma, Record<string, string>> = {
-  es: { Todas: "Todas", Maratón: "Maratón", "Media maratón": "Media maratón", "10K": "10K", "20K": "20K", "Ultra maratón": "Ultra maratón", Trail: "Trail" },
-  en: { Todas: "All", Maratón: "Marathon", "Media maratón": "Half marathon", "10K": "10K", "20K": "20K", "Ultra maratón": "Ultra marathon", Trail: "Trail" },
-  pt: { Todas: "Todas", Maratón: "Maratona", "Media maratón": "Meia maratona", "10K": "10K", "20K": "20K", "Ultra maratón": "Ultra maratona", Trail: "Trail" },
-  fr: { Todas: "Toutes", Maratón: "Marathon", "Media maratón": "Semi-marathon", "10K": "10K", "20K": "20K", "Ultra maratón": "Ultra marathon", Trail: "Trail" },
+  es: { Todas: "Todas", Maratón: "Maratón", "Media maratón": "Media maratón", "10K": "10K", "20K": "20K", "Ultra maratón": "Ultra maratón", Trail: "Trail", Relevos: "Relevos", "Distancia variable": "Distancia variable" },
+  en: { Todas: "All", Maratón: "Marathon", "Media maratón": "Half marathon", "10K": "10K", "20K": "20K", "Ultra maratón": "Ultra marathon", Trail: "Trail", Relevos: "Relay", "Distancia variable": "Varied distance" },
+  pt: { Todas: "Todas", Maratón: "Maratona", "Media maratón": "Meia maratona", "10K": "10K", "20K": "20K", "Ultra maratón": "Ultra maratona", Trail: "Trail", Relevos: "Revezamento", "Distancia variable": "Distância variável" },
+  fr: { Todas: "Toutes", Maratón: "Marathon", "Media maratón": "Semi-marathon", "10K": "10K", "20K": "20K", "Ultra maratón": "Ultra marathon", Trail: "Trail", Relevos: "Relais", "Distancia variable": "Distance variable" },
 };
 
 const ETIQUETAS_CONTINENTE: Record<Idioma, Record<string, string>> = {

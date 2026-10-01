@@ -32,9 +32,14 @@ const CONTINENTE_DB_A_UI: Record<string, string> = {
 const DISTANCIA_DB_A_UI: Record<string, string> = {
   MARATON: "Maratón",
   MEDIA_MARATON: "Media maratón",
+  KM_5: "5K",
   KM_10: "10K",
+  KM_15: "15K",
   KM_20: "20K",
+  KM_25: "25K",
+  KM_30: "30K",
   ULTRA: "Ultra maratón",
+  RELEVOS: "Relevos",
   OTRA: "Distancia variable",
 };
 

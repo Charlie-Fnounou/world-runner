@@ -64,6 +64,7 @@ export const DISTANCIAS = [
   "Todas",
   "Maratón",
   "Media maratón",
+  "5K",
   "10K",
   "20K",
   "Ultra maratón",

@@ -117,7 +117,7 @@ export function PerfilClient({
           <h3 className="font-bold mt-7 mb-3" style={{ color: "var(--wr-ink)" }}>
             {t.perfil.mapaPersonal}
           </h3>
-          <MapaMundialLazy carreras={completas} alto={300} />
+          <MapaMundialLazy carreras={completas} alto={300} filtroFechas={false} />
         </>
       )}
 
