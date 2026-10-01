@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { corregirCalidadDeDatos } from "@/lib/sanidad";
 import { traducirDescripcionesFaltantes } from "@/lib/traducciones";
 import { rellenarDatosFaltantes } from "@/lib/rellenoDatos";
@@ -317,6 +318,13 @@ export async function GET(request: Request) {
       resultados["_rellenoDatos"] = { error: e instanceof Error ? e.message : "error desconocido" };
     }
   }
+
+  // Las páginas públicas se regeneran 1 vez por día (revalidate = 86400),
+  // no cada 5 minutos: los datos solo cambian cuando corre este cron, y
+  // regenerarlas seguido descargaba el catálogo entero una y otra vez
+  // hasta agotar la cuota de tráfico de Supabase. Acá se las marca para
+  // regenerar justo después de que entraron los datos nuevos del día.
+  revalidatePath("/", "layout");
 
   return NextResponse.json(resultados);
 }

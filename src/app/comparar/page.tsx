@@ -1,7 +1,7 @@
 import { getCarreras } from "@/lib/races-data";
 import { CompareClient } from "@/components/CompareClient";
 
-export const revalidate = 300;
+export const revalidate = 86400;
 
 export const metadata = {
   title: "Comparador de carreras",

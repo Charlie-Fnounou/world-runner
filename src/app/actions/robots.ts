@@ -218,5 +218,5 @@ export async function correrCollectoresAhora() {
   await enriquecerCarrerasRunSignup().catch(() => {});
   await rellenarDatosFaltantes().catch(() => {});
 
-  revalidatePath("/admin/robots");
+  revalidatePath("/", "layout");
 }

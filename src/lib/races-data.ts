@@ -54,7 +54,51 @@ const EVENTO_CON_EDICIONES = {
 
 type EventoConEdiciones = Prisma.EventoGetPayload<typeof EVENTO_CON_EDICIONES>;
 
-function edicionActualDe(evento: EventoConEdiciones) {
+// Las páginas de listado (inicio, calendario, rankings, mapa, asistente...)
+// cargan TODO el catálogo de una vez. Traer ahí las descripciones en 4
+// idiomas, perfiles de elevación, etc. — que solo usa la ficha individual
+// de cada carrera — multiplicaba el tráfico de la base y terminó agotando
+// la cuota gratis de Supabase (egress). Acá va solo lo que esas páginas
+// muestran; la ficha sigue usando EVENTO_CON_EDICIONES completo.
+const EVENTO_LISTADO = {
+  select: {
+    id: true,
+    nombre: true,
+    ciudad: true,
+    pais: true,
+    bandera: true,
+    continente: true,
+    lat: true,
+    lng: true,
+    sitioWeb: true,
+    colorPrimario: true,
+    colorSecundario: true,
+    esWorldMarathonMajor: true,
+    climaTempPromedioC: true,
+    ediciones: {
+      orderBy: { anio: "desc" as const },
+      select: {
+        id: true,
+        anio: true,
+        fecha: true,
+        estado: true,
+        precioDesde: true,
+        moneda: true,
+        numCorredores: true,
+        desnivelPositivoM: true,
+        tiempoLimite: true,
+        dificultad: true,
+        ratingPromedio: true,
+        numResenas: true,
+      },
+    },
+    distancias: { select: { tipo: true, km: true, terreno: true, edicionId: true } },
+  },
+} satisfies Prisma.EventoDefaultArgs;
+
+type EventoListado = Prisma.EventoGetPayload<typeof EVENTO_LISTADO>;
+
+function edicionActualDe<E extends { fecha: Date }>(evento: { ediciones: E[] }): E | undefined {
   const hoy = new Date();
   const futuras = evento.ediciones
     .filter((e) => e.fecha >= hoy)
@@ -69,16 +113,19 @@ function edicionActualDe(evento: EventoConEdiciones) {
 // haya pasado. Como red de seguridad, acá se corrige en el momento de
 // mostrarla: una fecha ya pasada siempre se ve como cerrada, sin
 // importar qué haya quedado guardado.
-function estadoParaMostrar(edicion: EventoConEdiciones["ediciones"][number]): EstadoInscripcion {
+function estadoParaMostrar(edicion: { fecha: Date; estado: string }): EstadoInscripcion {
   const yaPaso = edicion.fecha < new Date();
   const abiertaOSimilar = edicion.estado === "ABIERTA" || edicion.estado === "ULTIMOS_CUPOS" || edicion.estado === "SORTEO" || edicion.estado === "PROXIMAMENTE";
   if (yaPaso && abiertaOSimilar) return "cerrada";
   return ESTADO_DB_A_UI[edicion.estado] ?? "proximamente";
 }
 
-function aCarrera(evento: EventoConEdiciones): Carrera | null {
-  const edicion = edicionActualDe(evento);
+function aCarrera(evento: EventoConEdiciones | EventoListado): Carrera | null {
+  const edicion = edicionActualDe<EventoListado["ediciones"][number]>(evento);
   if (!edicion) return null;
+  // Solo la ficha individual trae los campos de detalle (ver EVENTO_LISTADO).
+  const detalle = "descripcion" in evento ? evento : null;
+  const edicionDetalle = detalle ? detalle.ediciones.find((e) => e.id === edicion.id) : undefined;
   const distancia = evento.distancias.find((d) => d.edicionId === edicion.id) ?? evento.distancias[0];
 
   const history: EdicionHistorial[] = evento.ediciones
@@ -112,24 +159,40 @@ function aCarrera(evento: EventoConEdiciones): Carrera | null {
     nrev: edicion.numResenas,
     major: evento.esWorldMarathonMajor,
     web: evento.sitioWeb ?? "",
-    airport: evento.aeropuerto ?? "",
-    hotel: evento.zonaHoteles ?? "",
+    airport: detalle?.aeropuerto ?? "",
+    hotel: detalle?.zonaHoteles ?? "",
     g: [evento.colorPrimario ?? "#2547E8", evento.colorSecundario ?? "#12151b"],
-    desc: evento.descripcion ?? "",
-    descEn: evento.descripcionEn ?? "",
-    descPt: evento.descripcionPt ?? "",
-    descFr: evento.descripcionFr ?? "",
-    recM: edicion.recordMasculino ?? "",
-    recF: edicion.recordFemenino ?? "",
-    profile: Array.isArray(edicion.perfilElevacion) ? (edicion.perfilElevacion as number[]) : [],
+    desc: detalle?.descripcion ?? "",
+    descEn: detalle?.descripcionEn ?? "",
+    descPt: detalle?.descripcionPt ?? "",
+    descFr: detalle?.descripcionFr ?? "",
+    recM: edicionDetalle?.recordMasculino ?? "",
+    recF: edicionDetalle?.recordFemenino ?? "",
+    profile: Array.isArray(edicionDetalle?.perfilElevacion) ? (edicionDetalle.perfilElevacion as number[]) : [],
     history,
   };
 }
 
-export async function getCarreras(): Promise<Carrera[]> {
-  const eventos = await prisma.evento.findMany(EVENTO_CON_EDICIONES);
+async function cargarCarreras(): Promise<Carrera[]> {
+  const eventos = await prisma.evento.findMany(EVENTO_LISTADO);
   const carreras = eventos.map(aCarrera).filter((c): c is Carrera => c !== null);
   return carreras.sort((a, b) => a.date.localeCompare(b.date));
+}
+
+// Varias páginas se regeneran juntas (y el asistente pregunta seguido):
+// sin esto, cada una descargaba el catálogo entero por separado. Dentro de
+// una misma instancia del servidor se reutiliza la misma carga un rato.
+const MEMO_MS = 10 * 60_000;
+let memo: { hasta: number; promesa: Promise<Carrera[]> } | null = null;
+
+export function getCarreras(): Promise<Carrera[]> {
+  if (memo && memo.hasta > Date.now()) return memo.promesa;
+  const promesa = cargarCarreras();
+  memo = { hasta: Date.now() + MEMO_MS, promesa };
+  promesa.catch(() => {
+    if (memo?.promesa === promesa) memo = null;
+  });
+  return promesa;
 }
 
 export async function getCarreraPorId(id: string): Promise<Carrera | undefined> {

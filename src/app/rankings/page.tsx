@@ -1,7 +1,7 @@
 import { getCarreras } from "@/lib/races-data";
 import { RankingsClient } from "@/components/RankingsClient";
 
-export const revalidate = 300;
+export const revalidate = 86400;
 
 export const metadata = {
   title: "Rankings mundiales",

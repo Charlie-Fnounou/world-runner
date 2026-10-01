@@ -5,7 +5,7 @@ import { RaceDetailClient } from "@/components/RaceDetailClient";
 import { BannerPublicitario } from "@/components/BannerPublicitario";
 import { fmtFecha } from "@/lib/format";
 
-export const revalidate = 300;
+export const revalidate = 86400;
 
 // Pre-generar las ~2200+ fichas de carrera UNA POR UNA en cada build (una
 // consulta a la base por cada una) dejó de ser viable a este tamaño de

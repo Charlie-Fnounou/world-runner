@@ -54,6 +54,7 @@ export async function upsertCarreraExterna(c: CarreraExterna): Promise<{ creada:
         lng,
         sitioWeb: c.sitioWeb,
       },
+      select: { id: true },
     });
 
     const edicionAntes = await prisma.edicion.findUnique({
@@ -97,6 +98,7 @@ export async function upsertCarreraExterna(c: CarreraExterna): Promise<{ creada:
     await prisma.fuenteDato.update({
       where: { id: fuenteExistente.id },
       data: { ultimaObtencion: new Date() },
+      select: { id: true },
     });
 
     return { creada: false };
@@ -113,6 +115,7 @@ export async function upsertCarreraExterna(c: CarreraExterna): Promise<{ creada:
   const slug = slugify(id, c.nombre);
 
   await prisma.evento.create({
+    select: { id: true },
     data: {
       id,
       slug,

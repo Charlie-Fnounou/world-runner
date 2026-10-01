@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: "Todas las carreras de running del mundo organizadas por mes.",
 };
 
-export const revalidate = 300;
+export const revalidate = 86400;
 
 export default async function CalendarioPage() {
   const carreras = await getCarreras();

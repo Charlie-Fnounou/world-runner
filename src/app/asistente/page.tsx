@@ -1,7 +1,7 @@
 import { getCarreras } from "@/lib/races-data";
 import { AsistenteClient } from "@/components/AsistenteClient";
 
-export const revalidate = 300;
+export const revalidate = 86400;
 
 export const metadata = {
   title: "Asistente IA",

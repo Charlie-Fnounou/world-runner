@@ -2,7 +2,7 @@ import { getCarreras } from "@/lib/races-data";
 import { HomeClient } from "@/components/HomeClient";
 import { BannerPublicitario } from "@/components/BannerPublicitario";
 
-export const revalidate = 300;
+export const revalidate = 86400;
 
 export default async function Home() {
   const carreras = await getCarreras();
