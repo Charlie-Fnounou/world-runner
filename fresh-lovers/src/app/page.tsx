@@ -3,8 +3,6 @@ import { Shelf } from "@/components/home/Shelf";
 import { ProductReel } from "@/components/home/ProductReel";
 import { GreekSequence } from "@/components/home/GreekSequence";
 import { House } from "@/components/home/House";
-import { Story } from "@/components/home/Story";
-import { Kosher } from "@/components/home/Kosher";
 import { Stores } from "@/components/home/Stores";
 import { Contact } from "@/components/home/Contact";
 import { JsonLd } from "@/components/JsonLd";
@@ -50,8 +48,6 @@ export default function Home() {
       <Shelf />
       <GreekSequence />
       <House />
-      <Story />
-      <Kosher />
       <Stores />
       <Contact />
     </>
