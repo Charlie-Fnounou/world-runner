@@ -20,7 +20,7 @@ export const photos = {
   "copa": { src: "/products/copa.webp", w: 1600, h: 1397 },
   "cover-arepas": { src: "/products/cover-arepas.webp", w: 1376, h: 824 },
   "cover-quesos": { src: "/products/cover-quesos.webp", w: 1376, h: 826 },
-  "cover-yosnack": { src: "/products/cover-yosnack.webp", w: 1376, h: 1782 },
+  "cover-yosnack": { src: "/products/cover-yosnack.webp", w: 1376, h: 1624 },
   "dip-aceituna": { src: "/products/dip-aceituna.webp", w: 1148, h: 1304 },
   "especiales-chocolate": { src: "/products/especiales-chocolate.webp", w: 664, h: 758 },
   "especiales-dulce-leche": { src: "/products/especiales-dulce-leche.webp", w: 664, h: 756 },
