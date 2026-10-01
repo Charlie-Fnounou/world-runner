@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
-import { Pack } from "@/components/Pack";
+import { ProductPhoto } from "@/components/ProductPhoto";
 import { ArrowIcon } from "@/components/Icons";
 import { MaskLine, Reveal } from "@/components/Reveal";
 import { getProduct, productsIn } from "@/data/catalog";
@@ -13,6 +13,7 @@ import { useDragScroll } from "@/lib/useDragScroll";
 
 function Labne() {
   const labne = getProduct("labne")!;
+  const chips = getProduct("labne-con-chips")!;
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const x = useTransform(scrollYProgress, [0, 1], ["6%", "-14%"]);
@@ -32,12 +33,12 @@ function Labne() {
         </motion.h2>
 
         <div className="relative mt-[-14vw] grid items-end gap-10 md:mt-[-12vw] md:grid-cols-12">
-          <div className="flex gap-3 md:col-span-6 md:col-start-2">
-            <motion.div style={{ y: tubY, rotate: tubR }} className="w-1/2 md:w-[44%]">
-              <Pack product={labne} variant={0} className="h-auto w-full drop-shadow-[0_30px_40px_rgba(0,0,0,0.3)]" />
+          <div className="relative flex items-start gap-3 md:col-span-7 md:col-start-1">
+            <motion.div style={{ y: tubY, rotate: tubR }} className="relative aspect-[4/3] w-[78%] overflow-hidden rounded-[2rem] shadow-[0_40px_80px_-30px_rgba(0,0,0,0.5)]">
+              <ProductPhoto product={labne} fill sizes="(min-width: 768px) 45vw, 78vw" />
             </motion.div>
-            <motion.div style={{ y: tubY }} className="mt-16 w-1/2 md:w-[44%]">
-              <Pack product={labne} variant={1} className="h-auto w-full drop-shadow-[0_30px_40px_rgba(0,0,0,0.3)]" />
+            <motion.div style={{ y: tubY }} className="relative -ml-[18%] mt-[28%] aspect-[3/4] w-[40%] overflow-hidden rounded-[1.5rem] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.5)]">
+              <ProductPhoto product={chips} fill sizes="(min-width: 768px) 20vw, 40vw" />
             </motion.div>
           </div>
           <Reveal className="md:col-span-4 md:col-start-9 md:pb-10">
@@ -61,57 +62,6 @@ function Labne() {
 
 /* ───────────── Arepas ───────────── */
 
-const arepaLook: Record<string, { base: string; edge: string; fleck?: string; flecks?: number }> = {
-  "arepa-maiz-con-queso": { base: "#F2CC5C", edge: "#D9A535", fleck: "#FFF6DA", flecks: 14 },
-  "arepa-maiz": { base: "#F4D46A", edge: "#DCAA3A" },
-  "arepa-yuca-con-queso": { base: "#F1E4BE", edge: "#D9C28A", fleck: "#FFFDF4", flecks: 12 },
-  "arepa-yuca": { base: "#EEE2C0", edge: "#D2BE8C" },
-  "arepa-yuca-queso-pesto": { base: "#E9E0B4", edge: "#CDBF82", fleck: "#5F8A2E", flecks: 16 },
-  "arepa-platano-con-queso": { base: "#E8A23A", edge: "#C67C1F", fleck: "#FFF0CC", flecks: 10 },
-  "arepa-zanahoria-chia": { base: "#EC8A34", edge: "#C9661B", fleck: "#2A1E18", flecks: 26 },
-};
-
-function Arepa({ slug }: { slug: string }) {
-  const look = arepaLook[slug] ?? { base: "#F2CC5C", edge: "#D9A535" };
-  const flecks = Array.from({ length: look.flecks ?? 0 }, (_, i) => {
-    const a = (i * 137.5 * Math.PI) / 180;
-    const r = 12 + ((i * 29) % 62);
-    return { x: Math.round((100 + Math.cos(a) * r) * 100) / 100, y: Math.round((100 + Math.sin(a) * r) * 100) / 100, s: 1.4 + (i % 3) };
-  });
-  return (
-    <svg viewBox="0 0 200 200" className="h-auto w-full" aria-hidden="true">
-      <defs>
-        <radialGradient id={`ar-${slug}`} cx="0.42" cy="0.38" r="0.7">
-          <stop offset="0" stopColor="#fff" stopOpacity="0.28" />
-          <stop offset="0.6" stopColor="#fff" stopOpacity="0" />
-          <stop offset="1" stopColor="#000" stopOpacity="0.12" />
-        </radialGradient>
-        <clipPath id={`arc-${slug}`}>
-          <circle cx="100" cy="100" r="86" />
-        </clipPath>
-      </defs>
-      <circle cx="100" cy="106" r="90" fill="#000" opacity="0.1" />
-      <circle cx="100" cy="100" r="90" fill={look.edge} />
-      <circle cx="100" cy="100" r="86" fill={look.base} />
-      <g clipPath={`url(#arc-${slug})`}>
-        {flecks.map((f, i) => (
-          <circle key={i} cx={f.x} cy={f.y} r={f.s} fill={look.fleck} opacity="0.9" />
-        ))}
-        {/* grill marks */}
-        {/* toasted patches + soft grill marks */}
-        <circle cx="70" cy="80" r="34" fill="#8A4A16" opacity="0.12" />
-        <circle cx="132" cy="126" r="40" fill="#8A4A16" opacity="0.1" />
-        <g stroke="#5E3010" strokeOpacity="0.32" strokeWidth="7" strokeLinecap="round">
-          {[-36, 0, 36].map((o) => (
-            <line key={o} x1={58 + o} y1={30} x2={142 + o} y2={170} />
-          ))}
-        </g>
-        <circle cx="100" cy="100" r="86" fill={`url(#ar-${slug})`} />
-      </g>
-    </svg>
-  );
-}
-
 function Arepas() {
   const arepas = productsIn("arepas").filter((p) => p.shape === "arepas");
   const rail = useRef<HTMLDivElement>(null);
@@ -134,8 +84,8 @@ function Arepas() {
         {arepas.map((p, n) => (
           <Reveal key={p.slug} delay={n * 0.06} className="w-[48vw] shrink-0 snap-start sm:w-[30vw] md:w-[17vw]">
             <Link href={`/productos/${p.slug}`} className="group block text-center" draggable={false}>
-              <div className="transition-transform duration-700 ease-[var(--ease-out)] group-hover:-translate-y-2 group-hover:rotate-[24deg]">
-                <Arepa slug={p.slug} />
+              <div className="relative aspect-square overflow-hidden rounded-full shadow-[0_24px_40px_-20px_rgba(59,36,6,0.6)] transition-transform duration-700 ease-[var(--ease-out)] group-hover:-translate-y-2">
+                <ProductPhoto product={p} fill sizes="(min-width: 768px) 18vw, 50vw" className="transition-transform duration-[1.2s] group-hover:scale-110" />
               </div>
               <p className="font-display mt-4 text-[1.3rem] leading-tight">{p.title}</p>
               <p className="kicker mt-1 opacity-70">{p.sizes[0]}</p>
@@ -202,7 +152,9 @@ function Cafe() {
         <div className="relative flex justify-center gap-2 md:col-span-6">
           {[0, 1, 2].map((n) => (
             <Reveal key={n} delay={n * 0.12} y={60} className={`w-1/3 ${n === 1 ? "-mt-10" : "mt-8"}`}>
-              <Pack product={cafe} variant={n} className="h-auto w-full drop-shadow-[0_30px_40px_rgba(0,0,0,0.35)]" />
+              <div className="relative aspect-[3/4] overflow-hidden rounded-[1.25rem] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.6)]">
+                <ProductPhoto product={cafe} variant={n} fill sizes="(min-width: 768px) 16vw, 33vw" />
+              </div>
             </Reveal>
           ))}
         </div>

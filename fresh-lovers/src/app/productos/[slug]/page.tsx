@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { ProductView } from "@/components/catalog/ProductView";
-import { Pack } from "@/components/Pack";
+import { ProductPhoto } from "@/components/ProductPhoto";
 import { JsonLd } from "@/components/JsonLd";
 import { ArrowIcon } from "@/components/Icons";
 import { getCategory, getProduct, products } from "@/data/catalog";
@@ -85,8 +85,8 @@ export default async function ProductPage({ params }: PageProps<"/productos/[slu
           {more.map((r) => (
             <li key={r.slug}>
               <Link href={`/productos/${r.slug}`} className="group block">
-                <div className="rounded-[1.5rem] px-[12%] pt-[10%]" style={{ backgroundColor: getCategory(r.category)!.bg }}>
-                  <Pack product={r} className="h-auto w-full transition-transform duration-700 group-hover:-translate-y-2" />
+                <div className="relative aspect-[4/5] overflow-hidden rounded-[1.5rem]" style={{ backgroundColor: getCategory(r.category)!.bg }}>
+                  <ProductPhoto product={r} fill sizes="(min-width: 768px) 24vw, 48vw" className="transition-transform duration-700 group-hover:scale-105" />
                 </div>
                 <p className="mt-3 text-[1rem]">{r.name}</p>
               </Link>

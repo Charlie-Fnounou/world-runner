@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Pack } from "@/components/Pack";
+import { ProductPhoto, photoFor } from "@/components/ProductPhoto";
 import { categories, products, type CategorySlug, type Product } from "@/data/catalog";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -27,21 +27,28 @@ function Card({ p }: { p: Product }) {
     <Link
       href={`/productos/${p.slug}`}
       className="group block"
-      onMouseEnter={() => p.variants.length > 1 && setV(1)}
+      onMouseEnter={() => p.variants.length > 1 && photoFor(p, 1)?.src !== photoFor(p, 0)?.src && setV(1)}
       onMouseLeave={() => setV(0)}
     >
       <div className="relative overflow-hidden rounded-[1.75rem] transition-colors duration-500" style={{ backgroundColor: p.variants[v].bg === "#141210" ? cat.bg : `color-mix(in srgb, ${p.variants[v].bg} 70%, ${cat.bg})` }}>
         {p.isNew && <span className="kicker absolute left-4 top-4 z-10 rounded-full bg-ink px-2.5 py-1 text-[0.6rem] text-paper">Nuevo</span>}
-        <div className="px-[12%] pb-[4%] pt-[10%]">
-          <AnimatePresence mode="popLayout" initial={false}>
+        <div className="relative aspect-[4/5]">
+          <AnimatePresence initial={false}>
             <motion.div
               key={v}
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -14 }}
+              className="absolute inset-0"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               transition={{ duration: 0.45, ease: EASE }}
             >
-              <Pack product={p} variant={v} className="h-auto w-full transition-transform duration-700 ease-[var(--ease-out)] group-hover:scale-[1.04]" />
+              <ProductPhoto
+                product={p}
+                variant={v}
+                fill
+                sizes="(min-width: 1024px) 24vw, (min-width: 768px) 32vw, 48vw"
+                className="transition-transform duration-[1.1s] ease-[var(--ease-out)] group-hover:scale-[1.05]"
+              />
             </motion.div>
           </AnimatePresence>
         </div>

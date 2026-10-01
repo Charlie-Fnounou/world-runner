@@ -3,25 +3,25 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "motion/react";
-import { Pack } from "@/components/Pack";
+import Image from "next/image";
 import { ArrowIcon } from "@/components/Icons";
 import { cartoucheClipPath } from "@/lib/cartouche";
 import { getProduct } from "@/data/catalog";
+import { photos, type PhotoKey } from "@/data/photos";
 import { site } from "@/data/site";
 
-/** The products that open the site — one per family, label colours drive the stage. */
-const lineup = [
-  { slug: "yogurt-griego", v: 0 },
-  { slug: "labne", v: 0 },
-  { slug: "parfait", v: 0 },
-  { slug: "granola", v: 0 },
-  { slug: "cafe-artesanal", v: 1 },
-  { slug: "aceitunas-condimentadas", v: 1 },
-  { slug: "yogurt-pouches-ninos", v: 0 },
-].map(({ slug, v }) => ({ product: getProduct(slug)!, v }));
-
-/** stage backgrounds (label colour fields, sometimes deepened for contrast) */
-const stageBg = ["#C3D2E1", "#5B60D6", "#F3D9D9", "#E9D8C4", "#2E3F7A", "#C3C59A", "#F7C9DE"];
+/** Real product photography from the 2026 catalog — one hero shot per family. */
+const lineupData: { slug: string; photo: PhotoKey; caption: string }[] = [
+  { slug: "labne", photo: "labne", caption: "Labne" },
+  { slug: "parfait", photo: "parfait", caption: "Parfait con granola" },
+  { slug: "yosnack", photo: "cover-yosnack", caption: "YoSnack" },
+  { slug: "queso-prensado", photo: "cover-quesos", caption: "Quesos frescos" },
+  { slug: "arepa-platano-con-queso", photo: "cover-arepas", caption: "Arepas" },
+  { slug: "yogurt-copa-especiales", photo: "especiales", caption: "Yogurt copa especiales" },
+  { slug: "granola", photo: "granola", caption: "Granola" },
+  { slug: "cafe-artesanal", photo: "cafe", caption: "Café artesanal" },
+];
+const lineup = lineupData.map((it) => ({ ...it, product: getProduct(it.slug)! }));
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -54,9 +54,8 @@ export function Hero() {
   const my = useMotionValue(0);
   const sx = useSpring(mx, { stiffness: 60, damping: 18 });
   const sy = useSpring(my, { stiffness: 60, damping: 18 });
-  const packX = useTransform(sx, (v) => v * 18);
-  const packY = useTransform(sy, (v) => v * 12);
-  const packR = useTransform(sx, (v) => v * 3);
+  const packX = useTransform(sx, (v) => v * -14);
+  const packY = useTransform(sy, (v) => v * -10);
   const typeX = useTransform(sx, (v) => v * -10);
 
   const onMove = (e: React.PointerEvent) => {
@@ -66,8 +65,7 @@ export function Hero() {
     my.set((e.clientY - r.top) / r.height - 0.5);
   };
 
-  const v = item.product.variants[item.v];
-  const darkStage = ["#5B60D6", "#2E3F7A"].includes(stageBg[i]);
+  const darkStage = true;
 
   return (
     <section
@@ -134,26 +132,26 @@ export function Hero() {
           <motion.div
             className="absolute inset-0"
             style={{ clipPath: "url(#hero-cartouche)" }}
-            animate={{ backgroundColor: stageBg[i] }}
-            transition={{ duration: 0.9, ease: EASE }}
+            animate={{ backgroundColor: "#141210" }}
           >
-            {/* label half-circle field */}
-            <motion.div
-              className="absolute -bottom-[18%] -right-[30%] aspect-square w-[95%] rounded-full bg-white/25"
-              animate={{ rotate: i * 40 }}
-              transition={{ duration: 1.2, ease: EASE }}
-            />
-            <AnimatePresence mode="popLayout" initial={false}>
+            <AnimatePresence initial={false}>
               <motion.div
                 key={i}
-                className="absolute inset-0 flex items-end justify-center pb-[6%]"
-                initial={{ y: "28%", opacity: 0, rotate: 6 }}
-                animate={{ y: "0%", opacity: 1, rotate: 0 }}
-                exit={{ y: "-22%", opacity: 0, rotate: -5 }}
-                transition={{ duration: 0.9, ease: EASE }}
+                className="absolute inset-0"
+                initial={{ opacity: 0, scale: 1.12 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1.1, ease: EASE }}
               >
-                <motion.div style={{ x: packX, y: packY, rotate: packR }} className="w-[88%]">
-                  <Pack product={item.product} variant={item.v} className="h-auto w-full drop-shadow-[0_24px_30px_rgba(0,0,0,0.18)]" />
+                <motion.div style={{ x: packX, y: packY, scale: 1.08 }} className="absolute inset-0">
+                  <Image
+                    src={photos[item.photo].src}
+                    alt={`${item.caption} — Fresh Lovers`}
+                    fill
+                    priority={i === 0}
+                    sizes="(min-width: 768px) 30vw, 70vw"
+                    className="object-cover"
+                  />
                 </motion.div>
               </motion.div>
             </AnimatePresence>
@@ -173,7 +171,7 @@ export function Hero() {
             type="button"
             onClick={next}
             className="absolute inset-0 z-10 cursor-pointer rounded-[20%] focus-visible:outline-offset-8"
-            aria-label={`Siguiente producto. Ahora: ${item.product.name} ${v.name}`}
+            aria-label={`Siguiente producto. Ahora: ${item.caption}`}
           />
         </motion.div>
       </div>
@@ -213,7 +211,7 @@ export function Hero() {
                 className="mt-1 truncate text-[1.02rem]"
               >
                 <Link href={`/productos/${item.product.slug}`} className="hover:underline">
-                  {item.product.name} <em className="font-display text-ink-2">{v.name.toLowerCase()}</em>
+                  {item.caption}
                 </Link>
               </motion.p>
             </AnimatePresence>

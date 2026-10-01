@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Pack } from "@/components/Pack";
+import { ProductPhoto, photoFor } from "@/components/ProductPhoto";
 import { WhatsAppIcon } from "@/components/Icons";
 import { cartoucheClipPath } from "@/lib/cartouche";
 import type { Category, Product } from "@/data/catalog";
@@ -38,17 +38,16 @@ export function ProductView({ product: p, category }: { product: Product; catego
             transition={{ duration: 0.7, ease: EASE }}
             style={{ clipPath: "url(#pdp-cartouche)" }}
           >
-            <div className="absolute -bottom-[20%] -right-[20%] aspect-square w-[80%] rounded-full bg-white/25" />
-            <AnimatePresence mode="popLayout" initial={false}>
+            <AnimatePresence initial={false}>
               <motion.div
-                key={i}
-                className="absolute inset-0 flex items-end justify-center pb-[6%]"
-                initial={{ opacity: 0, y: 30, rotate: 4 }}
-                animate={{ opacity: 1, y: 0, rotate: 0 }}
-                exit={{ opacity: 0, y: -30, rotate: -4 }}
-                transition={{ duration: 0.6, ease: EASE }}
+                key={photoFor(p, i)?.src ?? i}
+                className="absolute inset-0"
+                initial={{ opacity: 0, scale: 1.06 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.7, ease: EASE }}
               >
-                <Pack product={p} variant={i} className="h-auto w-[74%] drop-shadow-[0_30px_40px_rgba(0,0,0,0.2)]" />
+                <ProductPhoto product={p} variant={i} fill priority sizes="(min-width: 768px) 45vw, 92vw" />
               </motion.div>
             </AnimatePresence>
           </motion.div>

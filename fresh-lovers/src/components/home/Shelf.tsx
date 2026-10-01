@@ -3,18 +3,22 @@
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Pack } from "@/components/Pack";
+import { ProductPhoto } from "@/components/ProductPhoto";
 import { ArrowIcon } from "@/components/Icons";
 import { categories, products, skuCount, type CategorySlug } from "@/data/catalog";
 import { useDragScroll } from "@/lib/useDragScroll";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-/** One card per variant so the shelf looks like a real shelf (cap per category). */
+/** One card per photographed variant; otherwise one card per product. */
 function shelfItems(slug: CategorySlug) {
   return products
-    .filter((p) => p.category === slug)
-    .flatMap((p) => p.variants.map((v, i) => ({ p, i, v })))
+    // home shelf shows photographed products only (Yogurt Griego has label art, no photo yet)
+    .filter((p) => p.category === slug && (p.image || p.variants.some((v) => v.photo)))
+    .flatMap((p) => {
+      const shot = p.variants.map((v, i) => ({ p, i, v })).filter(({ v }) => v.photo);
+      return shot.length > 1 ? shot : [{ p, i: 0, v: p.variants[0], all: true }];
+    })
     .slice(0, 12);
 }
 
@@ -124,7 +128,7 @@ export function Shelf() {
           className="no-scrollbar flex snap-x snap-mandatory gap-2 overflow-x-auto px-[var(--gutter)] pb-6 md:cursor-grab md:gap-4 md:active:cursor-grabbing"
         >
           <AnimatePresence mode="popLayout" initial={false}>
-            {items.map(({ p, i, v }, n) => (
+            {items.map(({ p, i, v, ...rest }, n) => (
               <motion.div
                 key={`${p.slug}-${i}`}
                 className="w-[58vw] shrink-0 snap-start sm:w-[36vw] md:w-[21vw] lg:w-[17vw]"
@@ -134,21 +138,27 @@ export function Shelf() {
                 transition={{ duration: 0.7, delay: n * 0.05, ease: EASE }}
               >
                 <Link
-                  href={`/productos/${p.slug}${p.variants.length > 1 ? `?v=${i}` : ""}`}
+                  href={`/productos/${p.slug}${p.variants.length > 1 && !("all" in rest) ? `?v=${i}` : ""}`}
                   className="group block"
                   draggable={false}
                 >
-                  <div className="relative">
-                    <Pack
+                  <div className="relative aspect-[4/5] overflow-hidden rounded-[1.5rem] bg-black/10">
+                    <ProductPhoto
                       product={p}
                       variant={i}
-                      className="h-auto w-full transition-transform duration-700 ease-[var(--ease-out)] group-hover:-translate-y-3 group-hover:-rotate-2"
+                      fill
+                      sizes="(min-width: 1024px) 18vw, (min-width: 768px) 22vw, 60vw"
+                      className="transition-transform duration-[1.1s] ease-[var(--ease-out)] group-hover:scale-[1.06]"
                     />
                   </div>
                   <div className="mt-2 border-t border-current/25 pt-3" style={{ borderColor: "color-mix(in srgb, currentColor 25%, transparent)" }}>
                     <p className="text-[1rem] leading-tight">{p.name}</p>
                     <p className="font-display mt-0.5 italic opacity-75">
-                      {p.variants.length > 1 ? v.name.toLowerCase() : p.sizes[0]}
+                      {"all" in rest || p.variants.length === 1
+                        ? p.variants.length > 1
+                          ? `${p.variants.length} variedades`
+                          : p.sizes[0]
+                        : v.name.toLowerCase()}
                     </p>
                   </div>
                 </Link>
