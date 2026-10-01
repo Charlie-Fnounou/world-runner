@@ -7,7 +7,7 @@ import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/
 import { Logo } from "./Logo";
 import { WhatsAppIcon, InstagramIcon, ArrowIcon } from "./Icons";
 import { ProductPhoto } from "./ProductPhoto";
-import { categories, products, type CategorySlug } from "@/data/catalog";
+import { categories, products, type CategorySlug, type Product } from "@/data/catalog";
 import { instagramLink, site, whatsappLink } from "@/data/site";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -21,13 +21,61 @@ const inCategory = (slug: CategorySlug) => products.filter((p) => p.category ===
 
 /* ───────────────────────── desktop mega menu ───────────────────────── */
 
+type Card = { key: string; href: string; product: Product; variant: number; title: string; sub: string };
+
+/** How a category opens in the menu:
+ *  - "lines": several product lines with flavours (Yogurt) → extra column of lines, flavours on the right
+ *  - "variants": a single product (Granola, Café…) → its varieties directly
+ *  - "products": everything else (Arepas, Quesos…) → products directly */
+function layoutFor(slug: CategorySlug): "lines" | "variants" | "products" {
+  const list = inCategory(slug);
+  if (list.length === 1) return "variants";
+  if (list.some((p) => p.variants.length >= 3)) return "lines";
+  return "products";
+}
+
+const variantCards = (p: Product): Card[] =>
+  p.variants.map((v, i) => ({
+    key: `${p.slug}-${i}`,
+    href: `/productos/${p.slug}${p.variants.length > 1 ? `?v=${i}` : ""}`,
+    product: p,
+    variant: i,
+    title: p.variants.length > 1 ? v.name : p.name,
+    sub: p.variants.length > 1 ? p.name : p.sizes[0],
+  }));
+
+const productCards = (list: Product[]): Card[] =>
+  list.map((p) => ({
+    key: p.slug,
+    href: `/productos/${p.slug}`,
+    product: p,
+    variant: 0,
+    title: p.name,
+    sub: p.variants.length > 1 ? `${p.variants.length} sabores / variedades` : p.sizes[0],
+  }));
+
 function MegaMenu({ active, setActive, close }: { active: CategorySlug; setActive: (c: CategorySlug) => void; close: () => void }) {
   const list = inCategory(active);
   const cat = categories.find((c) => c.slug === active)!;
+  const layout = layoutFor(active);
+  const [line, setLine] = useState<string>(list[0]?.slug ?? "");
+  // keep the selected line inside the current category
+  const lineProduct = list.find((p) => p.slug === line) ?? list[0];
+
+  const cards: Card[] =
+    layout === "lines" ? variantCards(lineProduct) : layout === "variants" ? variantCards(list[0]) : productCards(list);
+  const heading = layout === "lines" ? lineProduct.name : cat.name;
+  const headingHref = layout === "lines" ? `/productos/${lineProduct.slug}` : `/productos?c=${cat.slug}`;
+
+  const pickCategory = (c: CategorySlug) => {
+    setActive(c);
+    setLine(inCategory(c)[0]?.slug ?? "");
+  };
+
   return (
-    <div className="gutter grid grid-cols-12 gap-10 pb-12 pt-8">
-      {/* categories */}
-      <div className="col-span-3 border-r border-ink/10 pr-6">
+    <div className="gutter grid grid-cols-12 gap-8 pb-12 pt-8">
+      {/* level 1 — categories */}
+      <div className="col-span-3 border-r border-ink/10 pr-6 xl:col-span-2">
         <p className="kicker mb-4 text-ink/45">Categorías</p>
         <ul className="space-y-0.5">
           {categories.map((c) => {
@@ -36,13 +84,17 @@ function MegaMenu({ active, setActive, close }: { active: CategorySlug; setActiv
               <li key={c.slug}>
                 <Link
                   href={`/productos?c=${c.slug}`}
-                  onMouseEnter={() => setActive(c.slug)}
-                  onFocus={() => setActive(c.slug)}
+                  onMouseEnter={() => pickCategory(c.slug)}
+                  onFocus={() => pickCategory(c.slug)}
                   onClick={close}
                   className={`group flex items-center justify-between rounded-lg px-3 py-1.5 transition-colors ${on ? "bg-ink text-paper" : "text-ink hover:bg-ink/5"}`}
                 >
-                  <span className="font-display text-[1.35rem] leading-tight">{c.name}</span>
-                  <span className={`text-xs ${on ? "text-paper/60" : "text-ink/40"}`}>{inCategory(c.slug).length}</span>
+                  <span className="font-display text-[1.3rem] leading-tight">{c.name}</span>
+                  {layoutFor(c.slug) === "lines" ? (
+                    <span aria-hidden="true" className={on ? "text-paper/70" : "text-ink/40"}>›</span>
+                  ) : (
+                    <span className={`text-xs ${on ? "text-paper/60" : "text-ink/40"}`}>{inCategory(c.slug).length}</span>
+                  )}
                 </Link>
               </li>
             );
@@ -54,38 +106,69 @@ function MegaMenu({ active, setActive, close }: { active: CategorySlug; setActiv
         </Link>
       </div>
 
-      {/* products of the hovered category */}
-      <div className="col-span-9">
+      {/* level 2 — product lines (only for categories like Yogurt) */}
+      {layout === "lines" && (
+        <motion.div
+          key={`lines-${active}`}
+          className="col-span-2 border-r border-ink/10 pr-4"
+          initial={{ opacity: 0, x: -8 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.25, ease: EASE }}
+        >
+          <p className="kicker mb-4 text-ink/45">{cat.name}</p>
+          <ul className="space-y-0.5">
+            {list.map((p) => {
+              const on = p.slug === lineProduct.slug;
+              return (
+                <li key={p.slug}>
+                  <Link
+                    href={`/productos/${p.slug}`}
+                    onMouseEnter={() => setLine(p.slug)}
+                    onFocus={() => setLine(p.slug)}
+                    onClick={close}
+                    className={`flex items-center justify-between rounded-lg px-3 py-2 text-[0.98rem] transition-colors ${on ? "bg-ink/[0.07] text-ink" : "text-ink/75 hover:bg-ink/5 hover:text-ink"}`}
+                  >
+                    <span>{p.name.replace(/^Yogurt /, "")}</span>
+                    <span className="text-xs text-ink/40">{p.variants.length}</span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </motion.div>
+      )}
+
+      {/* level 3 — products / flavours with photos, each links straight to its page */}
+      <div className={layout === "lines" ? "col-span-7 xl:col-span-8" : "col-span-9 xl:col-span-10"}>
         <div className="mb-4 flex items-baseline justify-between">
-          <p className="kicker text-ink/45">{cat.name}</p>
-          <Link href={`/productos?c=${cat.slug}`} onClick={close} className="text-sm text-ink/70 hover:text-ink">
-            Ver {cat.name.toLowerCase()} →
+          <p className="kicker text-ink/45">{heading}</p>
+          <Link href={headingHref} onClick={close} className="text-sm text-ink/70 hover:text-ink">
+            Ver {heading.toLowerCase()} →
           </Link>
         </div>
         <AnimatePresence mode="wait" initial={false}>
           <motion.ul
-            key={active}
-            className="grid grid-cols-4 gap-x-5 gap-y-6 xl:grid-cols-5"
+            key={`${active}-${layout === "lines" ? lineProduct.slug : ""}`}
+            className={`grid gap-x-5 gap-y-6 ${layout === "lines" ? "grid-cols-4" : "grid-cols-4 xl:grid-cols-6"}`}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.25, ease: EASE }}
+            transition={{ duration: 0.22, ease: EASE }}
           >
-            {list.map((p) => (
-              <li key={p.slug}>
-                <Link href={`/productos/${p.slug}`} onClick={close} className="group block">
+            {cards.map((c) => (
+              <li key={c.key}>
+                <Link href={c.href} onClick={close} className="group block">
                   <div className="relative aspect-square overflow-hidden rounded-2xl" style={{ backgroundColor: cat.bg }}>
                     <ProductPhoto
-                      product={p}
+                      product={c.product}
+                      variant={c.variant}
                       fill
                       sizes="200px"
                       className="transition-transform duration-700 ease-[var(--ease-out)] group-hover:scale-[1.06]"
                     />
                   </div>
-                  <p className="mt-2 text-[0.95rem] leading-tight text-ink">{p.name}</p>
-                  <p className="text-xs text-ink/55">
-                    {p.variants.length > 1 ? `${p.variants.length} sabores / variedades` : p.sizes[0]}
-                  </p>
+                  <p className="mt-2 text-[0.95rem] leading-tight text-ink">{c.title}</p>
+                  <p className="text-xs text-ink/55">{c.sub}</p>
                 </Link>
               </li>
             ))}
