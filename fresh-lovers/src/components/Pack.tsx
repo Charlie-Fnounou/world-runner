@@ -761,14 +761,160 @@ function Tortillas({ id, v }: { id: string; v: Variant }) {
   );
 }
 
+/* ───────────── packs dressed with the real Canva label artwork ───────────── */
+
+const POUCH_BODY = "M66 64 Q66 52 80 52 L160 52 Q174 52 174 64 L182 284 Q182 300 166 300 L74 300 Q58 300 58 284 Z";
+
+function LabeledPouch({ id, src }: { id: string; src: string }) {
+  return (
+    <>
+      <Ground id={id} w={150} />
+      <rect x="106" y="16" width="28" height="22" rx="4" fill="#F4F2EE" />
+      {[0, 1, 2, 3, 4].map((i) => (
+        <rect key={i} x={109 + i * 5} y="18" width="1.4" height="18" fill="#000" opacity="0.07" />
+      ))}
+      <rect x="111" y="37" width="18" height="17" fill="#EAE6DF" />
+      <rect x="104" y="44" width="32" height="4" rx="2" fill="#DCD6CC" />
+      <clipPath id={`${id}-b`}>
+        <path d={POUCH_BODY} />
+      </clipPath>
+      <path d={POUCH_BODY} fill="#fff" />
+      <g clipPath={`url(#${id}-b)`}>
+        <image href={src} x="58" y="52" width="124" height="248" preserveAspectRatio="xMidYMid slice" />
+        <rect x="0" y="0" width="240" height="320" fill={`url(#${id}-soft)`} />
+        <rect x="58" y="52" width="124" height="7" fill="#000" opacity="0.06" />
+      </g>
+    </>
+  );
+}
+
+/** Round lid sticker seen from above — the Labne/Dips labels are circle stickers. */
+function LabeledLid({ id, src }: { id: string; src: string }) {
+  return (
+    <>
+      <ellipse cx="120" cy="282" rx="100" ry="14" fill={`url(#${id}-shadow)`} />
+      <circle cx="120" cy="168" r="108" fill="#E9E6E0" />
+      <circle cx="120" cy="164" r="108" fill="#F7F5F1" />
+      <circle cx="120" cy="164" r="100" fill="none" stroke="#000" strokeOpacity="0.07" strokeWidth="3" />
+      <clipPath id={`${id}-l`}>
+        <circle cx="120" cy="164" r="94" />
+      </clipPath>
+      <g clipPath={`url(#${id}-l)`}>
+        <image href={src} x="26" y="70" width="188" height="188" preserveAspectRatio="xMidYMid slice" />
+        <circle cx="90" cy="120" r="90" fill="#fff" opacity="0.08" />
+      </g>
+    </>
+  );
+}
+
+function LabeledJar({ id, src }: { id: string; src: string }) {
+  const body = "M62 74 Q62 62 74 62 L166 62 Q178 62 178 74 L178 290 Q178 302 166 302 L74 302 Q62 302 62 290 Z";
+  return (
+    <>
+      <Ground id={id} w={136} />
+      <rect x="74" y="22" width="92" height="34" rx="6" fill="#2A221C" />
+      <rect x="74" y="50" width="92" height="6" fill="#000" opacity="0.25" />
+      <rect x="80" y="54" width="80" height="10" fill="#EDE6DA" />
+      <clipPath id={`${id}-b`}>
+        <path d={body} />
+      </clipPath>
+      <g clipPath={`url(#${id}-b)`}>
+        <rect x="0" y="0" width="240" height="320" fill="#C8955A" />
+        {Array.from({ length: 60 }).map((_, i) => (
+          <circle key={i} cx={62 + ((i * 37) % 118)} cy={64 + ((i * 53) % 238)} r={2.5 + (i % 3)} fill={["#E7BE7C", "#A86C2E", "#8A5326"][i % 3]} />
+        ))}
+        <image href={src} x="72" y="64" width="96" height="236" preserveAspectRatio="xMidYMid slice" />
+        <rect x="0" y="0" width="240" height="320" fill={`url(#${id}-glass)`} />
+      </g>
+      <path d={body} fill="none" stroke="#fff" strokeOpacity="0.6" />
+    </>
+  );
+}
+
+function LabeledTray({ id, src }: { id: string; src: string }) {
+  const olives = Array.from({ length: 22 }, (_, i) => ({
+    x: 50 + ((i * 31) % 140),
+    y: 160 + ((i * 17) % 120),
+    c: ["#4A5A1E", "#6E7A2A", "#3A2A2A", "#5A6A22"][i % 4],
+  }));
+  const body = "M30 140 L210 140 L200 296 Q199 302 192 302 L48 302 Q41 302 40 296 Z";
+  return (
+    <>
+      <Ground id={id} w={196} />
+      <path d={body} fill="#E9ECDD" />
+      <clipPath id={`${id}-b`}>
+        <path d={body} />
+      </clipPath>
+      <g clipPath={`url(#${id}-b)`}>
+        {olives.map((o, i) => (
+          <ellipse key={i} cx={o.x} cy={o.y} rx="13" ry="10" fill={o.c} />
+        ))}
+        <rect x="0" y="0" width="240" height="320" fill={`url(#${id}-glass)`} />
+      </g>
+      <path d="M24 140 L216 140 L208 122 L32 122 Z" fill="#fff" opacity="0.7" />
+      <image href={src} x="70" y="128" width="100" height="156" preserveAspectRatio="xMidYMid meet" />
+    </>
+  );
+}
+
+function LabeledBag({ id, src, v }: { id: string; src: string; v: Variant }) {
+  const body = "M52 52 L188 52 L190 290 Q190 302 178 302 L62 302 Q50 302 50 290 Z";
+  const zig = Array.from({ length: 27 }, (_, i) => `${52 + i * 5.2},${i % 2 ? 46 : 52}`).join(" ");
+  return (
+    <>
+      <Ground id={id} w={156} />
+      <polyline points={zig} fill="none" stroke="#D8D3C8" strokeWidth="6" />
+      <clipPath id={`${id}-b`}>
+        <path d={body} />
+      </clipPath>
+      <path d={body} fill="#EFEADF" />
+      <g clipPath={`url(#${id}-b)`}>
+        {Array.from({ length: 16 }).map((_, i) => (
+          <g key={i} transform={`translate(${60 + ((i * 41) % 124)} ${70 + ((i * 59) % 224)})`}>
+            <circle r="15" fill={v.bg} opacity="0.55" />
+            <circle r="10" fill="#F6E7C8" />
+          </g>
+        ))}
+        <image href={src} x="62" y="76" width="116" height="166" preserveAspectRatio="xMidYMid slice" />
+        <rect x="0" y="0" width="240" height="320" fill={`url(#${id}-glass)`} />
+      </g>
+    </>
+  );
+}
+
 export function Pack({ product: p, variant = 0, className, shadow = true, title }: Props) {
   const raw = useId();
   const id = "pk" + raw.replace(/[^a-zA-Z0-9]/g, "");
   const v = p.variants[Math.min(variant, p.variants.length - 1)];
   const label = title ?? `${p.name} ${p.variants.length > 1 ? v.name : ""}`.trim();
 
+  if (v.label) {
+    const src = v.label;
+    const labeled =
+      p.shape === "pouch" ? (
+        <LabeledPouch id={id} src={src} />
+      ) : p.shape === "tub" ? (
+        <LabeledLid id={id} src={src} />
+      ) : p.shape === "jar" ? (
+        <LabeledJar id={id} src={src} />
+      ) : p.shape === "tray" ? (
+        <LabeledTray id={id} src={src} />
+      ) : (
+        <LabeledBag id={id} src={src} v={v} />
+      );
+    return (
+      <svg viewBox="0 0 240 320" className={className} role="img" aria-label={label}>
+        <Shade id={id} />
+        {labeled}
+      </svg>
+    );
+  }
+
   let shape: React.ReactNode;
   switch (p.shape) {
+    case "jar":
+      shape = <Bag id={id} p={p} v={v} />;
+      break;
     case "pouch":
       shape = <Pouch id={id} p={p} v={v} />;
       break;

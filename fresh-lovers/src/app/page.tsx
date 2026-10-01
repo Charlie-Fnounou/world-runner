@@ -1,5 +1,6 @@
 import { Hero } from "@/components/home/Hero";
 import { Shelf } from "@/components/home/Shelf";
+import { LabelReel } from "@/components/home/LabelReel";
 import { GreekSequence } from "@/components/home/GreekSequence";
 import { House } from "@/components/home/House";
 import { Story } from "@/components/home/Story";
@@ -45,6 +46,7 @@ export default function Home() {
         ]}
       />
       <Hero />
+      <LabelReel />
       <Shelf />
       <GreekSequence />
       <House />

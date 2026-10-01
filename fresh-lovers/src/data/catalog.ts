@@ -12,6 +12,7 @@
 
 export type PackShape =
   | "pouch"
+  | "jar"
   | "kidpouch"
   | "cup"
   | "parfait"
@@ -38,6 +39,8 @@ export interface Variant {
   accent?: string;
   ingredients?: string;
   note?: string;
+  /** real label artwork from Canva, /labels/<file>.webp */
+  label?: string;
 }
 
 export interface Product {
@@ -179,7 +182,7 @@ export const products: Product[] = [
     isNew: true,
     variants: [
       {
-        name: "natural",
+        name: "natural", label: "/labels/griego-natural.webp",
         bg: "#C3D2E1",
         ink: "#2F4A63",
         accent: "#8FA8C0",
@@ -187,35 +190,35 @@ export const products: Product[] = [
         note: "Sin azúcar",
       },
       {
-        name: "vainilla",
+        name: "vainilla", label: "/labels/griego-vainilla.webp",
         bg: "#F1E3BF",
         ink: "#7A5A22",
         accent: "#C9A464",
         ingredients: `Leche pasteurizada, ${YOGURT_CULTURES}, azúcar, esencia de vainilla.`,
       },
       {
-        name: "fresa",
+        name: "fresa", label: "/labels/griego-fresa.webp",
         bg: "#F6C3CB",
         ink: "#A3263F",
         accent: "#E06A80",
         ingredients: `Leche pasteurizada, ${YOGURT_CULTURES}, fresas, azúcar, saborizante.`,
       },
       {
-        name: "berries",
+        name: "berries", label: "/labels/griego-berries.webp",
         bg: "#E2C1DA",
         ink: "#6A2457",
         accent: "#B36AA0",
         ingredients: `Leche pasteurizada, ${YOGURT_CULTURES}, fresas, blueberries, azúcar, saborizante.`,
       },
       {
-        name: "blueberry",
+        name: "blueberry", label: "/labels/griego-blueberry.webp",
         bg: "#BFC6EC",
         ink: "#2E3A8A",
         accent: "#6E7BC9",
         ingredients: `Leche pasteurizada, ${YOGURT_CULTURES}, blueberries, azúcar, saborizante.`,
       },
       {
-        name: "banana-fresa",
+        name: "banana-fresa", label: "/labels/griego-banana-fresa.webp",
         bg: "#F7E29A",
         ink: "#9C2C3C",
         accent: "#E7B43C",
@@ -236,12 +239,12 @@ export const products: Product[] = [
     title: "Pouch",
     description: "Yogurt con probióticos en pouch de 250 ml. Ocho sabores.",
     variants: [
-      { name: "Natural", bg: "#F3F1EC", ink: "#1E4C8F", accent: "#2A64B5", note: "Extra creamy" },
-      { name: "Fresa", bg: "#F7D3D9", ink: "#B32446" },
+      { name: "Natural", label: "/labels/pouch-natural.webp", bg: "#F3F1EC", ink: "#1E4C8F", accent: "#2A64B5", note: "Extra creamy" },
+      { name: "Fresa", label: "/labels/pouch-fresa.webp", bg: "#F7D3D9", ink: "#B32446" },
       { name: "Blueberry", bg: "#D4D8F2", ink: "#2B3A8F" },
-      { name: "Fresa - Banana", bg: "#F8E7A8", ink: "#B32446" },
-      { name: "Vainilla", bg: "#F3E7C9", ink: "#7A5A22" },
-      { name: "Galleta", bg: "#E3D8CB", ink: "#3A2A20" },
+      { name: "Fresa - Banana", label: "/labels/pouch-fresa-banana.webp", bg: "#F8E7A8", ink: "#B32446" },
+      { name: "Vainilla", label: "/labels/pouch-vainilla.webp", bg: "#F3E7C9", ink: "#7A5A22" },
+      { name: "Galleta", label: "/labels/pouch-galleta.webp", bg: "#E3D8CB", ink: "#3A2A20" },
       { name: "Berries", bg: "#E5CADF", ink: "#6A2457" },
       { name: "Piña", bg: "#F8E08A", ink: "#7A5A0A" },
     ],
@@ -451,14 +454,14 @@ export const products: Product[] = [
     description: "Labne cremoso, solo o con za'atar y aceite de oliva.",
     variants: [
       {
-        name: "Natural",
+        name: "Natural", label: "/labels/labne.webp",
         bg: "#5B60D6",
         ink: "#FFFFFF",
         accent: "#F3EFE4",
         ingredients: `Leche pasteurizada, ${YOGURT_CULTURES}, sal, ácido cítrico.`,
       },
       {
-        name: "con Za'atar",
+        name: "con Za'atar", label: "/labels/labne-zaatar.webp",
         bg: "#4B50C2",
         ink: "#FFFFFF",
         accent: "#9BA84A",
@@ -491,7 +494,7 @@ export const products: Product[] = [
     description: "Una opción práctica y deliciosa para cualquier momento del día.",
     variants: [
       {
-        name: "Ricotta",
+        name: "Ricotta", label: "/labels/ricotta.webp",
         bg: "#5FB3B0",
         ink: "#FFFFFF",
         accent: "#F3EFE4",
@@ -512,7 +515,7 @@ export const products: Product[] = [
     description: "Dip cremoso con aceitunas verdes.",
     variants: [
       {
-        name: "Aceituna",
+        name: "Aceituna", label: "/labels/dip-aceituna.webp",
         bg: "#D3C64A",
         ink: "#2E3517",
         accent: "#6F7F2A",
@@ -634,14 +637,14 @@ export const products: Product[] = [
       "Elaborada con ingredientes naturales y avena integral: crujiente, rica en fibra y llena de sabor. Para el desayuno, con yogurt o como snack.",
     variants: [
       {
-        name: "The Original",
+        name: "The Original", label: "/labels/granola-original.webp",
         bg: "#F4ECE0",
         ink: "#7A4446",
         accent: "#7A4446",
         ingredients: "Avena integral, millet, buckwheat, aceite de coco, maple, azúcar morena, sal.",
       },
       {
-        name: "Choco Chips",
+        name: "Choco Chips", label: "/labels/granola-choco-chips.webp",
         bg: "#F4ECE0",
         ink: "#2D6C7A",
         accent: "#4A2A1E",
@@ -649,7 +652,7 @@ export const products: Product[] = [
           "Avena integral, chocolate, millet, buckwheat, aceite de coco, maple, azúcar morena, sal.",
       },
       {
-        name: "Fresas Secas",
+        name: "Fresas Secas", label: "/labels/granola-fresas-secas.webp",
         bg: "#F4ECE0",
         ink: "#A8505A",
         accent: "#D2414F",
@@ -657,7 +660,7 @@ export const products: Product[] = [
           "Avena integral, fresas, millet, buckwheat, aceite de coco, maple, azúcar morena, sal.",
       },
       {
-        name: "Pasas y Almendras",
+        name: "Pasas y Almendras", label: "/labels/granola-pasas-almendras.webp",
         bg: "#F4ECE0",
         ink: "#5E7A2C",
         accent: "#8A5A32",
@@ -668,7 +671,7 @@ export const products: Product[] = [
     sizes: ["Bolsa 225 g", "Frasco 180 g"],
     highlights: ["Hecho con avena integral", "100% natural", "Sin conservantes", "Fuente de fibra"],
     seals: ["kosher"],
-    shape: "bag",
+    shape: "jar",
     sources: ["CAT26", "LABEL"],
   },
 
@@ -702,7 +705,7 @@ export const products: Product[] = [
       "Perfectas para cualquier momento del día, con una variedad de sabores de diferentes culturas.",
     variants: [
       {
-        name: "con Ou",
+        name: "con Ou", label: "/labels/olivas-con-ou.webp",
         bg: "#C3C59A",
         ink: "#2E3517",
         accent: "#6E7A3A",
@@ -710,7 +713,7 @@ export const products: Product[] = [
           "Aceitunas, tamarindo, azúcar, aceite de oliva, limón, vinagre, ajo, orégano, paprika, hojuelas de chile picante.",
       },
       {
-        name: "Spicy",
+        name: "Spicy", label: "/labels/olivas-spicy.webp",
         bg: "#C7C39A",
         ink: "#3B2E12",
         accent: "#A2452A",
@@ -718,14 +721,14 @@ export const products: Product[] = [
           "Aceitunas, tamarindo, azúcar, aceite de oliva, limón, cebolla, pimentón, ajo, cebollina, hojuelas de chile picante.",
       },
       {
-        name: "Marinadas",
+        name: "Marinadas", label: "/labels/olivas-marinadas.webp",
         bg: "#BFC79E",
         ink: "#2E3517",
         accent: "#3E2A2A",
         ingredients: "Aceitunas, orégano, ajo, limón, laurel, aceite de oliva, pimienta.",
       },
       {
-        name: "Greek",
+        name: "Greek", label: "/labels/olivas-greek.webp",
         bg: "#C9CCA6",
         ink: "#2E3517",
         accent: "#4A3E52",
@@ -821,9 +824,9 @@ export const products: Product[] = [
     title: "Fruta Seca",
     description: "Fruta seca completamente natural, sin azúcar.",
     variants: [
-      { name: "Manzana Roja", bg: "#D23A3F", ink: "#FFFFFF", accent: "#F4E3C3" },
-      { name: "Manzana Verde", bg: "#7FAE2E", ink: "#FFFFFF", accent: "#F4E3C3" },
-      { name: "Pera", bg: "#A7B83A", ink: "#FFFFFF", accent: "#F4E3C3" },
+      { name: "Manzana Roja", label: "/labels/fruta-manzana-roja.webp", bg: "#D23A3F", ink: "#FFFFFF", accent: "#F4E3C3" },
+      { name: "Manzana Verde", label: "/labels/fruta-manzana-verde.webp", bg: "#7FAE2E", ink: "#FFFFFF", accent: "#F4E3C3" },
+      { name: "Pera", label: "/labels/fruta-pera.webp", bg: "#A7B83A", ink: "#FFFFFF", accent: "#F4E3C3" },
     ],
     sizes: ["75 g"],
     highlights: ["Sin azúcar"],
