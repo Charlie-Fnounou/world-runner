@@ -315,9 +315,9 @@ export const products: Product[] = [
         ingredients:
           "Leche pasteurizada, granola (avena, pasitas, almendras, miel), mermelada de fresa, cultivo lácteo (Bifidobacterium, Lactobacillus acidophilus, Lactobacillus delbrueckii subsp. bulgaricus, Streptococcus thermophilus).",
       },
-      { name: "Piña", photo: "parfait-pina", bg: "#FBF8F3", ink: "#8E2B2B", accent: "#E9A520" },
-      { name: "Apricot", photo: "parfait-apricot", bg: "#FBF8F3", ink: "#8E2B2B", accent: "#E88A2A" },
-      { name: "Blueberry", photo: "parfait-blueberry", bg: "#FBF8F3", ink: "#8E2B2B", accent: "#3B2A5E" },
+      { name: "Piña", bg: "#FBF8F3", ink: "#8E2B2B", accent: "#E9A520" },
+      { name: "Apricot", bg: "#FBF8F3", ink: "#8E2B2B", accent: "#E88A2A" },
+      { name: "Blueberry", bg: "#FBF8F3", ink: "#8E2B2B", accent: "#3B2A5E" },
     ],
     sizes: ["Parfait copa", "Parfait vaso 10 oz"],
     highlights: ["Extra creamy", "Probióticos"],
