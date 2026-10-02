@@ -20,6 +20,7 @@ export function Header() {
     { href: "/comparar", label: t.nav.comparar },
     { href: "/viaje", label: t.nav.viaje },
     { href: "/asistente", label: t.nav.ia },
+    { href: "/planes", label: t.nav.planes },
     { href: "/perfil", label: t.nav.perfil },
   ];
 

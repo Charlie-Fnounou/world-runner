@@ -6,6 +6,7 @@ import type { Carrera } from "@/lib/types";
 import type { CompletadaInfo } from "@/lib/completadas";
 import { Countdown } from "./Countdown";
 import { MapaMundialLazy } from "./MapaMundialLazy";
+import { MiPlan } from "./MiPlan";
 import { quitarCompletada } from "@/app/actions/completadas";
 import { fmtFecha, diasHasta } from "@/lib/format";
 import { slugify } from "@/lib/races-data";
@@ -111,6 +112,8 @@ export function PerfilClient({
           </div>
         ))}
       </div>
+
+      <MiPlan />
 
       {completas.length > 0 && (
         <>

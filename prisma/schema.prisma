@@ -335,6 +335,50 @@ model Usuario {
   logros                UsuarioLogro[]
   envios                EnvioComunidad[]
   seguimientosUbicacion SeguimientoUbicacion[]
+  suscripcion           Suscripcion?
+}
+
+// ============================================================
+// PLANES DE PAGO (PayPal)
+// ============================================================
+
+// PRO = suscripción mensual/anual; PASE = pago único que da Pro por un
+// tiempo fijo (vigenteHasta) sin renovarse solo. Sin fila = plan gratis.
+enum PlanPago {
+  PRO
+  PASE
+}
+
+model Suscripcion {
+  id        String  @id @default(cuid())
+  usuarioId String  @unique
+  usuario   Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  plan    PlanPago
+  periodo String // "mensual" | "anual" | "pase60"
+  estado  String // "activa" | "cancelada" (sigue vigente hasta vigenteHasta) | "suspendida" | "vencida"
+
+  paypalSubscriptionId String? @unique
+  paypalOrderId        String? @unique
+
+  // Hasta cuándo tiene Pro. En suscripciones se corre con cada cobro
+  // (webhook); en el pase son 60 días desde el pago.
+  vigenteHasta DateTime?
+
+  creadoEn      DateTime @default(now())
+  actualizadoEn DateTime @updatedAt
+}
+
+// IDs que crea la configuración automática de PayPal (producto, planes y
+// webhook), uno por entorno ("sandbox" para pruebas, "live" para cobrar
+// de verdad). Se guardan acá para no tener que pedírselos al dueño.
+model ConfigPayPal {
+  entorno       String   @id
+  productoId    String
+  planMensualId String
+  planAnualId   String
+  webhookId     String?
+  creadoEn      DateTime @default(now())
 }
 
 // Suscripción a un país o ciudad entero (a diferencia de Alerta, que es
@@ -515,8 +559,8 @@ model Patrocinador {
   eventoId String?
   evento   Evento? @relation(fields: [eventoId], references: [id], onDelete: Cascade)
 
-  tamano       TamanoBanner        @default(MEDIANO)
-  ajusteImagen AjusteImagenBanner  @default(CUBRIR)
+  tamano       TamanoBanner       @default(MEDIANO)
+  ajusteImagen AjusteImagenBanner @default(CUBRIR)
 
   creadoEn DateTime @default(now())
 

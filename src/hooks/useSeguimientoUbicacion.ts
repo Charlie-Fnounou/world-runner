@@ -23,6 +23,7 @@ export function useSeguimientoUbicacion(tipo: TipoSeguimiento, valor: string) {
       if (!res.ok) {
         setActivo(!siguiente);
         if (res.error === "no-auth") router.push("/login");
+        if (res.error === "limite") router.push("/planes?motivo=seguimientos");
       }
     });
   }, [activo, tipo, valor, router]);

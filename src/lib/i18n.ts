@@ -178,6 +178,38 @@ export interface Diccionario {
     avisosR: string;
     cercanasTitulo: string;
   };
+  planes: {
+    eyebrow: string;
+    titulo: string;
+    subtitulo: string;
+    mensual: string;
+    anual: string;
+    ahorroAnual: string;
+    masElegido: string;
+    porMes: string;
+    porAnio: string;
+    pagoUnico: (dias: number) => string;
+    prueba: (dias: number) => string;
+    gratis: { nombre: string; descripcion: string; items: string[]; cta: string };
+    pase: { nombre: string; descripcion: string; items: string[] };
+    pro: { nombre: string; descripcion: string; items: string[] };
+    tuPlanActual: string;
+    entrarParaComprar: string;
+    muyPronto: string;
+    procesando: string;
+    exito: string;
+    error: string;
+    cancelarNota: string;
+    avisoLimite: { alertas: string; seguimientos: string };
+    comoFuncionaTitulo: string;
+    pasos: { titulo: string; texto: string }[];
+    preguntasTitulo: string;
+    preguntas: { p: string; r: string }[];
+    pie: string;
+    terminos: string;
+    privacidad: string;
+    miPlan: { titulo: string; gratis: string; pro: (periodo: string) => string; pase: string; renueva: (fecha: string) => string; terminaEl: (fecha: string) => string; cancelar: string; confirmarCancelar: string; cancelada: string; mejorar: string };
+  };
   radar: {
     eyebrow: string;
     titulo: string;
@@ -449,6 +481,75 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       avisosP: (n) => `¿Cómo me entero si cambia algo en ${n}?`,
       avisosR: "Activá las alertas de esta carrera y te mandamos un email cuando detectemos un cambio de fecha o de precio, últimos cupos o una cancelación.",
       cercanasTitulo: "Otras carreras en fechas cercanas",
+    },
+    planes: {
+      eyebrow: "Planes",
+      titulo: "Enterate antes que nadie",
+      subtitulo: "Las carreras cambian de fecha, suben de precio, se quedan sin cupos o se cancelan. Nuestros robots revisan más de 90 fuentes oficiales y te avisan por email cuando pasa algo en las carreras que seguís.",
+      mensual: "Mensual",
+      anual: "Anual",
+      ahorroAnual: "ahorrás 42%",
+      masElegido: "Más elegido",
+      porMes: "/ mes",
+      porAnio: "/ año",
+      pagoUnico: (d) => `pago único · ${d} días`,
+      prueba: (d) => `${d} días gratis en el plan mensual`,
+      gratis: {
+        nombre: "Gratis",
+        descripcion: "Para descubrir carreras y seguir algunas de cerca.",
+        items: ["Calendario, mapa y radar de todas las carreras", "Alertas por email para hasta 3 carreras", "Seguí 1 país o ciudad con resumen semanal", "Asistente con IA para elegir carrera"],
+        cta: "Empezar gratis",
+      },
+      pase: {
+        nombre: "Pase 60 días",
+        descripcion: "Para preparar una carrera puntual, sin suscripción.",
+        items: ["Todo lo de Pro durante 60 días", "Sin renovación automática: termina solo", "Si ya tenés un pase, los días se suman"],
+      },
+      pro: {
+        nombre: "Pro",
+        descripcion: "Para quienes corren todo el año.",
+        items: ["Alertas ilimitadas: fecha, precio, últimos cupos y cancelaciones", "Seguí todos los países y ciudades que quieras", "Sin publicidad", "Ayudás a que el radar sume más países"],
+      },
+      tuPlanActual: "Tu plan actual",
+      entrarParaComprar: "Entrá para elegir este plan",
+      muyPronto: "Muy pronto",
+      procesando: "Confirmando el pago…",
+      exito: "¡Listo! Ya tenés Pro. Te llevamos a tu perfil…",
+      error: "No pudimos confirmar el pago. Si se cobró, escribinos y lo resolvemos.",
+      cancelarNota: "Cancelás cuando quieras desde tu perfil. Pro sigue activo hasta el final del período que ya pagaste.",
+      avisoLimite: {
+        alertas: "En el plan gratis podés tener alertas para hasta 3 carreras. Pasate a Pro para seguir todas las que quieras.",
+        seguimientos: "En el plan gratis podés seguir 1 país o ciudad. Pasate a Pro para seguir todos los que quieras.",
+      },
+      comoFuncionaTitulo: "Cómo funciona",
+      pasos: [
+        { titulo: "Elegí tus carreras", texto: "Activá las alertas en cualquier carrera o seguí un país o ciudad entero." },
+        { titulo: "Nuestros robots las vigilan", texto: "Revisamos más de 90 fuentes oficiales: las más grandes todos los días y el resto al menos una vez por semana." },
+        { titulo: "Te avisamos por email", texto: "Cuando detectamos un cambio de fecha o de precio, últimos cupos o una cancelación, te llega un email con el link a la carrera." },
+      ],
+      preguntasTitulo: "Preguntas",
+      preguntas: [
+        { p: "¿The World Runner es el sitio oficial de las carreras?", r: "No. Somos un directorio independiente: juntamos la información de las fuentes oficiales y te llevamos al sitio de cada organización para inscribirte." },
+        { p: "¿Me garantizan un cupo?", r: "No. Te avisamos cuando detectamos un cambio, pero la inscripción y los cupos los maneja cada organización." },
+        { p: "¿Cada cuánto revisan las carreras?", r: "Las fuentes más grandes todos los días y el resto al menos una vez por semana. Apenas detectamos un cambio, sale el email." },
+        { p: "¿Puedo cancelar?", r: "Sí, cuando quieras desde tu perfil. Pro sigue activo hasta el final del período que ya pagaste. El pase de 60 días no se renueva solo." },
+        { p: "¿Cómo pago?", r: "Con PayPal: podés usar tu cuenta PayPal o cualquier tarjeta de crédito o débito, sin crear una cuenta." },
+      ],
+      pie: "The World Runner es independiente y no está afiliado a las carreras que lista. Los pagos los procesa PayPal.",
+      terminos: "Términos",
+      privacidad: "Privacidad",
+      miPlan: {
+        titulo: "Tu plan",
+        gratis: "Gratis",
+        pro: (p) => `Pro ${p}`,
+        pase: "Pase 60 días",
+        renueva: (f) => `Se renueva el ${f}`,
+        terminaEl: (f) => `Activo hasta el ${f}`,
+        cancelar: "Cancelar suscripción",
+        confirmarCancelar: "Sí, cancelar",
+        cancelada: "Suscripción cancelada. Pro sigue activo hasta el final del período pagado.",
+        mejorar: "Ver planes",
+      },
     },
     radar: {
       eyebrow: "Radar de carreras",
@@ -729,6 +830,75 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       avisosR: "Turn on alerts for this race and we'll email you when we detect a date or price change, last spots or a cancellation.",
       cercanasTitulo: "Other races around the same dates",
     },
+    planes: {
+      eyebrow: "Plans",
+      titulo: "Be the first to know",
+      subtitulo: "Races change dates, raise prices, run out of spots or get cancelled. Our robots check 90+ official sources and email you when something happens to the races you follow.",
+      mensual: "Monthly",
+      anual: "Yearly",
+      ahorroAnual: "save 42%",
+      masElegido: "Most popular",
+      porMes: "/ month",
+      porAnio: "/ year",
+      pagoUnico: (d) => `one-time · ${d} days`,
+      prueba: (d) => `${d}-day free trial on monthly`,
+      gratis: {
+        nombre: "Free",
+        descripcion: "To discover races and follow a few closely.",
+        items: ["Calendar, map and radar of every race", "Email alerts for up to 3 races", "Follow 1 country or city with a weekly digest", "AI assistant to pick a race"],
+        cta: "Start free",
+      },
+      pase: {
+        nombre: "60-day pass",
+        descripcion: "To prepare for one race, no subscription.",
+        items: ["Everything in Pro for 60 days", "No auto-renewal: it simply ends", "Already have a pass? The days add up"],
+      },
+      pro: {
+        nombre: "Pro",
+        descripcion: "For people who race all year.",
+        items: ["Unlimited alerts: date, price, last spots and cancellations", "Follow every country and city you want", "No ads", "Help the radar cover more countries"],
+      },
+      tuPlanActual: "Your current plan",
+      entrarParaComprar: "Sign in to choose this plan",
+      muyPronto: "Coming soon",
+      procesando: "Confirming payment…",
+      exito: "Done! You're Pro now. Taking you to your profile…",
+      error: "We couldn't confirm the payment. If you were charged, contact us and we'll sort it out.",
+      cancelarNota: "Cancel any time from your profile. Pro stays on until the end of the period you've paid for.",
+      avisoLimite: {
+        alertas: "On the free plan you can have alerts for up to 3 races. Go Pro to follow as many as you like.",
+        seguimientos: "On the free plan you can follow 1 country or city. Go Pro to follow as many as you like.",
+      },
+      comoFuncionaTitulo: "How it works",
+      pasos: [
+        { titulo: "Pick your races", texto: "Turn on alerts for any race or follow a whole country or city." },
+        { titulo: "Our robots watch them", texto: "We check 90+ official sources: the biggest every day and the rest at least once a week." },
+        { titulo: "We email you", texto: "When we detect a date or price change, last spots or a cancellation, you get an email with a link to the race." },
+      ],
+      preguntasTitulo: "Questions",
+      preguntas: [
+        { p: "Is The World Runner the races' official website?", r: "No. We're an independent directory: we gather information from official sources and send you to each organizer's site to sign up." },
+        { p: "Do you guarantee me a spot?", r: "No. We alert you when we detect a change, but entries and spots are handled by each organizer." },
+        { p: "How often do you check races?", r: "The biggest sources every day and the rest at least once a week. As soon as we detect a change, the email goes out." },
+        { p: "Can I cancel?", r: "Yes, any time from your profile. Pro stays on until the end of the period you've paid for. The 60-day pass doesn't renew." },
+        { p: "How do I pay?", r: "With PayPal: use your PayPal account or any credit or debit card, no account needed." },
+      ],
+      pie: "The World Runner is independent and not affiliated with the races it lists. Payments are processed by PayPal.",
+      terminos: "Terms",
+      privacidad: "Privacy",
+      miPlan: {
+        titulo: "Your plan",
+        gratis: "Free",
+        pro: (p) => `Pro ${p}`,
+        pase: "60-day pass",
+        renueva: (f) => `Renews on ${f}`,
+        terminaEl: (f) => `Active until ${f}`,
+        cancelar: "Cancel subscription",
+        confirmarCancelar: "Yes, cancel",
+        cancelada: "Subscription cancelled. Pro stays on until the end of the paid period.",
+        mejorar: "See plans",
+      },
+    },
     radar: {
       eyebrow: "Race radar",
       titulo: "What changed in the running world",
@@ -1008,6 +1178,75 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       avisosR: "Ative os alertas desta corrida e enviamos um e-mail quando detectarmos mudança de data ou preço, últimas vagas ou cancelamento.",
       cercanasTitulo: "Outras corridas em datas próximas",
     },
+    planes: {
+      eyebrow: "Planos",
+      titulo: "Saiba antes de todo mundo",
+      subtitulo: "As corridas mudam de data, aumentam o preço, ficam sem vagas ou são canceladas. Nossos robôs verificam mais de 90 fontes oficiais e te avisam por e-mail quando algo acontece nas corridas que você segue.",
+      mensual: "Mensal",
+      anual: "Anual",
+      ahorroAnual: "economize 42%",
+      masElegido: "Mais escolhido",
+      porMes: "/ mês",
+      porAnio: "/ ano",
+      pagoUnico: (d) => `pagamento único · ${d} dias`,
+      prueba: (d) => `${d} dias grátis no plano mensal`,
+      gratis: {
+        nombre: "Grátis",
+        descripcion: "Para descobrir corridas e acompanhar algumas de perto.",
+        items: ["Calendário, mapa e radar de todas as corridas", "Alertas por e-mail para até 3 corridas", "Siga 1 país ou cidade com resumo semanal", "Assistente com IA para escolher corrida"],
+        cta: "Começar grátis",
+      },
+      pase: {
+        nombre: "Passe 60 dias",
+        descripcion: "Para se preparar para uma corrida, sem assinatura.",
+        items: ["Tudo do Pro durante 60 dias", "Sem renovação automática: termina sozinho", "Se você já tem um passe, os dias se somam"],
+      },
+      pro: {
+        nombre: "Pro",
+        descripcion: "Para quem corre o ano todo.",
+        items: ["Alertas ilimitados: data, preço, últimas vagas e cancelamentos", "Siga todos os países e cidades que quiser", "Sem anúncios", "Você ajuda o radar a incluir mais países"],
+      },
+      tuPlanActual: "Seu plano atual",
+      entrarParaComprar: "Entre para escolher este plano",
+      muyPronto: "Em breve",
+      procesando: "Confirmando o pagamento…",
+      exito: "Pronto! Você já é Pro. Levando você ao seu perfil…",
+      error: "Não conseguimos confirmar o pagamento. Se foi cobrado, fale com a gente e resolvemos.",
+      cancelarNota: "Cancele quando quiser pelo seu perfil. O Pro continua ativo até o fim do período já pago.",
+      avisoLimite: {
+        alertas: "No plano grátis você pode ter alertas para até 3 corridas. Mude para o Pro para seguir quantas quiser.",
+        seguimientos: "No plano grátis você pode seguir 1 país ou cidade. Mude para o Pro para seguir quantos quiser.",
+      },
+      comoFuncionaTitulo: "Como funciona",
+      pasos: [
+        { titulo: "Escolha suas corridas", texto: "Ative os alertas em qualquer corrida ou siga um país ou cidade inteira." },
+        { titulo: "Nossos robôs vigiam", texto: "Verificamos mais de 90 fontes oficiais: as maiores todos os dias e o resto pelo menos uma vez por semana." },
+        { titulo: "Avisamos por e-mail", texto: "Quando detectamos mudança de data ou preço, últimas vagas ou cancelamento, você recebe um e-mail com o link da corrida." },
+      ],
+      preguntasTitulo: "Perguntas",
+      preguntas: [
+        { p: "O The World Runner é o site oficial das corridas?", r: "Não. Somos um diretório independente: reunimos as informações das fontes oficiais e levamos você ao site de cada organização para se inscrever." },
+        { p: "Vocês garantem uma vaga?", r: "Não. Avisamos quando detectamos uma mudança, mas inscrições e vagas são de cada organização." },
+        { p: "Com que frequência verificam as corridas?", r: "As maiores fontes todos os dias e o resto pelo menos uma vez por semana. Assim que detectamos uma mudança, o e-mail sai." },
+        { p: "Posso cancelar?", r: "Sim, quando quiser pelo seu perfil. O Pro continua ativo até o fim do período pago. O passe de 60 dias não se renova." },
+        { p: "Como pago?", r: "Com PayPal: use sua conta PayPal ou qualquer cartão de crédito ou débito, sem criar conta." },
+      ],
+      pie: "O The World Runner é independente e não é afiliado às corridas que lista. Os pagamentos são processados pelo PayPal.",
+      terminos: "Termos",
+      privacidad: "Privacidade",
+      miPlan: {
+        titulo: "Seu plano",
+        gratis: "Grátis",
+        pro: (p) => `Pro ${p}`,
+        pase: "Passe 60 dias",
+        renueva: (f) => `Renova em ${f}`,
+        terminaEl: (f) => `Ativo até ${f}`,
+        cancelar: "Cancelar assinatura",
+        confirmarCancelar: "Sim, cancelar",
+        cancelada: "Assinatura cancelada. O Pro continua ativo até o fim do período pago.",
+        mejorar: "Ver planos",
+      },
+    },
     radar: {
       eyebrow: "Radar de corridas",
       titulo: "O que mudou no mundo da corrida",
@@ -1286,6 +1525,75 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       avisosP: (n) => `Comment savoir si quelque chose change pour ${n} ?`,
       avisosR: "Activez les alertes de cette course : nous vous envoyons un e-mail dès que nous détectons un changement de date ou de prix, les dernières places ou une annulation.",
       cercanasTitulo: "Autres courses aux mêmes dates",
+    },
+    planes: {
+      eyebrow: "Formules",
+      titulo: "Soyez le premier informé",
+      subtitulo: "Les courses changent de date, augmentent leurs prix, n'ont plus de places ou sont annulées. Nos robots surveillent plus de 90 sources officielles et vous préviennent par e-mail quand quelque chose change sur les courses que vous suivez.",
+      mensual: "Mensuel",
+      anual: "Annuel",
+      ahorroAnual: "économisez 42 %",
+      masElegido: "Le plus choisi",
+      porMes: "/ mois",
+      porAnio: "/ an",
+      pagoUnico: (d) => `paiement unique · ${d} jours`,
+      prueba: (d) => `${d} jours gratuits sur le mensuel`,
+      gratis: {
+        nombre: "Gratuit",
+        descripcion: "Pour découvrir des courses et en suivre quelques-unes.",
+        items: ["Calendrier, carte et radar de toutes les courses", "Alertes e-mail pour 3 courses maximum", "Suivez 1 pays ou ville avec un résumé hebdomadaire", "Assistant IA pour choisir une course"],
+        cta: "Commencer gratuitement",
+      },
+      pase: {
+        nombre: "Pass 60 jours",
+        descripcion: "Pour préparer une course précise, sans abonnement.",
+        items: ["Tout Pro pendant 60 jours", "Sans renouvellement : il se termine tout seul", "Vous avez déjà un pass ? Les jours s'additionnent"],
+      },
+      pro: {
+        nombre: "Pro",
+        descripcion: "Pour celles et ceux qui courent toute l'année.",
+        items: ["Alertes illimitées : date, prix, dernières places et annulations", "Suivez tous les pays et villes que vous voulez", "Sans publicité", "Vous aidez le radar à couvrir plus de pays"],
+      },
+      tuPlanActual: "Votre formule actuelle",
+      entrarParaComprar: "Connectez-vous pour choisir cette formule",
+      muyPronto: "Bientôt",
+      procesando: "Confirmation du paiement…",
+      exito: "C'est fait ! Vous êtes Pro. Redirection vers votre profil…",
+      error: "Nous n'avons pas pu confirmer le paiement. Si vous avez été débité, contactez-nous.",
+      cancelarNota: "Annulez quand vous voulez depuis votre profil. Pro reste actif jusqu'à la fin de la période payée.",
+      avisoLimite: {
+        alertas: "Avec la formule gratuite, vous pouvez avoir des alertes pour 3 courses maximum. Passez à Pro pour en suivre autant que vous voulez.",
+        seguimientos: "Avec la formule gratuite, vous pouvez suivre 1 pays ou ville. Passez à Pro pour en suivre autant que vous voulez.",
+      },
+      comoFuncionaTitulo: "Comment ça marche",
+      pasos: [
+        { titulo: "Choisissez vos courses", texto: "Activez les alertes sur n'importe quelle course ou suivez un pays ou une ville entière." },
+        { titulo: "Nos robots les surveillent", texto: "Nous vérifions plus de 90 sources officielles : les plus grandes chaque jour, les autres au moins une fois par semaine." },
+        { titulo: "Nous vous prévenons par e-mail", texto: "Quand nous détectons un changement de date ou de prix, les dernières places ou une annulation, vous recevez un e-mail avec le lien de la course." },
+      ],
+      preguntasTitulo: "Questions",
+      preguntas: [
+        { p: "The World Runner est-il le site officiel des courses ?", r: "Non. Nous sommes un annuaire indépendant : nous rassemblons les informations des sources officielles et vous envoyons sur le site de chaque organisateur pour vous inscrire." },
+        { p: "Garantissez-vous une place ?", r: "Non. Nous vous prévenons quand nous détectons un changement, mais les inscriptions et les places dépendent de chaque organisateur." },
+        { p: "À quelle fréquence vérifiez-vous les courses ?", r: "Les plus grandes sources chaque jour, les autres au moins une fois par semaine. Dès qu'un changement est détecté, l'e-mail part." },
+        { p: "Puis-je annuler ?", r: "Oui, quand vous voulez depuis votre profil. Pro reste actif jusqu'à la fin de la période payée. Le pass 60 jours ne se renouvelle pas." },
+        { p: "Comment payer ?", r: "Avec PayPal : votre compte PayPal ou n'importe quelle carte de crédit ou de débit, sans créer de compte." },
+      ],
+      pie: "The World Runner est indépendant et n'est pas affilié aux courses répertoriées. Les paiements sont traités par PayPal.",
+      terminos: "Conditions",
+      privacidad: "Confidentialité",
+      miPlan: {
+        titulo: "Votre formule",
+        gratis: "Gratuit",
+        pro: (p) => `Pro ${p}`,
+        pase: "Pass 60 jours",
+        renueva: (f) => `Renouvellement le ${f}`,
+        terminaEl: (f) => `Actif jusqu'au ${f}`,
+        cancelar: "Annuler l'abonnement",
+        confirmarCancelar: "Oui, annuler",
+        cancelada: "Abonnement annulé. Pro reste actif jusqu'à la fin de la période payée.",
+        mejorar: "Voir les formules",
+      },
     },
     radar: {
       eyebrow: "Radar des courses",

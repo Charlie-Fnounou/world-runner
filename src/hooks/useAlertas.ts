@@ -25,6 +25,7 @@ export function useAlertas(eventoId: string) {
       if (!res.ok) {
         setActiva(!siguiente);
         if (res.error === "no-auth") router.push("/login");
+        if (res.error === "limite") router.push("/planes?motivo=alertas");
       }
     });
   }, [activa, eventoId, router]);

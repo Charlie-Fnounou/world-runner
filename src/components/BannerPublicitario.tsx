@@ -1,5 +1,6 @@
 import type { UbicacionBanner } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+import { OcultarParaPro } from "./OcultarParaPro";
 
 const ALTO_POR_TAMANO: Record<string, string> = {
   PEQUENO: "h-20",
@@ -20,7 +21,9 @@ export async function BannerPublicitario({
     where: {
       ubicacion,
       activo: true,
-      ...(ubicacion === "FICHA_CARRERA" ? { OR: [{ eventoId: null }, { eventoId: eventoId ?? "__ninguna__" }] } : {}),
+      ...(ubicacion === "FICHA_CARRERA"
+        ? { OR: [{ eventoId: null }, { eventoId: eventoId ?? "__ninguna__" }] }
+        : {}),
     },
     orderBy: { creadoEn: "desc" },
   });
@@ -28,24 +31,30 @@ export async function BannerPublicitario({
   if (patrocinadores.length === 0) return null;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 w-full flex flex-col gap-3">
-      {patrocinadores.map((p) => (
-        <a
-          key={p.id}
-          href={p.enlaceUrl}
-          target="_blank"
-          rel="noopener noreferrer sponsored"
-          className="block rounded-2xl overflow-hidden wr-panel hover:opacity-90"
-          style={p.ajusteImagen === "CONTENER" ? { background: "var(--wr-panel-2)" } : undefined}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={p.imagenUrl}
-            alt={p.nombre}
-            className={`w-full ${ALTO_POR_TAMANO[p.tamano] ?? "max-h-40"} ${p.ajusteImagen === "CONTENER" ? "object-contain" : "object-cover"}`}
-          />
-        </a>
-      ))}
-    </div>
+    <OcultarParaPro>
+      <div className="max-w-6xl mx-auto px-4 w-full flex flex-col gap-3">
+        {patrocinadores.map((p) => (
+          <a
+            key={p.id}
+            href={p.enlaceUrl}
+            target="_blank"
+            rel="noopener noreferrer sponsored"
+            className="block rounded-2xl overflow-hidden wr-panel hover:opacity-90"
+            style={
+              p.ajusteImagen === "CONTENER"
+                ? { background: "var(--wr-panel-2)" }
+                : undefined
+            }
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={p.imagenUrl}
+              alt={p.nombre}
+              className={`w-full ${ALTO_POR_TAMANO[p.tamano] ?? "max-h-40"} ${p.ajusteImagen === "CONTENER" ? "object-contain" : "object-cover"}`}
+            />
+          </a>
+        ))}
+      </div>
+    </OcultarParaPro>
   );
 }
