@@ -92,7 +92,7 @@ export async function upsertCarreraExterna(c: CarreraExterna): Promise<{ creada:
     // acaba de disparar arriba porque era la primera vez que vemos esta
     // edición puntual, no hay "antes" real con qué compararla).
     if (edicionAntes) {
-      await detectarYNotificarCambios(fuenteExistente.eventoId, edicionAntes, edicionDespues, c.fuenteNombre);
+      await detectarYNotificarCambios(fuenteExistente.eventoId, edicionAntes, edicionDespues, c.fuenteNombre, c.estado !== undefined);
     }
 
     await prisma.fuenteDato.update({

@@ -211,3 +211,34 @@ export async function getCarreraPorSlug(slug: string): Promise<Carrera | undefin
   if (!evento) return undefined;
   return aCarrera(evento) ?? undefined;
 }
+
+// Para la ficha de una carrera: otras del mismo país (o, si no hay, del
+// mismo continente) a ±3 semanas. Consulta acotada a propósito: cargar el
+// catálogo entero en cada una de las miles de fichas volvería a disparar
+// el tráfico de la base (ver EVENTO_LISTADO).
+export async function getCarrerasCercanas(r: Carrera, limite = 6): Promise<Carrera[]> {
+  const fecha = new Date(r.date + "T12:00:00Z");
+  const desde = new Date(Math.max(fecha.getTime() - 21 * 864e5, Date.now()));
+  const hasta = new Date(fecha.getTime() + 21 * 864e5);
+  const enRango = { ediciones: { some: { fecha: { gte: desde, lte: hasta } } } };
+
+  let eventos = await prisma.evento.findMany({
+    where: { pais: r.country, id: { not: r.id }, ...enRango },
+    take: limite,
+    ...EVENTO_LISTADO,
+  });
+  if (eventos.length === 0) {
+    const continente = Object.entries(CONTINENTE_DB_A_UI).find(([, ui]) => ui === r.continent)?.[0];
+    if (continente) {
+      eventos = await prisma.evento.findMany({
+        where: { continente: continente as Prisma.EventoWhereInput["continente"], id: { not: r.id }, ...enRango },
+        take: limite,
+        ...EVENTO_LISTADO,
+      });
+    }
+  }
+  return eventos
+    .map(aCarrera)
+    .filter((c): c is Carrera => c !== null)
+    .sort((a, b) => a.date.localeCompare(b.date));
+}

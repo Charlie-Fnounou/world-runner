@@ -19,10 +19,12 @@ const ESTADOS_FILTRO: (EstadoInscripcion | "Todos")[] = ["Todos", "abierta", "ul
 
 export function HomeClient({
   carreras,
+  radar,
   bannerDestacado,
   bannerMedio,
 }: {
   carreras: Carrera[];
+  radar?: React.ReactNode;
   bannerDestacado?: React.ReactNode;
   bannerMedio?: React.ReactNode;
 }) {
@@ -178,6 +180,8 @@ export function HomeClient({
               ))}
             </div>
           </section>
+
+          {radar}
 
           {bannerDestacado}
 

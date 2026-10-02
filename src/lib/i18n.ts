@@ -15,6 +15,8 @@ export interface Diccionario {
   nav: {
     explorar: string;
     calendario: string;
+    radar: string;
+    planes: string;
     rankings: string;
     comparar: string;
     viaje: string;
@@ -162,6 +164,32 @@ export interface Diccionario {
     verCarrera: string;
     verMas: (n: number) => string;
   };
+  faq: {
+    titulo: string;
+    cuandoP: (nombre: string) => string;
+    cuandoR: (nombre: string, fecha: string, lugar: string) => string;
+    distanciaP: (nombre: string) => string;
+    distanciaR: (distancia: string) => string;
+    precioP: (nombre: string) => string;
+    precioR: (precio: string) => string;
+    inscribirP: (nombre: string) => string;
+    inscribirR: string;
+    avisosP: (nombre: string) => string;
+    avisosR: string;
+    cercanasTitulo: string;
+  };
+  radar: {
+    eyebrow: string;
+    titulo: string;
+    subtitulo: string;
+    stats: { proximos30: string; paises: string; nuevas: string; cambios: string };
+    tipos: { nueva: string; fecha: string; precio: string; pocosCupos: string; cancelada: string; abrio: string; cerro: string };
+    antesAhora: (antes: string, ahora: string) => string;
+    verTodo: string;
+    actualizado: string;
+    sinNovedades: string;
+    tituloFicha: string;
+  };
   rankings: {
     titulo: string;
     subtitulo: string;
@@ -241,6 +269,8 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
     nav: {
       explorar: "Explorar",
       calendario: "Calendario",
+      radar: "Radar",
+      planes: "Planes",
       rankings: "Rankings",
       comparar: "Comparar",
       viaje: "Viaje",
@@ -406,6 +436,32 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       verCarrera: "Ver carrera →",
       verMas: (n) => `Ver ${n} más`,
     },
+    faq: {
+      titulo: "Preguntas frecuentes",
+      cuandoP: (n) => `¿Cuándo es ${n}?`,
+      cuandoR: (n, f, l) => `${n} se corre el ${f} en ${l}.`,
+      distanciaP: (n) => `¿Qué distancia tiene ${n}?`,
+      distanciaR: (d) => `La distancia principal es ${d}. Muchas carreras suman otras distancias: revisalas en el sitio oficial.`,
+      precioP: (n) => `¿Cuánto cuesta la inscripción a ${n}?`,
+      precioR: (p) => `La inscripción arranca en ${p}. El precio suele subir a medida que se acerca la fecha: confirmalo en el sitio oficial.`,
+      inscribirP: (n) => `¿Cómo me inscribo en ${n}?`,
+      inscribirR: "En el sitio oficial de la organización (botón de inscripción de arriba). The World Runner no vende inscripciones ni cobra comisión.",
+      avisosP: (n) => `¿Cómo me entero si cambia algo en ${n}?`,
+      avisosR: "Activá las alertas de esta carrera y te mandamos un email cuando detectemos un cambio de fecha o de precio, últimos cupos o una cancelación.",
+      cercanasTitulo: "Otras carreras en fechas cercanas",
+    },
+    radar: {
+      eyebrow: "Radar de carreras",
+      titulo: "Lo que cambió en el mundo del running",
+      subtitulo: "Carreras nuevas, cambios de fecha y de precio, últimos cupos y cancelaciones que detectan nuestros robots en más de 90 fuentes oficiales.",
+      stats: { proximos30: "carreras en los próximos 30 días", paises: "países con carreras", nuevas: "carreras nuevas esta semana", cambios: "cambios detectados esta semana" },
+      tipos: { nueva: "Nueva carrera", fecha: "Cambió la fecha", precio: "Cambió el precio", pocosCupos: "Últimos cupos", cancelada: "Cancelada", abrio: "Abrió la inscripción", cerro: "Cerró la inscripción" },
+      antesAhora: (a, b) => `Antes ${a} · ahora ${b}`,
+      verTodo: "Ver todos los cambios →",
+      actualizado: "Se actualiza todos los días",
+      sinNovedades: "Todavía no detectamos cambios.",
+      tituloFicha: "Cambios recientes en esta carrera",
+    },
     rankings: {
       titulo: "Rankings mundiales",
       subtitulo: "Generados automáticamente a partir de los datos de cada carrera.",
@@ -492,6 +548,8 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
     nav: {
       explorar: "Explore",
       calendario: "Calendar",
+      radar: "Radar",
+      planes: "Pricing",
       rankings: "Rankings",
       comparar: "Compare",
       viaje: "Trip",
@@ -657,6 +715,32 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       verCarrera: "View race →",
       verMas: (n) => `Show ${n} more`,
     },
+    faq: {
+      titulo: "Frequently asked questions",
+      cuandoP: (n) => `When is ${n}?`,
+      cuandoR: (n, f, l) => `${n} takes place on ${f} in ${l}.`,
+      distanciaP: (n) => `What distance is ${n}?`,
+      distanciaR: (d) => `The main distance is ${d}. Many races offer other distances too: check the official website.`,
+      precioP: (n) => `How much is the entry fee for ${n}?`,
+      precioR: (p) => `Entry starts at ${p}. Prices usually go up closer to race day: confirm on the official website.`,
+      inscribirP: (n) => `How do I sign up for ${n}?`,
+      inscribirR: "On the organizer's official website (registration button above). The World Runner doesn't sell entries or charge fees.",
+      avisosP: (n) => `How do I find out if something changes for ${n}?`,
+      avisosR: "Turn on alerts for this race and we'll email you when we detect a date or price change, last spots or a cancellation.",
+      cercanasTitulo: "Other races around the same dates",
+    },
+    radar: {
+      eyebrow: "Race radar",
+      titulo: "What changed in the running world",
+      subtitulo: "New races, date and price changes, last spots and cancellations our robots detect across 90+ official sources.",
+      stats: { proximos30: "races in the next 30 days", paises: "countries with races", nuevas: "new races this week", cambios: "changes detected this week" },
+      tipos: { nueva: "New race", fecha: "Date changed", precio: "Price changed", pocosCupos: "Last spots", cancelada: "Cancelled", abrio: "Registration opened", cerro: "Registration closed" },
+      antesAhora: (a, b) => `Was ${a} · now ${b}`,
+      verTodo: "See all changes →",
+      actualizado: "Updated every day",
+      sinNovedades: "No changes detected yet.",
+      tituloFicha: "Recent changes to this race",
+    },
     rankings: {
       titulo: "World rankings",
       subtitulo: "Automatically generated from each race's data.",
@@ -743,6 +827,8 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
     nav: {
       explorar: "Explorar",
       calendario: "Calendário",
+      radar: "Radar",
+      planes: "Planos",
       rankings: "Rankings",
       comparar: "Comparar",
       viaje: "Viagem",
@@ -908,6 +994,32 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       verCarrera: "Ver corrida →",
       verMas: (n) => `Ver mais ${n}`,
     },
+    faq: {
+      titulo: "Perguntas frequentes",
+      cuandoP: (n) => `Quando é ${n}?`,
+      cuandoR: (n, f, l) => `${n} acontece em ${f}, em ${l}.`,
+      distanciaP: (n) => `Qual é a distância de ${n}?`,
+      distanciaR: (d) => `A distância principal é ${d}. Muitas corridas têm outras distâncias: confira no site oficial.`,
+      precioP: (n) => `Quanto custa a inscrição de ${n}?`,
+      precioR: (p) => `A inscrição começa em ${p}. O preço costuma subir perto da data: confirme no site oficial.`,
+      inscribirP: (n) => `Como me inscrevo em ${n}?`,
+      inscribirR: "No site oficial da organização (botão de inscrição acima). O The World Runner não vende inscrições nem cobra taxas.",
+      avisosP: (n) => `Como fico sabendo se algo mudar em ${n}?`,
+      avisosR: "Ative os alertas desta corrida e enviamos um e-mail quando detectarmos mudança de data ou preço, últimas vagas ou cancelamento.",
+      cercanasTitulo: "Outras corridas em datas próximas",
+    },
+    radar: {
+      eyebrow: "Radar de corridas",
+      titulo: "O que mudou no mundo da corrida",
+      subtitulo: "Corridas novas, mudanças de data e preço, últimas vagas e cancelamentos que nossos robôs detectam em mais de 90 fontes oficiais.",
+      stats: { proximos30: "corridas nos próximos 30 dias", paises: "países com corridas", nuevas: "corridas novas esta semana", cambios: "mudanças detectadas esta semana" },
+      tipos: { nueva: "Nova corrida", fecha: "Mudou a data", precio: "Mudou o preço", pocosCupos: "Últimas vagas", cancelada: "Cancelada", abrio: "Inscrições abertas", cerro: "Inscrições encerradas" },
+      antesAhora: (a, b) => `Antes ${a} · agora ${b}`,
+      verTodo: "Ver todas as mudanças →",
+      actualizado: "Atualizado todos os dias",
+      sinNovedades: "Ainda não detectamos mudanças.",
+      tituloFicha: "Mudanças recentes nesta corrida",
+    },
     rankings: {
       titulo: "Rankings mundiais",
       subtitulo: "Gerados automaticamente a partir dos dados de cada corrida.",
@@ -994,6 +1106,8 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
     nav: {
       explorar: "Explorer",
       calendario: "Calendrier",
+      radar: "Radar",
+      planes: "Tarifs",
       rankings: "Classements",
       comparar: "Comparer",
       viaje: "Voyage",
@@ -1158,6 +1272,32 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       sinCarrerasEnRango: "Aucune course à ces dates. Élargissez la période.",
       verCarrera: "Voir la course →",
       verMas: (n) => `Voir ${n} de plus`,
+    },
+    faq: {
+      titulo: "Questions fréquentes",
+      cuandoP: (n) => `Quand a lieu ${n} ?`,
+      cuandoR: (n, f, l) => `${n} a lieu le ${f} à ${l}.`,
+      distanciaP: (n) => `Quelle est la distance de ${n} ?`,
+      distanciaR: (d) => `La distance principale est ${d}. Beaucoup de courses proposent d'autres distances : vérifiez sur le site officiel.`,
+      precioP: (n) => `Combien coûte l'inscription à ${n} ?`,
+      precioR: (p) => `L'inscription commence à ${p}. Le prix augmente souvent à l'approche de la course : vérifiez sur le site officiel.`,
+      inscribirP: (n) => `Comment s'inscrire à ${n} ?`,
+      inscribirR: "Sur le site officiel de l'organisation (bouton d'inscription ci-dessus). The World Runner ne vend pas d'inscriptions et ne prend aucune commission.",
+      avisosP: (n) => `Comment savoir si quelque chose change pour ${n} ?`,
+      avisosR: "Activez les alertes de cette course : nous vous envoyons un e-mail dès que nous détectons un changement de date ou de prix, les dernières places ou une annulation.",
+      cercanasTitulo: "Autres courses aux mêmes dates",
+    },
+    radar: {
+      eyebrow: "Radar des courses",
+      titulo: "Ce qui a changé dans le monde de la course",
+      subtitulo: "Nouvelles courses, changements de date et de prix, dernières places et annulations détectés par nos robots sur plus de 90 sources officielles.",
+      stats: { proximos30: "courses dans les 30 prochains jours", paises: "pays avec des courses", nuevas: "nouvelles courses cette semaine", cambios: "changements détectés cette semaine" },
+      tipos: { nueva: "Nouvelle course", fecha: "Date modifiée", precio: "Prix modifié", pocosCupos: "Dernières places", cancelada: "Annulée", abrio: "Inscriptions ouvertes", cerro: "Inscriptions closes" },
+      antesAhora: (a, b) => `Avant ${a} · maintenant ${b}`,
+      verTodo: "Voir tous les changements →",
+      actualizado: "Mis à jour chaque jour",
+      sinNovedades: "Aucun changement détecté pour l'instant.",
+      tituloFicha: "Changements récents pour cette course",
     },
     rankings: {
       titulo: "Classements mondiaux",

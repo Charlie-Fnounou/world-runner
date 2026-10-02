@@ -15,6 +15,7 @@ export function Header() {
   const nav = [
     { href: "/", label: t.nav.explorar },
     { href: "/calendario", label: t.nav.calendario },
+    { href: "/radar", label: t.nav.radar },
     { href: "/rankings", label: t.nav.rankings },
     { href: "/comparar", label: t.nav.comparar },
     { href: "/viaje", label: t.nav.viaje },

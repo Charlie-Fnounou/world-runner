@@ -63,16 +63,21 @@ interface EdicionComparable {
 // como desde cada collector (ver upsert.ts) para que un cambio real
 // detectado automáticamente (se abrió la inscripción, cambió el precio)
 // tenga el mismo efecto que si lo hubiera cargado un admin a mano.
+// `estadoExplicito`: casi ninguna fuente publica si la inscripción está
+// abierta; cuando no lo hace, upsert.ts DEDUCE el estado por la cercanía
+// de la fecha. Un cambio deducido así no es una noticia real (no "abrió
+// la inscripción"), así que no se registra ni se avisa.
 export async function detectarYNotificarCambios(
   eventoId: string,
   antes: EdicionComparable,
   despues: EdicionComparable,
   fuente: string,
+  estadoExplicito = true,
 ) {
   const cambios: { tipo: TipoCambio; mensaje: string }[] = [];
   const historial: { campo: string; valorAnterior: string; valorNuevo: string; esImportante: boolean }[] = [];
 
-  if (antes.estado !== despues.estado) {
+  if (estadoExplicito && antes.estado !== despues.estado) {
     historial.push({ campo: "estado", valorAnterior: antes.estado, valorNuevo: despues.estado, esImportante: true });
     if (despues.estado === "ABIERTA") {
       cambios.push({ tipo: "apertura", mensaje: "🔔 ¡Ya abrió la inscripción!" });
@@ -98,14 +103,13 @@ export async function detectarYNotificarCambios(
     cambios.push({ tipo: "precio", mensaje: `💰 El precio cambió a ${despues.moneda ?? "$"}${despues.precioDesde}.` });
   }
 
-  if (antes.fecha.getTime() !== despues.fecha.getTime()) {
-    historial.push({
-      campo: "fecha",
-      valorAnterior: antes.fecha.toISOString().slice(0, 10),
-      valorNuevo: despues.fecha.toISOString().slice(0, 10),
-      esImportante: true,
-    });
-    cambios.push({ tipo: "fecha", mensaje: `📅 La fecha cambió a ${despues.fecha.toISOString().slice(0, 10)}.` });
+  // Se compara el día, no el instante: varias fuentes cambian solo la hora
+  // interna de un día a otro y eso generaba avisos de "cambió la fecha" falsos.
+  const diaAntes = antes.fecha.toISOString().slice(0, 10);
+  const diaDespues = despues.fecha.toISOString().slice(0, 10);
+  if (diaAntes !== diaDespues) {
+    historial.push({ campo: "fecha", valorAnterior: diaAntes, valorNuevo: diaDespues, esImportante: true });
+    cambios.push({ tipo: "fecha", mensaje: `📅 La fecha cambió a ${diaDespues}.` });
   }
 
   if (historial.length === 0) return;

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getCarreras, getCarreraPorSlug, slugify } from "@/lib/races-data";
+import { getCarreras, getCarreraPorSlug, getCarrerasCercanas, slugify } from "@/lib/races-data";
+import { getNovedades } from "@/lib/radar";
+import { preguntasDeCarrera } from "@/lib/faq";
+import { RaceExtras } from "@/components/RaceExtras";
 import { RaceDetailClient } from "@/components/RaceDetailClient";
 import { BannerPublicitario } from "@/components/BannerPublicitario";
 import { fmtFecha } from "@/lib/format";
@@ -47,6 +50,17 @@ export default async function RacePage({
   const { slug } = await params;
   const r = await getCarreraPorSlug(slug);
   if (!r) notFound();
+  const [novedades, cercanas] = await Promise.all([getNovedades(8, r.id), getCarrerasCercanas(r)]);
+
+  const faqLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: preguntasDeCarrera(r, "es").map((q) => ({
+      "@type": "Question",
+      name: q.pregunta,
+      acceptedAnswer: { "@type": "Answer", text: q.respuesta },
+    })),
+  };
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -70,10 +84,14 @@ export default async function RacePage({
     <>
       <script
         type="application/ld+json"
-        // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+      />
       <RaceDetailClient r={r} />
+      <RaceExtras r={r} novedades={novedades} cercanas={cercanas} />
       <div className="pb-16">
         <BannerPublicitario ubicacion="FICHA_CARRERA" eventoId={r.id} />
       </div>
