@@ -14,12 +14,11 @@ const items: Item[] = [
   { photo: "parfait", name: "Parfait", detail: "yogurt, mermelada y granola", href: "/productos/parfait", bg: "#8E2B2B", ink: "#FFF4EE" },
   { photo: "cover-arepas", name: "Arepas", detail: "siete maneras", href: "/productos?c=arepas", bg: "#F2C14E", ink: "#3B2406" },
   { photo: "queso-prensado", name: "Queso Prensado", detail: "con sal o bajo en sal", href: "/productos/queso-prensado", bg: "#EFE3C4", ink: "#3A2E12" },
-  { photo: "pouch-250", name: "Yogurt en Pouch", detail: "250 ml y para niños", href: "/productos/yogurt-en-pouch", bg: "#E9C8C0", ink: "#5C1A22" },
+  { photo: "pouch-250", name: "Yogurt en Pouch", detail: "250 ml y Pouch de niños", href: "/productos/yogurt-en-pouch", bg: "#E9C8C0", ink: "#5C1A22" },
   { photo: "granola", name: "Granola", detail: "avena integral", href: "/productos/granola", bg: "#E9D8C4", ink: "#6E3B3C" },
   { photo: "especiales", name: "Yogurt Copa", detail: "chocolate · dulce de leche · mermelada", href: "/productos/yogurt-copa-especiales", bg: "#D8CFC6", ink: "#3A2A20" },
   { photo: "cafe", name: "Café Artesanal", detail: "cuenca del Canal de Panamá", href: "/productos/cafe-artesanal", bg: "#22305F", ink: "#F4EFE6" },
   { photo: "olivas-spicy", name: "Aceitunas", detail: "condimentadas · 10 oz", href: "/productos/aceitunas-condimentadas", bg: "#C3C59A", ink: "#2E3517" },
-  { photo: "pouches-ninos", name: "Yogurt Pouches", detail: "para loncheras", href: "/productos/yogurt-en-pouch?v=8", bg: "#F6C928", ink: "#3A2600" },
   { photo: "sopa-tomate", name: "Sopas", detail: "sin lácteos", href: "/productos/sopas", bg: "#E9744A", ink: "#2A0F06" },
   { photo: "finca-mix", name: "De la Finca", detail: "listo para la olla", href: "/productos?c=de-la-finca", bg: "#B7D96A", ink: "#1E3510" },
 ];
