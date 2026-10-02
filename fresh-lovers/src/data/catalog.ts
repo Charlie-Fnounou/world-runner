@@ -45,6 +45,8 @@ export interface Variant {
   label?: string;
   /** real product photo for this flavour/variety */
   photo?: PhotoKey;
+  /** per-variant seals, when only some variants of a merged line carry them */
+  seals?: Seal[];
 }
 
 export interface Product {
@@ -173,6 +175,8 @@ export const categories: Category[] = [
 const YOGURT_CULTURES =
   "fermento lácteo (Bifidobacterium, Lactobacillus acidophilus, Lactobacillus delbrueckii subsp. bulgaricus, Streptococcus thermophilus)";
 
+const POUCH_INGREDIENTS = `Leche pasteurizada, ${YOGURT_CULTURES}. Los sabores llevan además fruta o saborizante y azúcar.`;
+
 export const products: Product[] = [
   /* ───────────────────────────── YOGURT ───────────────────────────── */
   {
@@ -239,26 +243,28 @@ export const products: Product[] = [
     slug: "yogurt-en-pouch",
     name: "Yogurt en Pouch",
     category: "yogurt",
-    kicker: "Yogurt con probióticos",
+    kicker: "Yogurt",
     title: "Pouch",
-    description: "Yogurt con probióticos en pouch de 250 ml. Ocho sabores.",
+    description:
+      "Yogurt con probióticos en pouch de 250 ml, en ocho sabores, y pouches para niños: yogurt cremoso en un empaque práctico, fácil de abrir, para loncheras, paseos y meriendas.",
     variants: [
-      { name: "Natural", bg: "#F3F1EC", ink: "#1E4C8F", accent: "#2A64B5", note: "Extra creamy" },
-      { name: "Fresa", photo: "pouch-250-fresa", bg: "#F7D3D9", ink: "#B32446" },
-      { name: "Blueberry", photo: "pouch-250-blueberry", bg: "#D4D8F2", ink: "#2B3A8F" },
-      { name: "Fresa - Banana", photo: "pouch-250-fresa-banana", bg: "#F8E7A8", ink: "#B32446" },
-      { name: "Vainilla", bg: "#F3E7C9", ink: "#7A5A22" },
-      { name: "Galleta", bg: "#E3D8CB", ink: "#3A2A20" },
-      { name: "Berries", bg: "#E5CADF", ink: "#6A2457" },
-      { name: "Piña", bg: "#F8E08A", ink: "#7A5A0A" },
+      { name: "Natural", bg: "#F3F1EC", ink: "#1E4C8F", accent: "#2A64B5", note: "250 ml · Extra creamy", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
+      { name: "Fresa", photo: "pouch-250-fresa", bg: "#F7D3D9", ink: "#B32446", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
+      { name: "Blueberry", photo: "pouch-250-blueberry", bg: "#D4D8F2", ink: "#2B3A8F", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
+      { name: "Fresa - Banana", photo: "pouch-250-fresa-banana", bg: "#F8E7A8", ink: "#B32446", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
+      { name: "Vainilla", bg: "#F3E7C9", ink: "#7A5A22", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
+      { name: "Galleta", bg: "#E3D8CB", ink: "#3A2A20", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
+      { name: "Berries", bg: "#E5CADF", ink: "#6A2457", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
+      { name: "Piña", bg: "#F8E08A", ink: "#7A5A0A", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
+      { name: "Niños · Fresa", photo: "pouch-ninos-fresa", bg: "#EC4F93", ink: "#FFFFFF", accent: "#C21E63", note: "Pouch para niños" },
+      { name: "Niños · Vainilla", photo: "pouch-ninos-vainilla", bg: "#F6C928", ink: "#4A3200", accent: "#FFFFFF", note: "Pouch para niños" },
+      { name: "Niños · Galleta", photo: "pouch-ninos-galleta", bg: "#2C9CDB", ink: "#FFFFFF", accent: "#0F3A66", note: "Pouch para niños" },
+      { name: "Niños · Chocolate", photo: "pouch-ninos-chocolate", bg: "#5B3426", ink: "#FFFFFF", accent: "#C79A6B", note: "Pouch para niños" },
     ],
-    sizes: ["250 ml"],
-    highlights: ["Yogurt con probióticos"],
-    ingredients: `Leche pasteurizada, ${YOGURT_CULTURES}. Los sabores llevan además fruta o saborizante y azúcar.`,
-    seals: ["jalav-israel"],
+    sizes: ["250 ml", "Pouch para niños"],
     shape: "pouch",
     image: "pouch-250",
-    sources: ["CAT26", "LABEL"],
+    sources: ["CAT26", "CAT22", "LABEL"],
   },
   {
     slug: "yogurt-copa",
@@ -342,25 +348,6 @@ export const products: Product[] = [
     shape: "yosnack",
     image: "yosnack",
     sources: ["CAT26"],
-  },
-  {
-    slug: "yogurt-pouches-ninos",
-    name: "Yogurt Pouches",
-    category: "yogurt",
-    kicker: "Para loncheras",
-    title: "Pouches",
-    description:
-      "Un snack pensado para niños activos: yogurt cremoso en un empaque práctico, fácil de abrir. Perfecto para loncheras, paseos y meriendas.",
-    variants: [
-      { name: "Fresa", photo: "pouch-ninos-fresa", bg: "#EC4F93", ink: "#FFFFFF", accent: "#C21E63" },
-      { name: "Vainilla", photo: "pouch-ninos-vainilla", bg: "#F6C928", ink: "#4A3200", accent: "#FFFFFF" },
-      { name: "Galleta", photo: "pouch-ninos-galleta", bg: "#2C9CDB", ink: "#FFFFFF", accent: "#0F3A66" },
-      { name: "Chocolate", photo: "pouch-ninos-chocolate", bg: "#5B3426", ink: "#FFFFFF", accent: "#C79A6B" },
-    ],
-    sizes: ["Pouch"],
-    shape: "kidpouch",
-    image: "pouches-ninos",
-    sources: ["CAT26", "CAT22"],
   },
 
   /* ───────────────────────────── QUESOS ───────────────────────────── */

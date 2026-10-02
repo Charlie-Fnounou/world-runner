@@ -21,6 +21,7 @@ export function ProductView({ product: p, category }: { product: Product; catego
   const v = p.variants[i];
   const stage = pale(v.bg) ? category.bg : v.bg;
   const ingredients = v.ingredients ?? p.ingredients;
+  const seals = v.seals ?? p.seals;
 
   return (
     <div className="grid gap-10 md:grid-cols-12 md:gap-12">
@@ -114,13 +115,13 @@ export function ProductView({ product: p, category }: { product: Product; catego
               <dd className="text-right">{v.note}</dd>
             </div>
           )}
-          {p.seals?.includes("jalav-israel") && (
+          {seals?.includes("jalav-israel") && (
             <div className="flex justify-between gap-6 border-b border-ink/20 py-3">
               <dt className="font-semibold">Kosher</dt>
               <dd className="text-right">Jalav Israel (según etiqueta)</dd>
             </div>
           )}
-          {p.seals?.includes("kosher") && (
+          {seals?.includes("kosher") && (
             <div className="flex justify-between gap-6 border-b border-ink/20 py-3">
               <dt className="font-semibold">Kosher</dt>
               <dd className="text-right">Sello kosher en el empaque</dd>
