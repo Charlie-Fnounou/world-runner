@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Bodoni_Moda, Instrument_Sans, Oswald } from "next/font/google";
+import { Bodoni_Moda, Instrument_Sans } from "next/font/google";
 import "./globals.css";
 import { site } from "@/data/site";
 import { Header } from "@/components/Header";
@@ -17,12 +17,6 @@ const display = Bodoni_Moda({
 const sans = Instrument_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
-  display: "swap",
-});
-const logo = Oswald({
-  subsets: ["latin"],
-  weight: ["400"],
-  variable: "--font-logo",
   display: "swap",
 });
 
@@ -55,7 +49,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="es-PA" className={`${display.variable} ${sans.variable} ${logo.variable}`}>
+    <html lang="es-PA" className={`${display.variable} ${sans.variable}`}>
       <body>
         <a
           href="#contenido"

@@ -246,8 +246,8 @@ export function Header() {
         onMouseLeave={scheduleClose}
       >
         <div className="gutter flex h-16 items-center justify-between md:h-20">
-          <Link href="/" aria-label="Fresh Lovers — inicio" className="relative z-10 block w-[84px] md:w-[96px]" onClick={closeAll}>
-            <Logo className="h-auto w-full" fill={open ? "var(--paper)" : "var(--ink)"} ink={open ? "var(--ink)" : "var(--paper)"} />
+          <Link href="/" aria-label="Fresh Lovers — inicio" className="relative z-10 block w-[92px] md:w-[112px]" onClick={closeAll}>
+            <Logo className="h-auto w-full" fill={open ? "var(--paper)" : "var(--ink)"} />
           </Link>
 
           <nav aria-label="Principal" className="hidden items-center gap-8 md:flex">

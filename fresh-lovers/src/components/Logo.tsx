@@ -1,51 +1,18 @@
 import { cartouchePath } from "@/lib/cartouche";
+import { LOGO_PATH, LOGO_VIEWBOX } from "@/lib/logo";
 
 type Props = {
   className?: string;
-  /** frame colour */
+  /** cartouche colour — the lettering is knocked out and shows what is behind */
   fill?: string;
-  /** letter colour */
-  ink?: string;
   title?: string;
 };
 
-/**
- * Fresh Lovers wordmark in its scalloped cartouche, redrawn as SVG from the
- * label artwork. Replace with the official vector when available.
- */
-export function Logo({ className, fill = "var(--ink)", ink = "var(--paper)", title = "Fresh Lovers" }: Props) {
-  const W = 200;
-  const H = 120;
-  const outer = cartouchePath(W, H, 26, 7);
-  const inner = cartouchePath(W - 16, H - 16, 20, 5);
+/** Official Fresh Lovers logo, traced from the 2026 catalog cover. */
+export function Logo({ className, fill = "var(--ink)", title = "Fresh Lovers" }: Props) {
   return (
-    <svg viewBox={`0 0 ${W + 14} ${H + 14}`} className={className} role="img" aria-label={title}>
-      <path d={outer} fill={fill} />
-      <path d={inner} transform="translate(8 8)" fill="none" stroke={ink} strokeWidth="1.4" opacity="0.9" />
-      {/* sprout */}
-      <g transform="translate(107 24) scale(1.15)" fill={ink}>
-        <path d="M0 9 C-1 3 -6 -1 -11 0 C-10 6 -5 9 0 9 Z" />
-        <path d="M0 9 C1 3 6 -1 11 0 C10 6 5 9 0 9 Z" />
-      </g>
-      <text
-        x="107"
-        y="80"
-        textAnchor="middle"
-        fill={ink}
-        style={{ fontFamily: "var(--font-logo)", fontSize: 40, letterSpacing: 2, fontWeight: 400 }}
-      >
-        FRESH
-      </text>
-      <rect x="62" y="86" width="90" height="1.6" fill={ink} />
-      <text
-        x="108"
-        y="106"
-        textAnchor="middle"
-        fill={ink}
-        style={{ fontFamily: "var(--font-sans)", fontSize: 15, letterSpacing: 5.5, fontWeight: 400 }}
-      >
-        lovers
-      </text>
+    <svg viewBox={LOGO_VIEWBOX} className={className} role="img" aria-label={title}>
+      <path d={LOGO_PATH} fill={fill} fillRule="evenodd" />
     </svg>
   );
 }
