@@ -8,6 +8,7 @@ import { Logo } from "./Logo";
 import { WhatsAppIcon, InstagramIcon, ArrowIcon } from "./Icons";
 import { ProductPhoto } from "./ProductPhoto";
 import { categories, products, type CategorySlug, type Product } from "@/data/catalog";
+import type { PhotoKey } from "@/data/photos";
 import { instagramLink, site, whatsappLink } from "@/data/site";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -21,7 +22,7 @@ const inCategory = (slug: CategorySlug) => products.filter((p) => p.category ===
 
 /* ───────────────────────── desktop mega menu ───────────────────────── */
 
-type Card = { key: string; href: string; product: Product; variant: number; title: string; sub: string };
+type Card = { key: string; href: string; product: Product; variant: number; title: string; sub: string; photo?: PhotoKey };
 
 /** How a category opens in the menu:
  *  - "lines": several product lines with flavours (Yogurt) → extra column of lines, flavours on the right
@@ -50,6 +51,7 @@ const productCards = (list: Product[]): Card[] =>
     href: `/productos/${p.slug}`,
     product: p,
     variant: 0,
+    photo: p.image,
     title: p.name,
     sub: p.variants.length > 1 ? `${p.variants.length} sabores / variedades` : p.sizes[0],
   }));
@@ -162,7 +164,9 @@ function MegaMenu({ active, setActive, close }: { active: CategorySlug; setActiv
                     <ProductPhoto
                       product={c.product}
                       variant={c.variant}
+                      photo={c.photo}
                       fill
+                      eager
                       sizes="200px"
                       className="transition-transform duration-700 ease-[var(--ease-out)] group-hover:scale-[1.06]"
                     />
@@ -402,7 +406,7 @@ export function Header() {
                                   <li key={p.slug}>
                                     <Link href={`/productos/${p.slug}`} onClick={closeAll} className="flex items-center gap-3 py-2">
                                       <span className="relative block h-12 w-12 shrink-0 overflow-hidden rounded-xl" style={{ backgroundColor: c.bg }}>
-                                        <ProductPhoto product={p} fill sizes="48px" />
+                                        <ProductPhoto product={p} photo={p.image} fill eager sizes="48px" />
                                       </span>
                                       <span className="text-[0.98rem] text-paper/90">{p.name}</span>
                                     </Link>

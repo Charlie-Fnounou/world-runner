@@ -100,7 +100,7 @@ export function ProductReel() {
         <div>
           <p className="kicker text-ink/55">Productos · desliza →</p>
           <h2 id="reel-title" className="font-display mt-2 text-[12vw] leading-[0.85] tracking-[-0.02em] md:text-[5.6vw]">
-            De nuestra <em>cocina</em>
+            Para cada <em>antojo</em>
           </h2>
         </div>
         <div className="flex shrink-0 items-center gap-3">

@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     template: "%s · Fresh Lovers Panamá",
   },
   description:
-    "Yogurt griego, quesos frescos, labne, arepas, granola y café artesanal hechos en La Chorrera, Panamá, desde 2018. Productos kosher bajo supervisión de Shevet Ahim.",
+    "Yogurt griego, quesos frescos, labne, arepas, granola y café artesanal. Productos kosher bajo supervisión de Shevet Ahim.",
   applicationName: "Fresh Lovers",
   keywords: ["Fresh Lovers", "yogurt griego Panamá", "labne", "quesos frescos", "arepas", "kosher Panamá", "Jalav Israel"],
   alternates: { canonical: "/" },

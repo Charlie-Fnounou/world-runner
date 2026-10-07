@@ -7,9 +7,8 @@ export function Footer() {
     <footer className="relative overflow-hidden bg-ink text-paper">
       <div className="gutter grid gap-12 pb-10 pt-20 md:grid-cols-12 md:pt-28">
         <div className="md:col-span-5">
-          <p className="kicker text-paper/50">— {site.tagline} —</p>
-          <p className="font-display mt-6 max-w-md text-3xl leading-tight md:text-4xl">
-            Hecho en La Chorrera. <em>Desde {site.since}.</em>
+          <p className="font-display max-w-md text-3xl leading-tight md:text-4xl">
+            Yogurt, quesos, labne y arepas. <em>Calidad y sabor.</em>
           </p>
         </div>
         <nav aria-label="Categorías" className="md:col-span-3">
@@ -43,14 +42,6 @@ export function Footer() {
               </a>
             </li>
           </ul>
-          <p className="kicker mb-3 mt-8 text-paper/50">Planta</p>
-          <address className="text-[0.95rem] not-italic text-paper/85">
-            {site.legalName}
-            <br />
-            {site.plant.line1}
-            <br />
-            {site.plant.line2}
-          </address>
         </div>
       </div>
 
@@ -63,7 +54,7 @@ export function Footer() {
 
       <div className="gutter flex flex-col gap-2 border-t border-paper/10 py-6 pb-24 text-xs text-paper/50 md:flex-row md:items-center md:justify-between md:pb-6">
         <p>
-          © {new Date().getFullYear()} {site.legalName} · Panamá
+          © {new Date().getFullYear()} {site.legalName} · {site.plant.line1}, {site.plant.line2}
         </p>
         <p>Kashrut bajo supervisión de {site.kashrut} · בס״ד</p>
       </div>

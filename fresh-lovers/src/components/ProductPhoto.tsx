@@ -17,6 +17,8 @@ type Props = {
   className?: string;
   sizes?: string;
   priority?: boolean;
+  /** load right away instead of when scrolled near (menus open instantly) */
+  eager?: boolean;
   /** fill the parent box (parent must be positioned) */
   fill?: boolean;
   /** show this photo instead of the variant/product default */
@@ -29,7 +31,7 @@ export function shotsFor(p: Product, variant = 0): PhotoKey[] {
   return [...new Set([v?.photo, p.image].filter((k): k is PhotoKey => !!k))];
 }
 
-export function ProductPhoto({ product: p, variant = 0, className = "", sizes = "(min-width: 768px) 33vw, 80vw", priority, fill, photo }: Props) {
+export function ProductPhoto({ product: p, variant = 0, className = "", sizes = "(min-width: 768px) 33vw, 80vw", priority, eager, fill, photo }: Props) {
   const ph = photo ? { ...photos[photo], kind: "photo" as const } : photoFor(p, variant);
   if (!ph) return null;
   const v = p.variants[Math.min(variant, p.variants.length - 1)];
@@ -37,8 +39,8 @@ export function ProductPhoto({ product: p, variant = 0, className = "", sizes = 
   // label art (Yogurt Griego) is shown whole on its colour; photos fill the frame
   const fit = ph.kind === "label" ? "object-contain p-[8%]" : "object-cover";
   return fill ? (
-    <Image src={ph.src} alt={alt} fill sizes={sizes} priority={priority} className={`${fit} ${className}`} />
+    <Image src={ph.src} alt={alt} fill sizes={sizes} priority={priority} loading={eager && !priority ? "eager" : undefined} className={`${fit} ${className}`} />
   ) : (
-    <Image src={ph.src} alt={alt} width={ph.w} height={ph.h} sizes={sizes} priority={priority} className={`${fit} ${className}`} />
+    <Image src={ph.src} alt={alt} width={ph.w} height={ph.h} sizes={sizes} priority={priority} loading={eager && !priority ? "eager" : undefined} className={`${fit} ${className}`} />
   );
 }

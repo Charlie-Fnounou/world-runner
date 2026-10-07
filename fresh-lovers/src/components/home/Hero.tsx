@@ -185,7 +185,7 @@ export function Hero() {
           transition={{ delay: 1, duration: 0.9, ease: EASE }}
           className="max-w-[22rem] text-[1.02rem] leading-snug text-ink-2 md:text-[1.05rem]"
         >
-          Yogurt griego, labne, quesos frescos, arepas y café. Hechos en La Chorrera, Panamá, desde {site.since}.
+          Yogurt griego, labne, quesos frescos, arepas, granola y café.
         </motion.p>
 
         <div className="hidden justify-center md:flex">
