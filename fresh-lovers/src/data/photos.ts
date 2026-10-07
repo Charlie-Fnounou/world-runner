@@ -120,6 +120,13 @@ export const photos = {
   "studio-pouch-berries": { src: "/studio/pouch-berries.webp", w: 1200, h: 1500 },
   "studio-pouch-pina": { src: "/studio/pouch-pina.webp", w: 1200, h: 1500 },
   "studio-queso-con-sal": { src: "/studio/queso-con-sal.webp", w: 1200, h: 1500 },
+  "studio-griego-natural": { src: "/studio/griego-natural.webp", w: 1200, h: 1500 },
+  "studio-griego-vainilla": { src: "/studio/griego-vainilla.webp", w: 1200, h: 1500 },
+  "studio-griego-fresa": { src: "/studio/griego-fresa.webp", w: 1200, h: 1500 },
+  "studio-griego-berries": { src: "/studio/griego-berries.webp", w: 1200, h: 1500 },
+  "studio-griego-blueberry": { src: "/studio/griego-blueberry.webp", w: 1200, h: 1500 },
+  "studio-griego-banana-fresa": { src: "/studio/griego-banana-fresa.webp", w: 1200, h: 1500 },
+  "studio-griego-hero": { src: "/studio/griego-hero.webp", w: 1200, h: 1500 },
 } as const;
 
 export type PhotoKey = keyof typeof photos;

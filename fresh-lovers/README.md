@@ -45,4 +45,4 @@ Cada producto usa su foto de estudio en `image`; cada sabor puede tener su propi
 
 - Confirmar que **6864-4453** (teléfono de las etiquetas) es el WhatsApp comercial.
 - Cambiar el logo trazado del catálogo (`src/lib/logo.ts`) por el vector oficial si existe.
-- Confirmar qué SKUs de Yogurt Griego ya están en anaqueles (vienen de etiquetas 2026, no del catálogo) y conseguir una foto real de su empaque.
+- Confirmar qué SKUs de Yogurt Griego ya están en anaqueles (vienen de etiquetas 2026, no del catálogo).

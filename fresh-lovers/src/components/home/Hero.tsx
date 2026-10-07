@@ -12,6 +12,7 @@ import { site } from "@/data/site";
 
 /** Studio shots of the real packaging — one per family. */
 const lineupData: { slug: string; photo: PhotoKey; caption: string }[] = [
+  { slug: "yogurt-griego", photo: "studio-griego-hero", caption: "Yogurt griego" },
   { slug: "labne", photo: "studio-labne", caption: "Labne" },
   { slug: "yogurt-en-pouch", photo: "studio-yogurt-en-pouch", caption: "Yogurt en pouch" },
   { slug: "queso-prensado", photo: "studio-queso-prensado", caption: "Queso prensado" },
