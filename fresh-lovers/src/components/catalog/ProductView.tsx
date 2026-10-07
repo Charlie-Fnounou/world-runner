@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ProductPhoto, photoFor } from "@/components/ProductPhoto";
+import { ProductPhoto, shotsFor } from "@/components/ProductPhoto";
 import { WhatsAppIcon } from "@/components/Icons";
 import { cartoucheClipPath } from "@/lib/cartouche";
 import type { Category, Product } from "@/data/catalog";
@@ -18,7 +18,16 @@ export function ProductView({ product: p, category }: { product: Product; catego
   const params = useSearchParams();
   const start = Math.min(Math.max(0, Number(params.get("v") ?? 0) || 0), p.variants.length - 1);
   const [i, setI] = useState(start);
+  const [shot, setShot] = useState(0);
+  const [shotFor, setShotFor] = useState(start);
+  if (shotFor !== i) {
+    // a new flavour starts on its own photo
+    setShotFor(i);
+    setShot(0);
+  }
   const v = p.variants[i];
+  const shots = shotsFor(p, i);
+  const current = shots[Math.min(shot, shots.length - 1)];
   const stage = pale(v.bg) ? category.bg : v.bg;
   const ingredients = v.ingredients ?? p.ingredients;
   const seals = v.seals ?? p.seals;
@@ -41,18 +50,35 @@ export function ProductView({ product: p, category }: { product: Product; catego
           >
             <AnimatePresence initial={false}>
               <motion.div
-                key={photoFor(p, i)?.src ?? i}
+                key={current ?? `label-${i}`}
                 className="absolute inset-0"
                 initial={{ opacity: 0, scale: 1.06 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.7, ease: EASE }}
               >
-                <ProductPhoto product={p} variant={i} fill priority sizes="(min-width: 768px) 45vw, 92vw" />
+                <ProductPhoto product={p} variant={i} photo={current} fill priority sizes="(min-width: 768px) 45vw, 92vw" />
               </motion.div>
             </AnimatePresence>
           </motion.div>
-          {p.image && <p className="sr-only">Fotografía disponible</p>}
+          {shots.length > 1 && (
+            <div role="group" aria-label="Fotos del producto" className="mx-auto mt-5 flex max-w-[560px] justify-center gap-3">
+              {shots.map((k, n) => (
+                <button
+                  key={k}
+                  type="button"
+                  aria-pressed={n === shot}
+                  aria-label={`Foto ${n + 1} de ${shots.length}`}
+                  onClick={() => setShot(n)}
+                  className={`relative h-20 w-16 overflow-hidden rounded-xl border-2 transition-all md:h-24 md:w-20 ${
+                    n === shot ? "border-ink" : "border-transparent opacity-60 hover:opacity-100"
+                  }`}
+                >
+                  <ProductPhoto product={p} variant={i} photo={k} fill sizes="80px" />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

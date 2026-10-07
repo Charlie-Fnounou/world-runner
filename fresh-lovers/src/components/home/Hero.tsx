@@ -10,16 +10,16 @@ import { getProduct } from "@/data/catalog";
 import { photos, type PhotoKey } from "@/data/photos";
 import { site } from "@/data/site";
 
-/** Real product photography from the 2026 catalog — one hero shot per family. */
+/** Studio shots of the real packaging — one per family. */
 const lineupData: { slug: string; photo: PhotoKey; caption: string }[] = [
-  { slug: "labne", photo: "labne", caption: "Labne" },
-  { slug: "parfait", photo: "parfait", caption: "Parfait con granola" },
-  { slug: "yosnack", photo: "cover-yosnack", caption: "YoSnack" },
-  { slug: "queso-prensado", photo: "cover-quesos", caption: "Quesos frescos" },
-  { slug: "arepa-platano-con-queso", photo: "cover-arepas", caption: "Arepas" },
-  { slug: "yogurt-copa-especiales", photo: "especiales", caption: "Yogurt copa especiales" },
-  { slug: "granola", photo: "granola", caption: "Granola" },
-  { slug: "cafe-artesanal", photo: "cafe", caption: "Café artesanal" },
+  { slug: "labne", photo: "studio-labne", caption: "Labne" },
+  { slug: "yogurt-en-pouch", photo: "studio-yogurt-en-pouch", caption: "Yogurt en pouch" },
+  { slug: "queso-prensado", photo: "studio-queso-prensado", caption: "Queso prensado" },
+  { slug: "arepa-yuca-con-queso", photo: "studio-arepa-yuca-con-queso", caption: "Arepas" },
+  { slug: "yosnack", photo: "studio-yosnack", caption: "YoSnack" },
+  { slug: "parfait", photo: "studio-parfait", caption: "Parfait con granola" },
+  { slug: "granola", photo: "studio-granola", caption: "Granola" },
+  { slug: "cafe-artesanal", photo: "studio-cafe-artesanal", caption: "Café artesanal" },
 ];
 const lineup = lineupData.map((it) => ({ ...it, product: getProduct(it.slug)! }));
 

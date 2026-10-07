@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { Product } from "@/data/catalog";
-import { photos } from "@/data/photos";
+import { photos, type PhotoKey } from "@/data/photos";
 
 /** Photo for a product/variant: variant photo → product photo → real label art (Griego only, no photo yet). */
 export function photoFor(p: Product, variant = 0) {
@@ -19,10 +19,18 @@ type Props = {
   priority?: boolean;
   /** fill the parent box (parent must be positioned) */
   fill?: boolean;
+  /** show this photo instead of the variant/product default */
+  photo?: PhotoKey;
 };
 
-export function ProductPhoto({ product: p, variant = 0, className = "", sizes = "(min-width: 768px) 33vw, 80vw", priority, fill }: Props) {
-  const ph = photoFor(p, variant);
+/** Every distinct photo for a variant: its own shot first, then the product's studio shot. */
+export function shotsFor(p: Product, variant = 0): PhotoKey[] {
+  const v = p.variants[Math.min(variant, p.variants.length - 1)];
+  return [...new Set([v?.photo, p.image].filter((k): k is PhotoKey => !!k))];
+}
+
+export function ProductPhoto({ product: p, variant = 0, className = "", sizes = "(min-width: 768px) 33vw, 80vw", priority, fill, photo }: Props) {
+  const ph = photo ? { ...photos[photo], kind: "photo" as const } : photoFor(p, variant);
   if (!ph) return null;
   const v = p.variants[Math.min(variant, p.variants.length - 1)];
   const alt = `${p.name}${p.variants.length > 1 ? ` ${v.name}` : ""} — Fresh Lovers`;

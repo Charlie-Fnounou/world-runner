@@ -7,6 +7,7 @@ import { ProductPhoto } from "@/components/ProductPhoto";
 import { JsonLd } from "@/components/JsonLd";
 import { ArrowIcon } from "@/components/Icons";
 import { getCategory, getProduct, products } from "@/data/catalog";
+import { photos } from "@/data/photos";
 import { site } from "@/data/site";
 
 export function generateStaticParams() {
@@ -24,7 +25,11 @@ export async function generateMetadata({ params }: PageProps<"/productos/[slug]"
     title: p.name,
     description: `${p.description}${variants}`.slice(0, 158),
     alternates: { canonical: `/productos/${p.slug}` },
-    openGraph: { title: `${p.name} · Fresh Lovers`, url: `/productos/${p.slug}` },
+    openGraph: {
+      title: `${p.name} · Fresh Lovers`,
+      url: `/productos/${p.slug}`,
+      ...(p.image && { images: [{ url: photos[p.image].src, width: photos[p.image].w, height: photos[p.image].h, alt: p.name }] }),
+    },
   };
 }
 
@@ -49,6 +54,7 @@ export default async function ProductPage({ params }: PageProps<"/productos/[slu
             manufacturer: { "@type": "Organization", name: site.legalName },
             category: category.name,
             url: `${site.url}/productos/${p.slug}`,
+            ...(p.image && { image: `${site.url}${photos[p.image].src}` }),
           },
           {
             "@context": "https://schema.org",

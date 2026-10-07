@@ -35,10 +35,10 @@ function Labne() {
         <div className="relative mt-[-14vw] grid items-end gap-10 md:mt-[-12vw] md:grid-cols-12">
           <div className="relative flex items-start gap-3 md:col-span-7 md:col-start-1">
             <motion.div style={{ y: tubY, rotate: tubR }} className="relative aspect-[4/3] w-[78%] overflow-hidden rounded-[2rem] shadow-[0_40px_80px_-30px_rgba(0,0,0,0.5)]">
-              <ProductPhoto product={labne} fill sizes="(min-width: 768px) 45vw, 78vw" />
+              <ProductPhoto product={labne} photo={labne.image} fill sizes="(min-width: 768px) 45vw, 78vw" />
             </motion.div>
             <motion.div style={{ y: tubY }} className="relative -ml-[18%] mt-[28%] aspect-[3/4] w-[40%] overflow-hidden rounded-[1.5rem] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.5)]">
-              <ProductPhoto product={chips} fill sizes="(min-width: 768px) 20vw, 40vw" />
+              <ProductPhoto product={chips} photo={chips.image} fill sizes="(min-width: 768px) 20vw, 40vw" />
             </motion.div>
           </div>
           <Reveal className="md:col-span-4 md:col-start-9 md:pb-10">
@@ -85,7 +85,7 @@ function Arepas() {
           <Reveal key={p.slug} delay={n * 0.06} className="w-[48vw] shrink-0 snap-start sm:w-[30vw] md:w-[17vw]">
             <Link href={`/productos/${p.slug}`} className="group block text-center" draggable={false}>
               <div className="relative aspect-square overflow-hidden rounded-full shadow-[0_24px_40px_-20px_rgba(59,36,6,0.6)] transition-transform duration-700 ease-[var(--ease-out)] group-hover:-translate-y-2">
-                <ProductPhoto product={p} fill sizes="(min-width: 768px) 18vw, 50vw" className="transition-transform duration-[1.2s] group-hover:scale-110" />
+                <ProductPhoto product={p} photo={p.image} fill sizes="(min-width: 768px) 18vw, 50vw" className="transition-transform duration-[1.2s] group-hover:scale-110" />
               </div>
               <p className="font-display mt-4 text-[1.3rem] leading-tight">{p.title}</p>
               <p className="kicker mt-1 opacity-70">{p.sizes[0]}</p>

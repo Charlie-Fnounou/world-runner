@@ -180,6 +180,116 @@ const POUCH_INGREDIENTS = `Leche pasteurizada, ${YOGURT_CULTURES}. Los sabores l
 export const products: Product[] = [
   /* ───────────────────────────── YOGURT ───────────────────────────── */
   {
+    slug: "yogurt-en-pouch",
+    name: "Yogurt en Pouch",
+    category: "yogurt",
+    kicker: "Yogurt",
+    title: "Pouch",
+    description:
+      "Yogurt con probióticos en pouch de 250 ml, en ocho sabores, y Pouch de niños: yogurt cremoso en un empaque práctico, fácil de abrir, para loncheras, paseos y meriendas.",
+    variants: [
+      { name: "Natural", photo: "studio-pouch-natural", bg: "#F3F1EC", ink: "#1E4C8F", accent: "#2A64B5", note: "250 ml · Extra creamy", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
+      { name: "Fresa", photo: "pouch-250-fresa", bg: "#F7D3D9", ink: "#B32446", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
+      { name: "Blueberry", photo: "pouch-250-blueberry", bg: "#D4D8F2", ink: "#2B3A8F", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
+      { name: "Fresa - Banana", photo: "pouch-250-fresa-banana", bg: "#F8E7A8", ink: "#B32446", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
+      { name: "Vainilla", photo: "studio-pouch-vainilla", bg: "#F3E7C9", ink: "#7A5A22", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
+      { name: "Galleta", photo: "studio-pouch-galleta", bg: "#E3D8CB", ink: "#3A2A20", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
+      { name: "Berries", photo: "studio-pouch-berries", bg: "#E5CADF", ink: "#6A2457", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
+      { name: "Piña", photo: "studio-pouch-pina", bg: "#F8E08A", ink: "#7A5A0A", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
+      { name: "Pouch de niños · Fresa", photo: "pouch-ninos-fresa", bg: "#EC4F93", ink: "#FFFFFF", accent: "#C21E63" },
+      { name: "Pouch de niños · Vainilla", photo: "pouch-ninos-vainilla", bg: "#F6C928", ink: "#4A3200", accent: "#FFFFFF" },
+      { name: "Pouch de niños · Galleta", photo: "pouch-ninos-galleta", bg: "#2C9CDB", ink: "#FFFFFF", accent: "#0F3A66" },
+      { name: "Pouch de niños · Chocolate", photo: "pouch-ninos-chocolate", bg: "#5B3426", ink: "#FFFFFF", accent: "#C79A6B" },
+    ],
+    sizes: ["250 ml", "Pouch de niños"],
+    shape: "pouch",
+    image: "studio-yogurt-en-pouch",
+    sources: ["CAT26", "CAT22", "LABEL"],
+  },
+  {
+    slug: "yogurt-copa",
+    name: "Yogurt Copa",
+    category: "yogurt",
+    kicker: "Yogurt",
+    title: "Copa",
+    description:
+      "Yogurt natural, cremoso y delicioso, elaborado con ingredientes cuidadosamente seleccionados para lograr una textura suave y un sabor auténtico.",
+    variants: [
+      { name: "Fresa", photo: "copa-fresa", bg: "#F4C6CF", ink: "#A3263F" },
+      { name: "Vainilla", photo: "copa-vainilla", bg: "#F3E4BE", ink: "#7A5A22" },
+      { name: "Galleta", photo: "copa-galleta", bg: "#DCCFC0", ink: "#3A2A20" },
+      { name: "Natural", photo: "copa-natural", bg: "#C9DAEC", ink: "#1E4C8F" },
+    ],
+    sizes: ["Copa 150 ml"],
+    shape: "cup",
+    image: "studio-yogurt-copa",
+    sources: ["CAT26"],
+  },
+  {
+    slug: "yogurt-copa-especiales",
+    name: "Yogurt Copa Especiales",
+    category: "yogurt",
+    kicker: "Yogurt copa",
+    title: "Especiales",
+    description:
+      "Una combinación irresistible que convierte cada cucharada en un verdadero placer.",
+    variants: [
+      { name: "con Chocolate", photo: "especiales-chocolate", bg: "#EDE2D6", ink: "#5A2E22", accent: "#5A3426" },
+      { name: "con Dulce de Leche", photo: "especiales-dulce-leche", bg: "#F1E2CC", ink: "#8A4A1C", accent: "#B8742F" },
+      { name: "con Mermelada", photo: "especiales-mermelada", bg: "#F3D9D9", ink: "#9E2433", accent: "#B3243B" },
+    ],
+    sizes: ["Copa"],
+    shape: "cup",
+    image: "studio-yogurt-copa-especiales",
+    sources: ["CAT26", "CAT22"],
+  },
+  {
+    slug: "parfait",
+    name: "Parfait de Yogurt con Granola",
+    category: "yogurt",
+    kicker: "Parfait",
+    title: "Parfait",
+    description:
+      "Yogurt natural extra cremoso con mermelada y granola. En copa o en vaso.",
+    variants: [
+      {
+        name: "Fresa",
+        photo: "parfait",
+        bg: "#FBF8F3",
+        ink: "#8E2B2B",
+        accent: "#B3243B",
+        ingredients:
+          "Leche pasteurizada, granola (avena, pasitas, almendras, miel), mermelada de fresa, cultivo lácteo (Bifidobacterium, Lactobacillus acidophilus, Lactobacillus delbrueckii subsp. bulgaricus, Streptococcus thermophilus).",
+      },
+      { name: "Piña", photo: "parfait-pina", bg: "#FBF8F3", ink: "#8E2B2B", accent: "#E9A520" },
+      { name: "Apricot", photo: "parfait-apricot", bg: "#FBF8F3", ink: "#8E2B2B", accent: "#E88A2A" },
+      { name: "Blueberry", photo: "parfait-blueberry", bg: "#FBF8F3", ink: "#8E2B2B", accent: "#3B2A5E" },
+    ],
+    sizes: ["Parfait copa", "Parfait vaso 10 oz"],
+    highlights: ["Extra creamy", "Probióticos"],
+    seals: ["kosher"],
+    shape: "parfait",
+    image: "studio-parfait",
+    sources: ["CAT26", "CAT22", "LABEL"],
+  },
+  {
+    slug: "yosnack",
+    name: "YoSnack",
+    category: "yogurt",
+    kicker: "Yogurt + toppings",
+    title: "YoSnack",
+    description:
+      "Una opción práctica y deliciosa, perfecta para disfrutar como snack en cualquier momento del día. Con toppings: Oreo, granola, M&M's o cereal.",
+    variants: [
+      { name: "Vainilla", photo: "yosnack-vainilla", bg: "#DDE15A", ink: "#3D4210", accent: "#F2F0E6" },
+      { name: "Fresa", photo: "yosnack-fresa", bg: "#F27DB2", ink: "#5C0F35", accent: "#F2F0E6" },
+    ],
+    sizes: ["Toppings: Oreo · Granola · M&M's · Cereal"],
+    shape: "yosnack",
+    image: "studio-yosnack",
+    sources: ["CAT26"],
+  },
+  {
     slug: "yogurt-griego",
     name: "Yogurt Griego",
     category: "yogurt",
@@ -239,116 +349,6 @@ export const products: Product[] = [
     shape: "pouch",
     sources: ["LABEL"],
   },
-  {
-    slug: "yogurt-en-pouch",
-    name: "Yogurt en Pouch",
-    category: "yogurt",
-    kicker: "Yogurt",
-    title: "Pouch",
-    description:
-      "Yogurt con probióticos en pouch de 250 ml, en ocho sabores, y Pouch de niños: yogurt cremoso en un empaque práctico, fácil de abrir, para loncheras, paseos y meriendas.",
-    variants: [
-      { name: "Natural", bg: "#F3F1EC", ink: "#1E4C8F", accent: "#2A64B5", note: "250 ml · Extra creamy", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
-      { name: "Fresa", photo: "pouch-250-fresa", bg: "#F7D3D9", ink: "#B32446", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
-      { name: "Blueberry", photo: "pouch-250-blueberry", bg: "#D4D8F2", ink: "#2B3A8F", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
-      { name: "Fresa - Banana", photo: "pouch-250-fresa-banana", bg: "#F8E7A8", ink: "#B32446", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
-      { name: "Vainilla", bg: "#F3E7C9", ink: "#7A5A22", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
-      { name: "Galleta", bg: "#E3D8CB", ink: "#3A2A20", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
-      { name: "Berries", bg: "#E5CADF", ink: "#6A2457", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
-      { name: "Piña", bg: "#F8E08A", ink: "#7A5A0A", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
-      { name: "Pouch de niños · Fresa", photo: "pouch-ninos-fresa", bg: "#EC4F93", ink: "#FFFFFF", accent: "#C21E63" },
-      { name: "Pouch de niños · Vainilla", photo: "pouch-ninos-vainilla", bg: "#F6C928", ink: "#4A3200", accent: "#FFFFFF" },
-      { name: "Pouch de niños · Galleta", photo: "pouch-ninos-galleta", bg: "#2C9CDB", ink: "#FFFFFF", accent: "#0F3A66" },
-      { name: "Pouch de niños · Chocolate", photo: "pouch-ninos-chocolate", bg: "#5B3426", ink: "#FFFFFF", accent: "#C79A6B" },
-    ],
-    sizes: ["250 ml", "Pouch de niños"],
-    shape: "pouch",
-    image: "pouch-250",
-    sources: ["CAT26", "CAT22", "LABEL"],
-  },
-  {
-    slug: "yogurt-copa",
-    name: "Yogurt Copa",
-    category: "yogurt",
-    kicker: "Yogurt",
-    title: "Copa",
-    description:
-      "Yogurt natural, cremoso y delicioso, elaborado con ingredientes cuidadosamente seleccionados para lograr una textura suave y un sabor auténtico.",
-    variants: [
-      { name: "Fresa", photo: "copa-fresa", bg: "#F4C6CF", ink: "#A3263F" },
-      { name: "Vainilla", photo: "copa-vainilla", bg: "#F3E4BE", ink: "#7A5A22" },
-      { name: "Galleta", photo: "copa-galleta", bg: "#DCCFC0", ink: "#3A2A20" },
-      { name: "Natural", photo: "copa-natural", bg: "#C9DAEC", ink: "#1E4C8F" },
-    ],
-    sizes: ["Copa 150 ml"],
-    shape: "cup",
-    image: "copa",
-    sources: ["CAT26"],
-  },
-  {
-    slug: "yogurt-copa-especiales",
-    name: "Yogurt Copa Especiales",
-    category: "yogurt",
-    kicker: "Yogurt copa",
-    title: "Especiales",
-    description:
-      "Una combinación irresistible que convierte cada cucharada en un verdadero placer.",
-    variants: [
-      { name: "con Chocolate", photo: "especiales-chocolate", bg: "#EDE2D6", ink: "#5A2E22", accent: "#5A3426" },
-      { name: "con Dulce de Leche", photo: "especiales-dulce-leche", bg: "#F1E2CC", ink: "#8A4A1C", accent: "#B8742F" },
-      { name: "con Mermelada", photo: "especiales-mermelada", bg: "#F3D9D9", ink: "#9E2433", accent: "#B3243B" },
-    ],
-    sizes: ["Copa"],
-    shape: "cup",
-    image: "especiales",
-    sources: ["CAT26", "CAT22"],
-  },
-  {
-    slug: "parfait",
-    name: "Parfait de Yogurt con Granola",
-    category: "yogurt",
-    kicker: "Parfait",
-    title: "Parfait",
-    description:
-      "Yogurt natural extra cremoso con mermelada y granola. En copa o en vaso.",
-    variants: [
-      {
-        name: "Fresa",
-        photo: "parfait",
-        bg: "#FBF8F3",
-        ink: "#8E2B2B",
-        accent: "#B3243B",
-        ingredients:
-          "Leche pasteurizada, granola (avena, pasitas, almendras, miel), mermelada de fresa, cultivo lácteo (Bifidobacterium, Lactobacillus acidophilus, Lactobacillus delbrueckii subsp. bulgaricus, Streptococcus thermophilus).",
-      },
-      { name: "Piña", photo: "parfait-pina", bg: "#FBF8F3", ink: "#8E2B2B", accent: "#E9A520" },
-      { name: "Apricot", photo: "parfait-apricot", bg: "#FBF8F3", ink: "#8E2B2B", accent: "#E88A2A" },
-      { name: "Blueberry", photo: "parfait-blueberry", bg: "#FBF8F3", ink: "#8E2B2B", accent: "#3B2A5E" },
-    ],
-    sizes: ["Parfait copa", "Parfait vaso 10 oz"],
-    highlights: ["Extra creamy", "Probióticos"],
-    seals: ["kosher"],
-    shape: "parfait",
-    image: "parfait",
-    sources: ["CAT26", "CAT22", "LABEL"],
-  },
-  {
-    slug: "yosnack",
-    name: "YoSnack",
-    category: "yogurt",
-    kicker: "Yogurt + toppings",
-    title: "YoSnack",
-    description:
-      "Una opción práctica y deliciosa, perfecta para disfrutar como snack en cualquier momento del día. Con toppings: Oreo, granola, M&M's o cereal.",
-    variants: [
-      { name: "Vainilla", photo: "yosnack-vainilla", bg: "#DDE15A", ink: "#3D4210", accent: "#F2F0E6" },
-      { name: "Fresa", photo: "yosnack-fresa", bg: "#F27DB2", ink: "#5C0F35", accent: "#F2F0E6" },
-    ],
-    sizes: ["Toppings: Oreo · Granola · M&M's · Cereal"],
-    shape: "yosnack",
-    image: "yosnack",
-    sources: ["CAT26"],
-  },
 
   /* ───────────────────────────── QUESOS ───────────────────────────── */
   {
@@ -359,12 +359,12 @@ export const products: Product[] = [
     title: "Prensado",
     description: "Queso fresco prensado con un toque de sal. También bajo en sal.",
     variants: [
-      { name: "con Sal", bg: "#141210", ink: "#FFFFFF", accent: "#E2B33C" },
-      { name: "Bajo en Sal", bg: "#141210", ink: "#FFFFFF", accent: "#4D8FD1" },
+      { name: "con Sal", photo: "studio-queso-con-sal", bg: "#141210", ink: "#FFFFFF", accent: "#E2B33C" },
+      { name: "Bajo en Sal", photo: "studio-queso-prensado", bg: "#141210", ink: "#FFFFFF", accent: "#4D8FD1" },
     ],
     sizes: ["8 oz", "Barra ≈ 2.5 kg"],
     shape: "block",
-    image: "queso-prensado",
+    image: "studio-queso-prensado",
     sources: ["CAT26", "CAT22"],
   },
   {
@@ -377,7 +377,7 @@ export const products: Product[] = [
     variants: [{ name: "Cremoso", bg: "#141210", ink: "#FFFFFF", accent: "#E58F3B" }],
     sizes: ["8 oz"],
     shape: "block",
-    image: "queso-cremoso",
+    image: "studio-queso-cremoso",
     sources: ["CAT26", "CAT22"],
   },
   {
@@ -390,7 +390,7 @@ export const products: Product[] = [
     variants: [{ name: "Aleppo", bg: "#141210", ink: "#FFFFFF", accent: "#C0392B" }],
     sizes: ["8 oz"],
     shape: "block",
-    image: "queso-aleppo",
+    image: "studio-queso-cremoso-aleppo",
     sources: ["CAT26", "CAT22"],
   },
   {
@@ -403,7 +403,7 @@ export const products: Product[] = [
     variants: [{ name: "Aceituna", bg: "#141210", ink: "#FFFFFF", accent: "#8A9A3A" }],
     sizes: ["8 oz"],
     shape: "block",
-    image: "queso-aceituna",
+    image: "studio-queso-cremoso-aceituna",
     sources: ["CAT26", "CAT22"],
   },
   {
@@ -416,7 +416,7 @@ export const products: Product[] = [
     variants: [{ name: "Nacional", bg: "#141210", ink: "#FFFFFF", accent: "#2E8B57" }],
     sizes: ["8 oz"],
     shape: "block",
-    image: "queso-nacional",
+    image: "studio-queso-nacional",
     sources: ["CAT26", "CAT22"],
   },
   {
@@ -432,7 +432,7 @@ export const products: Product[] = [
     ],
     sizes: ["8 oz", "Rayado", "Rebanado", "Barra ≈ 2.5 kg"],
     shape: "bag",
-    image: "mozzarella",
+    image: "studio-mozzarella",
     sources: ["CAT26"],
   },
   {
@@ -445,7 +445,7 @@ export const products: Product[] = [
     variants: [{ name: "Snack Pack", bg: "#B8C27A", ink: "#22300E", accent: "#F7F1DF" }],
     sizes: ["Vaso"],
     shape: "cup",
-    image: "snack-pack",
+    image: "studio-snack-pack",
     sources: ["CAT26"],
   },
 
@@ -476,7 +476,7 @@ export const products: Product[] = [
     sizes: ["266 ml"],
     seals: ["jalav-israel"],
     shape: "tub",
-    image: "labne",
+    image: "studio-labne",
     sources: ["CAT26", "LABEL"],
   },
   {
@@ -489,7 +489,7 @@ export const products: Product[] = [
     variants: [{ name: "Labne con Chips", bg: "#2F45A8", ink: "#FFFFFF", accent: "#D9A85B" }],
     sizes: ["Vaso"],
     shape: "cup",
-    image: "labne-chips",
+    image: "studio-labne-con-chips",
     sources: ["CAT26"],
   },
   {
@@ -511,7 +511,7 @@ export const products: Product[] = [
     sizes: ["266 ml"],
     seals: ["jalav-israel"],
     shape: "tub",
-    image: "ricotta",
+    image: "studio-ricotta",
     sources: ["CAT26", "LABEL"],
   },
   {
@@ -533,7 +533,7 @@ export const products: Product[] = [
     sizes: ["180 ml"],
     seals: ["jalav-israel"],
     shape: "tub",
-    image: "dip-aceituna",
+    image: "studio-dip-aceituna",
     sources: ["CAT26", "LABEL"],
   },
 
@@ -548,7 +548,7 @@ export const products: Product[] = [
     variants: [{ name: "Maíz con Queso", bg: "#F4D57A", ink: "#1F3C8F", accent: "#E9B949" }],
     sizes: ["9 und."],
     shape: "arepas",
-    image: "arepa-maiz-queso",
+    image: "studio-arepa-maiz-con-queso",
     sources: ["CAT26", "CAT22"],
   },
   {
@@ -561,7 +561,7 @@ export const products: Product[] = [
     variants: [{ name: "Maíz", bg: "#F6DF8E", ink: "#3B5E1F", accent: "#EFC650" }],
     sizes: ["12 und."],
     shape: "arepas",
-    image: "arepa-maiz",
+    image: "studio-arepa-maiz",
     sources: ["CAT26"],
   },
   {
@@ -574,7 +574,7 @@ export const products: Product[] = [
     variants: [{ name: "Yuca con Queso", bg: "#F3E8C8", ink: "#2C6E8F", accent: "#EADBA8" }],
     sizes: ["12 und."],
     shape: "arepas",
-    image: "arepa-yuca-queso",
+    image: "studio-arepa-yuca-con-queso",
     sources: ["CAT26", "CAT22"],
   },
   {
@@ -587,7 +587,7 @@ export const products: Product[] = [
     variants: [{ name: "Yuca", bg: "#F1E6CC", ink: "#7A2E2E", accent: "#E8D9A9" }],
     sizes: ["12 und."],
     shape: "arepas",
-    image: "arepa-yuca",
+    image: "studio-arepa-yuca",
     sources: ["CAT26", "CAT22"],
   },
   {
@@ -600,7 +600,7 @@ export const products: Product[] = [
     variants: [{ name: "Queso y Pesto", bg: "#E9E3C2", ink: "#2F5A1E", accent: "#DCCF94" }],
     sizes: ["12 und."],
     shape: "arepas",
-    image: "arepa-yuca-pesto",
+    image: "studio-arepa-yuca-queso-pesto",
     sources: ["CAT26"],
   },
   {
@@ -613,7 +613,7 @@ export const products: Product[] = [
     variants: [{ name: "Plátano con Queso", bg: "#E9A43A", ink: "#2C6E8F", accent: "#D98B22" }],
     sizes: ["12 und."],
     shape: "arepas",
-    image: "arepa-platano-queso",
+    image: "studio-arepa-platano-con-queso",
     sources: ["CAT26", "CAT22"],
   },
   {
@@ -626,7 +626,7 @@ export const products: Product[] = [
     variants: [{ name: "Zanahoria - Chía", bg: "#EE9142", ink: "#2C6E8F", accent: "#E07A2A" }],
     sizes: ["12 und."],
     shape: "arepas",
-    image: "arepa-zanahoria-chia",
+    image: "studio-arepa-zanahoria-chia",
     sources: ["CAT26", "CAT22"],
   },
   {
@@ -639,7 +639,7 @@ export const products: Product[] = [
     variants: [{ name: "Maíz", bg: "#F3C93F", ink: "#2C4E1E", accent: "#F7DE84" }],
     sizes: ["10 und."],
     shape: "tortillas",
-    image: "tortillas",
+    image: "studio-tortillas-de-maiz",
     sources: ["CAT26"],
   },
 
@@ -689,7 +689,7 @@ export const products: Product[] = [
     highlights: ["Hecho con avena integral", "100% natural", "Sin conservantes", "Fuente de fibra"],
     seals: ["kosher"],
     shape: "jar",
-    image: "granola",
+    image: "studio-granola",
     sources: ["CAT26", "LABEL"],
   },
 
@@ -709,7 +709,7 @@ export const products: Product[] = [
     ],
     sizes: ["Granos 450 g", "Molido 225 g · 450 g", "Turco 225 g · 450 g"],
     shape: "bag",
-    image: "cafe",
+    image: "studio-cafe-artesanal",
     sources: ["CAT26", "CAT22"],
   },
 
@@ -758,7 +758,7 @@ export const products: Product[] = [
     sizes: ["10 oz"],
     seals: ["kosher"],
     shape: "tray",
-    image: "olivas-con-ou",
+    image: "studio-aceitunas-condimentadas",
     sources: ["CAT26", "LABEL"],
   },
 
@@ -774,7 +774,7 @@ export const products: Product[] = [
     variants: [{ name: "Mix Sopero", bg: "#9CCB3B", ink: "#1E3510", accent: "#F0A13A" }],
     sizes: ["1 kilo"],
     shape: "vacuum",
-    image: "finca-mix",
+    image: "studio-mix-sopero",
     sources: ["CAT26", "CAT22"],
   },
   {
@@ -787,7 +787,7 @@ export const products: Product[] = [
     variants: [{ name: "Yuca", bg: "#9CCB3B", ink: "#1E3510", accent: "#F4EEDC" }],
     sizes: ["1 kilo"],
     shape: "vacuum",
-    image: "finca-yuca",
+    image: "studio-yuca-al-vacio",
     sources: ["CAT26", "CAT22"],
   },
   {
@@ -800,7 +800,7 @@ export const products: Product[] = [
     variants: [{ name: "Zapallo", bg: "#9CCB3B", ink: "#1E3510", accent: "#F2A22E" }],
     sizes: ["1 kilo"],
     shape: "vacuum",
-    image: "finca-zapallo",
+    image: "studio-zapallo-al-vacio",
     sources: ["CAT26", "CAT22"],
   },
   {
@@ -813,7 +813,7 @@ export const products: Product[] = [
     variants: [{ name: "Limón", bg: "#D7E84A", ink: "#1E3510", accent: "#F6F8D8" }],
     sizes: ["Botella"],
     shape: "bottle",
-    image: "limon",
+    image: "studio-limon-exprimido",
     sources: ["CAT26"],
   },
 
@@ -836,7 +836,7 @@ export const products: Product[] = [
     sizes: ["Congelada"],
     highlights: ["Sin lácteos"],
     shape: "soup",
-    image: "sopa-tomate",
+    image: "studio-sopas",
     sources: ["CAT26"],
   },
 
@@ -856,7 +856,7 @@ export const products: Product[] = [
     sizes: ["75 g"],
     highlights: ["Sin azúcar"],
     shape: "bag",
-    image: "fruta-manzana-roja",
+    image: "studio-fruta-seca",
     sources: ["CAT26"],
   },
 
@@ -875,7 +875,7 @@ export const products: Product[] = [
     ],
     sizes: ["225 g"],
     shape: "bag",
-    image: "harina-yuca",
+    image: "studio-harinas",
     sources: ["CAT26"],
   },
 ];
