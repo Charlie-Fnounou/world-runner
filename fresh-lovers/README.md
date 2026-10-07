@@ -36,12 +36,13 @@ docs/fresh-lovers-design-direction.md   Investigación y dirección de diseño
 
 ## Editar productos
 
-Todo sale de `src/data/catalog.ts`. Para añadir fotografía real, colocar el archivo en
-`public/products/` y completar el campo `image` del producto (el slot ya existe).
+Todo sale de `src/data/catalog.ts`. Las fotos viven en `public/products/` (recortes del
+catálogo 2026) y `public/studio/` (fotos de estudio), y se registran en `src/data/photos.ts`.
+Cada producto usa su foto de estudio en `image`; cada sabor puede tener su propia foto en
+`variants[].photo`.
 
 ## Antes de publicar
 
 - Confirmar que **6864-4453** (teléfono de las etiquetas) es el WhatsApp comercial.
-- Reemplazar el logo redibujado (`Logo.tsx`) por el vector oficial y añadir el arte real del sello kosher.
-- Confirmar qué SKUs de Yogurt Griego ya están en anaqueles (vienen de etiquetas 2026, no del catálogo).
-- Añadir fotografía de producto en alta resolución (opcional; el sistema SVG funciona sin ella).
+- Cambiar el logo trazado del catálogo (`src/lib/logo.ts`) por el vector oficial si existe.
+- Confirmar qué SKUs de Yogurt Griego ya están en anaqueles (vienen de etiquetas 2026, no del catálogo) y conseguir una foto real de su empaque.
