@@ -119,7 +119,7 @@ export function CatalogBrowser() {
 
   return (
     <div>
-      <div className="sticky top-16 z-20 -mx-[var(--gutter)] mt-8 bg-paper/90 px-[var(--gutter)] pb-4 pt-4 backdrop-blur-md md:top-20">
+      <div className="catalog-bar sticky top-16 z-20 -mx-[var(--gutter)] mt-8 border-b border-ink/10 bg-paper px-[var(--gutter)] pb-4 pt-4 md:top-20">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div role="group" aria-label="Filtrar por categoría" className="no-scrollbar -mx-[var(--gutter)] flex gap-2 overflow-x-auto px-[var(--gutter)] md:mx-0 md:flex-wrap md:px-0">
             {[{ slug: "all" as const, name: "Todo" }, ...categories].map((c) => (

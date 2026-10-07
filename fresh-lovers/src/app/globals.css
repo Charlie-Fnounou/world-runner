@@ -107,3 +107,11 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* catalog filter bar follows the header when it hides on scroll */
+.catalog-bar {
+  transition: top 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+html[data-header-hidden] .catalog-bar {
+  top: 0;
+}

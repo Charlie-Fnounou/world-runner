@@ -224,6 +224,12 @@ export function Header() {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
+  // let sticky bars below the header (catalog filters) slide up with it
+  const headerOff = hidden && !open && !mega;
+  useEffect(() => {
+    document.documentElement.toggleAttribute("data-header-hidden", headerOff);
+  }, [headerOff]);
+
   // hover intent: open immediately, close after a short grace period
   const openMega = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
