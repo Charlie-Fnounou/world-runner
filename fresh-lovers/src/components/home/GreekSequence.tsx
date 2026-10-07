@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
-import { AnimatePresence, motion, useMotionValueEvent, useScroll, useTransform } from "motion/react";
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, useInView, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { ProductPhoto } from "@/components/ProductPhoto";
 import { ArrowIcon } from "@/components/Icons";
 import { cartoucheClipPath } from "@/lib/cartouche";
@@ -11,40 +11,46 @@ import { getProduct } from "@/data/catalog";
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 /**
- * Pinned flavour sequence for Yogurt Copa (real catalog photos per flavour).
- * Plain vertical scroll — flavour buttons jump to the matching scroll position.
+ * Flavour showcase for Yogurt Copa (real catalog photos per flavour).
+ * One screen tall and never pinned: flavours rotate on their own while the
+ * section is on screen, and the buttons pick one directly.
  */
 export function GreekSequence() {
   const product = getProduct("yogurt-copa")!;
   const flavours = product.variants;
   const ref = useRef<HTMLElement>(null);
   const [i, setI] = useState(0);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+  const [paused, setPaused] = useState(false);
+  const reduce = useReducedMotion();
+  const inView = useInView(ref, { amount: 0.4 });
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
 
-  useMotionValueEvent(scrollYProgress, "change", (p) => {
-    setI(Math.min(flavours.length - 1, Math.max(0, Math.floor(p * flavours.length * 0.999))));
-  });
+  useEffect(() => {
+    if (!inView || paused || reduce) return;
+    const t = setTimeout(() => setI((n) => (n + 1) % flavours.length), 3200);
+    return () => clearTimeout(t);
+  }, [i, inView, paused, reduce, flavours.length]);
 
-  const ring = useTransform(scrollYProgress, [0, 1], [0, 160]);
+  const ring = useTransform(scrollYProgress, [0, 1], [-40, 120]);
   const v = flavours[i];
 
-  const jump = (n: number) => {
-    const el = ref.current;
-    if (!el) return;
-    const top = el.getBoundingClientRect().top + window.scrollY;
-    const span = el.offsetHeight - window.innerHeight;
-    window.scrollTo({ top: top + span * ((n + 0.5) / flavours.length), behavior: "smooth" });
-  };
-
   return (
-    <section ref={ref} aria-labelledby="copa-title" className="relative" style={{ height: `${flavours.length * 70 + 100}svh` }}>
+    <section
+      ref={ref}
+      aria-labelledby="copa-title"
+      className="relative"
+      onPointerEnter={() => setPaused(true)}
+      onPointerLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
+    >
       <svg width="0" height="0" className="absolute" aria-hidden="true">
         <clipPath id="copa-cartouche" clipPathUnits="objectBoundingBox">
           <path d={cartoucheClipPath(0.86)} />
         </clipPath>
       </svg>
       <motion.div
-        className="sticky top-0 flex h-[100svh] flex-col overflow-hidden"
+        className="relative flex min-h-[100svh] flex-col overflow-hidden"
         animate={{ backgroundColor: v.bg, color: v.ink }}
         transition={{ duration: 0.8, ease: EASE }}
       >
@@ -112,7 +118,7 @@ export function GreekSequence() {
               <li key={f.name}>
                 <button
                   type="button"
-                  onClick={() => jump(n)}
+                  onClick={() => setI(n)}
                   aria-current={n === i}
                   className={`font-display text-[1.1rem] italic transition-opacity md:text-[1.3rem] ${n === i ? "opacity-100" : "opacity-45 hover:opacity-80"}`}
                 >

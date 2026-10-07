@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useLayoutEffect, useRef, useState } from "react";
-import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "motion/react";
+import { useRef, useState } from "react";
+import { motion, useMotionValueEvent, useScroll, useTransform, type MotionValue } from "motion/react";
 import { photos, type PhotoKey } from "@/data/photos";
 
 type Item = { photo: PhotoKey; name: string; detail: string; href: string; bg: string; ink: string };
@@ -31,7 +31,7 @@ function Card({ it, n, progress }: { it: Item; n: number; progress: MotionValue<
     <Link
       href={it.href}
       draggable={false}
-      className="group relative flex h-full w-[80vw] shrink-0 flex-col overflow-hidden rounded-[2rem] sm:w-[48vw] md:w-[34vw]"
+      className="group relative flex h-full w-[80vw] shrink-0 snap-start flex-col overflow-hidden rounded-[2rem] sm:w-[48vw] md:w-[34vw]"
       style={{ backgroundColor: it.bg, color: it.ink }}
     >
       <div className="relative min-h-0 flex-1 overflow-hidden">
@@ -62,92 +62,73 @@ function Card({ it, n, progress }: { it: Item; n: number; progress: MotionValue<
 }
 
 /**
- * Reel-style sequence: vertical scroll drives a horizontal track of product photos.
- * The section pins while the track crosses the screen; scrolling stays native.
- * With reduced motion it becomes a plain horizontal swipe rail.
+ * Product reel: a native horizontal rail of product photos. Page scroll is never
+ * held — swipe, trackpad or the arrows move the rail, and the photos drift with it.
  */
 export function ProductReel() {
-  const reduce = useReducedMotion();
-  const section = useRef<HTMLElement>(null);
-  const track = useRef<HTMLDivElement>(null);
-  const [distance, setDistance] = useState(0);
+  const rail = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
+  const { scrollXProgress } = useScroll({ container: rail });
+  const wordX = useTransform(scrollXProgress, [0, 1], ["0%", "-35%"]);
+  const bar = useTransform(scrollXProgress, [0, 1], ["0%", "100%"]);
 
-  useLayoutEffect(() => {
-    const measure = () => {
-      if (!track.current) return;
-      setDistance(Math.max(0, track.current.scrollWidth - window.innerWidth));
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    if (track.current) ro.observe(track.current);
-    window.addEventListener("resize", measure);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", measure);
-    };
-  }, []);
-
-  const { scrollYProgress } = useScroll({ target: section, offset: ["start start", "end end"] });
-  const smooth = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.4 });
-  const x = useTransform(smooth, [0, 1], [0, -distance]);
-  const wordX = useTransform(smooth, [0, 1], ["0%", "-35%"]);
-  const bar = useTransform(smooth, [0, 1], ["0%", "100%"]);
-
-  useMotionValueEvent(scrollYProgress, "change", (p) =>
+  useMotionValueEvent(scrollXProgress, "change", (p) =>
     setIndex(Math.min(items.length - 1, Math.round(p * (items.length - 1)))),
   );
 
-  if (reduce) {
-    return (
-      <section aria-labelledby="reel-title" className="bg-paper py-20">
-        <h2 id="reel-title" className="font-display gutter text-[14vw] leading-[0.85] md:text-[7vw]">
-          De nuestra <em>cocina</em>
-        </h2>
-        <div className="no-scrollbar mt-10 flex h-[72svh] gap-4 overflow-x-auto px-[var(--gutter)]">
-          {items.map((it, n) => (
-            <Card key={it.photo} it={it} n={n} progress={scrollYProgress} />
-          ))}
-        </div>
-      </section>
-    );
-  }
+  const step = (dir: 1 | -1) => {
+    const el = rail.current;
+    const card = el?.querySelector("a");
+    if (!el || !card) return;
+    el.scrollBy({ left: dir * (card.getBoundingClientRect().width + 16), behavior: "smooth" });
+  };
+
+  const arrow =
+    "grid h-11 w-11 place-items-center rounded-full border border-ink/25 transition-colors hover:border-ink hover:bg-ink hover:text-paper disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-ink";
 
   return (
-    <section ref={section} aria-labelledby="reel-title" className="relative bg-paper" style={{ height: `calc(100svh + ${distance}px)` }}>
-      <div className="sticky top-0 flex h-[100svh] flex-col overflow-hidden">
-        <motion.p
-          aria-hidden="true"
-          style={{ x: wordX, WebkitTextStroke: "1px rgba(20,18,16,.16)" }}
-          className="font-display pointer-events-none absolute bottom-[3svh] left-0 whitespace-nowrap text-[28vw] italic leading-none text-transparent md:text-[18vw]"
-        >
-          calidad y sabor · calidad y sabor ·
-        </motion.p>
+    <section aria-labelledby="reel-title" className="relative overflow-hidden bg-paper py-20 md:py-24">
+      <motion.p
+        aria-hidden="true"
+        style={{ x: wordX, WebkitTextStroke: "1px rgba(20,18,16,.16)" }}
+        className="font-display pointer-events-none absolute bottom-6 left-0 whitespace-nowrap text-[28vw] italic leading-none text-transparent md:text-[18vw]"
+      >
+        calidad y sabor · calidad y sabor ·
+      </motion.p>
 
-        <div className="gutter relative z-10 flex items-end justify-between gap-6 pt-20 md:pt-24">
-          <div>
-            <p className="kicker text-ink/55">Productos · desliza ↓</p>
-            <h2 id="reel-title" className="font-display mt-2 text-[12vw] leading-[0.85] tracking-[-0.02em] md:text-[5.6vw]">
-              De nuestra <em>cocina</em>
-            </h2>
-          </div>
-          <p className="kicker shrink-0 text-ink/55" aria-live="polite">
+      <div className="gutter relative z-10 flex items-end justify-between gap-6">
+        <div>
+          <p className="kicker text-ink/55">Productos · desliza →</p>
+          <h2 id="reel-title" className="font-display mt-2 text-[12vw] leading-[0.85] tracking-[-0.02em] md:text-[5.6vw]">
+            De nuestra <em>cocina</em>
+          </h2>
+        </div>
+        <div className="flex shrink-0 items-center gap-3">
+          <p className="kicker text-ink/55" aria-live="polite">
             {String(index + 1).padStart(2, "0")} / {String(items.length).padStart(2, "0")}
           </p>
+          <button type="button" aria-label="Anterior" onClick={() => step(-1)} disabled={index === 0} className={`${arrow} hidden md:grid`}>
+            ←
+          </button>
+          <button type="button" aria-label="Siguiente" onClick={() => step(1)} disabled={index === items.length - 1} className={`${arrow} hidden md:grid`}>
+            →
+          </button>
         </div>
+      </div>
 
-        <div className="relative z-10 flex flex-1 items-center py-6">
-          <motion.div ref={track} style={{ x }} className="flex h-[64svh] gap-3 px-[var(--gutter)] md:h-[66svh] md:gap-5">
-            {items.map((it, n) => (
-              <Card key={it.photo} it={it} n={n} progress={smooth} />
-            ))}
-          </motion.div>
-        </div>
+      <div
+        ref={rail}
+        style={{ scrollPaddingInline: "var(--gutter)" }}
+        className="no-scrollbar relative z-10 mt-8 flex h-[64svh] snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain px-[var(--gutter)] md:mt-10 md:h-[66svh] md:gap-5"
+      >
+        {items.map((it, n) => (
+          <Card key={it.photo} it={it} n={n} progress={scrollXProgress} />
+        ))}
+      </div>
 
-        <div className="gutter relative z-10 pb-24 md:pb-8">
-          <div className="h-px w-full bg-ink/15">
-            <motion.div style={{ width: bar }} className="h-px bg-ink" />
-          </div>
+      <div className="gutter relative z-10 mt-6">
+        <div className="h-px w-full bg-ink/15">
+          <motion.div style={{ width: bar }} className="h-px bg-ink" />
         </div>
       </div>
     </section>
