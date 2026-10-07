@@ -232,8 +232,8 @@ export const products: Product[] = [
         accent: "#E7B43C",
         ingredients: `Leche pasteurizada, ${YOGURT_CULTURES}, fresas, banana, azúcar, saborizante.`,
       },
-      { name: "Copa · vainilla", photo: "griego-copa-vainilla", bg: "#F1E3BF", ink: "#7A5A22", accent: "#C9A464", note: "Copa 150 ml" },
-      { name: "Copa · fresa", photo: "griego-copa-fresa", bg: "#F6C3CB", ink: "#A3263F", accent: "#E06A80", note: "Copa 150 ml" },
+      { name: "Copa · vainilla", photo: "studio-griego-copa-vainilla", bg: "#F1E3BF", ink: "#7A5A22", accent: "#C9A464", note: "Copa 150 ml" },
+      { name: "Copa · fresa", photo: "studio-griego-copa-fresa", bg: "#F6C3CB", ink: "#A3263F", accent: "#E06A80", note: "Copa 150 ml" },
       { name: "470 ml · natural", photo: "griego-470-natural", bg: "#C3D2E1", ink: "#2F4A63", accent: "#8FA8C0", note: "Envase 470 ml" },
     ],
     sizes: ["Copa 150 ml", "Pouch 250 ml", "470 ml"],
@@ -471,6 +471,7 @@ export const products: Product[] = [
       },
       {
         name: "con Za'atar",
+        photo: "studio-labne-zaatar",
         bg: "#4B50C2",
         ink: "#FFFFFF",
         accent: "#9BA84A",
