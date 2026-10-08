@@ -16,7 +16,7 @@ const BRAKE = 760;
 const REV_ACC = 360;
 const REV_MAX = 140;
 const DRAG = 1.48;
-const DRAG_OFF = 4.6;
+const DRAG_OFF = 3.8;
 const TURN = 3.5;
 const GRIP = 11;
 const GRIP_HB = 1.7;
@@ -134,7 +134,7 @@ export function createRace(track: Track, cpuFlags: boolean[], rand: () => number
       finishPlace: null,
       ghost: false,
       boost: 0,
-      skill: 0.84 + rand() * 0.14,
+      skill: 0.8 + rand() * 0.15,
       lineBias: (rand() - 0.5) * 0.5,
       stuck: 0,
       reverse: 0,

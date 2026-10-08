@@ -63,8 +63,8 @@ export default function SpeedDuelArt({ className }: { className?: string }) {
       </g>
       {/* tumbleweed */}
       <g stroke="#3d1407" strokeWidth="2" fill="none" opacity="0.9">
-        <circle cx="300" cy="268" r="12" />
-        <path d="M290 262 Q300 276 312 262 M292 274 Q300 258 310 274" />
+        <circle cx="236" cy="270" r="12" />
+        <path d="M226 264 Q236 278 248 264 M228 276 Q236 260 246 276" />
       </g>
       {/* poster frame */}
       <rect x="6" y="6" width="388" height="288" fill="none" stroke="#fff2df" strokeWidth="2" opacity="0.35" />

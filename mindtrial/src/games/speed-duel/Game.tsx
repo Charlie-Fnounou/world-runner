@@ -328,7 +328,7 @@ function Stage({ view, players }: { view: View | null; players: PlayerConfig[] }
           <p className="font-mono text-xs uppercase tracking-[0.35em] opacity-80 sm:text-sm">Round {view.round}</p>
           <h2
             className="font-display font-black uppercase leading-[0.9] tracking-tight"
-            style={{ fontSize: "clamp(2.2rem, 9vmin, 6rem)", color: ACCENT, textShadow: `0 4px 0 ${ACCENT2}` }}
+            style={{ fontSize: "clamp(2rem, min(9vmin, 11vw), 6rem)", color: ACCENT, textShadow: `0 4px 0 ${ACCENT2}` }}
           >
             {info.title}
           </h2>
@@ -408,7 +408,7 @@ function Signal({ view }: { view: View }) {
       <h2
         key={view.cueSerial}
         className="sd-slam font-display font-black uppercase leading-none"
-        style={{ fontSize: "clamp(4rem, 20vmin, 13rem)", color: INK, textShadow: `0 6px 0 ${ACCENT2}, 0 0 40px ${ACCENT}` }}
+        style={{ fontSize: "clamp(3rem, min(20vmin, 22vw), 13rem)", color: INK, textShadow: `0 6px 0 ${ACCENT2}, 0 0 40px ${ACCENT}` }}
       >
         DRAW!
       </h2>
@@ -417,7 +417,7 @@ function Signal({ view }: { view: View }) {
         <p className="sd-breathe font-display font-black uppercase tracking-[0.2em] opacity-70" style={{ fontSize: "clamp(1.6rem, 6vmin, 3.5rem)" }}>
           Steady…
         </p>
-        <p className="mt-2 font-mono text-xs uppercase tracking-[0.3em] opacity-60">{ruleShort}</p>
+        <p className="mt-2 font-mono text-xs uppercase tracking-[0.3em] opacity-80">{ruleShort}</p>
       </div>
     );
   }
@@ -443,7 +443,7 @@ function Signal({ view }: { view: View }) {
         <p className="mt-3 font-display text-lg font-black uppercase tracking-[0.2em] sm:text-2xl" style={{ color: lamp ? fill : INK, opacity: lamp ? 1 : 0.6 }}>
           {lamp ? lamp.toUpperCase() : "Watch the lamp"}
         </p>
-        <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.3em] opacity-60">{ruleShort}</p>
+        <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.3em] opacity-80">{ruleShort}</p>
       </div>
     );
   }
@@ -463,12 +463,12 @@ function Signal({ view }: { view: View }) {
           <span
             key={view.cueSerial}
             className={`block font-display font-black uppercase leading-none ${cue ? "sd-pop" : ""}`}
-            style={{ fontSize: "clamp(2.6rem, 13vmin, 8rem)", color: live ? INK : "#ffe1b8", textShadow: live ? `0 0 30px ${ACCENT}` : "0 3px 0 #3a1a08" }}
+            style={{ fontSize: "clamp(2.2rem, min(13vmin, 15vw), 8rem)", color: live ? INK : "#ffe1b8", textShadow: live ? `0 0 30px ${ACCENT}` : "0 3px 0 #3a1a08" }}
           >
             {cue ? cue.text : "· · ·"}
           </span>
         </div>
-        <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.3em] opacity-60">{ruleShort}</p>
+        <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.3em] opacity-80">{ruleShort}</p>
       </div>
     );
   }
@@ -492,9 +492,15 @@ function Signal({ view }: { view: View }) {
         className="sd-pop mt-2 font-display font-black uppercase tracking-[0.15em]"
         style={{ fontSize: live ? "clamp(2rem, 8vmin, 4.5rem)" : "clamp(1rem, 3.5vmin, 1.6rem)", color: live ? INK : "#ffd9b0", opacity: live ? 1 : 0.75 }}
       >
-        {live ? "DING!" : cue ? <span className="font-serif normal-case italic tracking-normal">({cue.text})</span> : "Listen…"}
+        {live ? "DING!" : cue ? (
+          <span className="font-serif normal-case italic tracking-normal" style={{ color: INK, textShadow: "0 2px 6px rgba(43,20,8,0.8)" }}>
+            ({cue.text})
+          </span>
+        ) : (
+          "Listen…"
+        )}
       </p>
-      <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.3em] opacity-60">{ruleShort}</p>
+      <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.3em] opacity-80">{ruleShort}</p>
     </div>
   );
 }
@@ -522,6 +528,7 @@ function Zone({
   else if (drawn) status = `${shot} ms`;
   else if (phase === "wait") status = "Hold…";
   else if (phase === "signal") status = human ? "FIRE!" : "…";
+  else if (phase === "result") status = "Too slow";
   else status = human ? `Press ${player.controls.actionLabel} or tap` : "CPU";
 
   return (

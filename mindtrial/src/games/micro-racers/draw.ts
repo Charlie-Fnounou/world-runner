@@ -627,7 +627,7 @@ export function drawFrame(
     const pos = st.indexOf(c.id) + 1;
     const p = players[c.id];
     const tx = c.x;
-    const ty = c.y - 24;
+    const ty = c.y < 40 ? c.y + 24 : c.y - 24;
     g.globalAlpha = c.ghost ? 0.6 : 1;
     g.fillStyle = p.color;
     g.strokeStyle = INK;

@@ -56,7 +56,7 @@ export default function MicroRacersArt({ className }: { className?: string }) {
       {/* checkered start */}
       <rect x="150" y="141" width="16" height="58" fill="url(#mr-check)" transform="rotate(8 158 170)" />
       {/* boost chevrons */}
-      <g fill="none" stroke="#ff2f4f" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" transform="translate(268 222) rotate(-38)">
+      <g fill="none" stroke="#ff2f4f" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" transform="translate(258 196) rotate(-25)">
         <path d="M-14 -10 L-5 0 L-14 10" opacity="0.5" />
         <path d="M-2 -10 L7 0 L-2 10" opacity="0.75" />
         <path d="M10 -10 L19 0 L10 10" />
