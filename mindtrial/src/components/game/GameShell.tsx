@@ -7,6 +7,7 @@ import type { GameMeta, GameProps, GameResult, PlayerConfig } from "@/lib/types"
 import { makeRoster } from "@/lib/players";
 import { countPlay, getRecord, submitScore, type RecordEntry } from "@/lib/records";
 import { formatRecord } from "@/lib/format";
+import { readableOn } from "@/lib/color";
 import { isMuted, onMuteChange, setMuted, sfx } from "@/lib/sound";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 import { t } from "@/lib/i18n";
@@ -36,15 +37,17 @@ interface Props {
  */
 export function GameShell({ meta, Game, party }: Props) {
   const reducedMotion = useReducedMotion();
-  const [phase, setPhase] = useState<Phase>("intro");
+  // Party Mode already showed its own round intro, so it jumps straight to the countdown.
+  const [phase, setPhase] = useState<Phase>(party ? (reducedMotion ? "playing" : "countdown") : "intro");
   const [paused, setPaused] = useState(false);
-  const [runId, setRunId] = useState(0);
+  const [runId, setRunId] = useState(party ? 1 : 0);
   const [result, setResult] = useState<GameResult | null>(null);
   const [newBest, setNewBest] = useState(false);
-  const [record, setRecord] = useState<RecordEntry | undefined>(undefined);
+  // GameShell only ever renders on the client (GameLoader mounts it after a dynamic import).
+  const [record, setRecord] = useState<RecordEntry | undefined>(() => getRecord(meta.slug));
   const [humans, setHumans] = useState(meta.players.min);
   const [count, setCount] = useState(3);
-  const [muted, setMutedState] = useState(false);
+  const [muted, setMutedState] = useState(() => isMuted());
   const [fullscreen, setFullscreen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const finishedRef = useRef(false);
@@ -56,11 +59,7 @@ export function GameShell({ meta, Game, party }: Props) {
     return makeRoster(humans);
   }, [party, humans, meta.cpuOpponents, meta.cpuFill]);
 
-  useEffect(() => {
-    setRecord(getRecord(meta.slug));
-    setMutedState(isMuted());
-    return onMuteChange(setMutedState);
-  }, [meta.slug]);
+  useEffect(() => onMuteChange(setMutedState), []);
 
   useEffect(() => {
     const onFs = () => setFullscreen(!!document.fullscreenElement);
@@ -86,13 +85,15 @@ export function GameShell({ meta, Game, party }: Props) {
   // 3-2-1 countdown for arcade games so everyone can find their keys.
   useEffect(() => {
     if (phase !== "countdown") return;
-    if (count === 0) {
-      sfx.good();
-      setPhase("playing");
-      return;
-    }
     sfx.tick();
-    const id = setTimeout(() => setCount((c) => c - 1), 650);
+    const id = setTimeout(() => {
+      if (count <= 1) {
+        sfx.good();
+        setPhase("playing");
+      } else {
+        setCount(count - 1);
+      }
+    }, 650);
     return () => clearTimeout(id);
   }, [phase, count]);
 
@@ -245,7 +246,7 @@ export function GameShell({ meta, Game, party }: Props) {
         {phase === "countdown" && (
           <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center">
             <div key={count} className="animate-pop font-display text-[22vmin] font-black leading-none drop-shadow-[0_6px_0_rgba(0,0,0,0.35)]" style={{ color: theme.accent }}>
-              {count > 0 ? count : "GO"}
+              {count}
             </div>
           </div>
         )}
@@ -256,7 +257,7 @@ export function GameShell({ meta, Game, party }: Props) {
               <p className="font-mono text-xs uppercase tracking-[0.3em] opacity-70">{t.shell.paused}</p>
               <p className="mt-2 font-display text-4xl font-black">Take a breath.</p>
               <div className="mt-6 flex flex-col gap-3">
-                <button autoFocus className="btn" style={{ background: theme.accent, color: theme.ink, borderColor: theme.ink }} onClick={() => setPaused(false)}>
+                <button autoFocus className="btn" style={{ background: theme.accent, color: readableOn(theme.accent), borderColor: theme.ink }} onClick={() => setPaused(false)}>
                   <Play size={18} /> {t.shell.resume}
                 </button>
                 <button className="btn" onClick={restart}>
@@ -350,10 +351,9 @@ function IntroCard({
 }) {
   const { theme } = meta;
   const startRef = useRef<HTMLButtonElement>(null);
-  const [coarse, setCoarse] = useState(false);
+  const [coarse] = useState(() => window.matchMedia("(pointer: coarse)").matches);
   useEffect(() => {
     startRef.current?.focus();
-    setCoarse(window.matchMedia("(pointer: coarse)").matches);
   }, []);
   const options = Array.from({ length: meta.players.max - meta.players.min + 1 }, (_, i) => meta.players.min + i);
 
@@ -378,7 +378,7 @@ function IntroCard({
             <ol className="mt-3 space-y-2 text-[15px] leading-snug">
               {meta.instructions.map((s, i) => (
                 <li key={i} className="flex gap-3">
-                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-bold" style={{ background: theme.accent, color: theme.ink }}>
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-bold" style={{ background: theme.accent, color: readableOn(theme.accent) }}>
                     {i + 1}
                   </span>
                   <span>{s}</span>
@@ -418,7 +418,7 @@ function IntroCard({
                   aria-checked={humans === n}
                   onClick={() => setHumans(n)}
                   className="rounded-full border-2 px-4 py-1.5 text-sm font-bold transition"
-                  style={humans === n ? { background: theme.accent, color: theme.ink, borderColor: theme.accent } : { borderColor: "currentColor", opacity: 0.75 }}
+                  style={humans === n ? { background: theme.accent, color: readableOn(theme.accent), borderColor: theme.accent } : { borderColor: "currentColor", opacity: 0.75 }}
                 >
                   {n === 1 && meta.cpuOpponents ? `1 ${t.shell.vsCpu}` : n === 1 ? "Solo" : `${n} players`}
                 </button>
@@ -437,7 +437,7 @@ function IntroCard({
         <span className="font-mono text-xs opacity-70">
           {!party && meta.record && (record ? `${t.shell.best}: ${formatRecord(meta, record.best)}` : t.shell.noBest)}
         </span>
-        <button ref={startRef} onClick={onStart} className="btn text-lg" style={{ background: theme.accent, color: theme.ink, borderColor: theme.accent, boxShadow: `0 4px 0 0 ${theme.accent2 === theme.ink ? "#000" : theme.accent2}` }}>
+        <button ref={startRef} onClick={onStart} className="btn text-lg" style={{ background: theme.accent, color: readableOn(theme.accent), borderColor: theme.accent, boxShadow: `0 4px 0 0 ${theme.accent2 === theme.ink ? "#000" : theme.accent2}` }}>
           <Play size={20} fill="currentColor" /> {t.shell.start}
         </button>
       </div>
@@ -479,11 +479,11 @@ function EndCard({
 
         {result.scoreLabel && (
           <div className="mt-6 flex flex-wrap items-end gap-x-4 gap-y-2">
-            <span className="font-display text-6xl font-black tabular-nums leading-none" style={{ color: theme.accent }}>
+            <span className="rounded-2xl px-4 py-2 font-display text-5xl font-black tabular-nums leading-none sm:text-6xl" style={{ background: theme.accent, color: readableOn(theme.accent) }}>
               {result.scoreLabel}
             </span>
             {newBest ? (
-              <span className="mb-1 inline-flex animate-pop items-center gap-1 rounded-full px-3 py-1 text-sm font-bold" style={{ background: theme.accent, color: theme.ink }}>
+              <span className="mb-1 inline-flex animate-pop items-center gap-1 rounded-full px-3 py-1 text-sm font-bold" style={{ background: theme.accent, color: readableOn(theme.accent) }}>
                 <Trophy size={14} /> {t.shell.newBest}
               </span>
             ) : (
@@ -513,7 +513,7 @@ function EndCard({
       </div>
       <div className="flex flex-wrap items-center justify-end gap-3 px-6 pb-6 sm:px-8 sm:pb-8">
         {party ? (
-          <button ref={btnRef} onClick={() => party.onDone(result)} className="btn text-lg" style={{ background: theme.accent, color: theme.ink, borderColor: theme.accent }}>
+          <button ref={btnRef} onClick={() => party.onDone(result)} className="btn text-lg" style={{ background: theme.accent, color: readableOn(theme.accent), borderColor: theme.accent }}>
             {t.party.continue} →
           </button>
         ) : (
@@ -521,7 +521,7 @@ function EndCard({
             <Link href="/#games" className="btn">
               <ArrowLeft size={18} /> {t.shell.backToCatalog}
             </Link>
-            <button ref={btnRef} onClick={onReplay} className="btn" style={{ background: theme.accent, color: theme.ink, borderColor: theme.accent }}>
+            <button ref={btnRef} onClick={onReplay} className="btn" style={{ background: theme.accent, color: readableOn(theme.accent), borderColor: theme.accent }}>
               <RotateCcw size={18} /> {t.shell.playAgain}
             </button>
           </>
