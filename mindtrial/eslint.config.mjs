@@ -12,8 +12,6 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
-    // MINDTRIAL is a separate app with its own lint config.
-    "mindtrial/**",
   ]),
 ]);
 
