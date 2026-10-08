@@ -119,10 +119,11 @@ export function formatLength(m: number): string {
   if (m < 0.1 * LY) return `${num(m / AU)} AU`;
   if (m < 1e6 * LY) return `${num(m / LY)} light-years`;
   if (m < 1e9 * LY) return `${num(m / LY / 1e6)} million light-years`;
-  return `${num(m / LY / 1e9)} billion light-years`;
+  if (m < 1e12 * LY) return `${num(m / LY / 1e9)} billion light-years`;
+  return `${num(m / LY / 1e12)} trillion light-years`;
 }
 
 /** Short unit name for the ruler. */
 export function unitHint(n: number): string {
-  return formatLength(10 ** n).replace("light-years", "ly").replace(" million ", "M ").replace(" billion ", "B ");
+  return formatLength(10 ** n).replace("light-years", "ly").replace(" million ", "M ").replace(" billion ", "B ").replace(" trillion ", "T ");
 }

@@ -15,6 +15,15 @@ export interface Level extends LevelGeometry {
 
 const deg = (d: number) => (d * Math.PI) / 180;
 
+/** A closed box sitting on the floor, centred on x. Blasts reach through; balls don't. */
+function cage(cx: number, top: number, half = 60, floorY = 700): WallDef[] {
+  return [
+    { ax: cx - half, ay: top, bx: cx + half, by: top },
+    { ax: cx - half, ay: top, bx: cx - half, by: floorY },
+    { ax: cx + half, ay: top, bx: cx + half, by: floorY },
+  ];
+}
+
 /** Floor plus side walls, shared by most levels. */
 function box(floorY = 700): WallDef[] {
   return [
@@ -49,7 +58,7 @@ export const LEVELS: Level[] = [
     hint: "Dominoes topple into each other. Fill the gap so the last one reaches the star.",
     start: { x: 130, y: 80 },
     walls: box(),
-    targets: [{ x: 790, y: 625 }],
+    targets: [{ x: 785, y: 612 }],
     fixed: [400, 450, 500, 650, 700, 750].map((x) => ({ kind: "domino" as const, x, y: 692, angle: 0 })),
     inventory: { ramp: 1, domino: 2 },
   },
@@ -67,12 +76,7 @@ export const LEVELS: Level[] = [
     name: "Demolition",
     hint: "The star is caged. A bomb's blast reaches through walls.",
     start: { x: 160, y: 80 },
-    walls: [
-      ...box(),
-      { ax: 880, ay: 560, bx: 1020, by: 560 },
-      { ax: 880, ay: 560, bx: 880, by: 700 },
-      { ax: 1020, ay: 560, bx: 1020, by: 700 },
-    ],
+    walls: [...box(), ...cage(950, 560, 70)],
     targets: [{ x: 950, y: 640 }],
     inventory: { ramp: 1, bomb: 1 },
   },
@@ -81,24 +85,24 @@ export const LEVELS: Level[] = [
     name: "Ricochet",
     hint: "One ball, two stars. Bank it off a bumper.",
     start: { x: 220, y: 80 },
-    walls: [...box(), { ax: 760, ay: 260, bx: 1060, by: 260 }],
+    walls: [...box(), { ax: 760, ay: 330, bx: 1060, by: 330 }],
     targets: [
       { x: 520, y: 668 },
-      { x: 910, y: 228 },
+      { x: 910, y: 298 },
     ],
     inventory: { ramp: 2, bumper: 1, spring: 1 },
   },
   {
     id: 7,
     name: "Relay",
-    hint: "Dominoes can push other balls. Pass the baton.",
-    start: { x: 120, y: 80 },
-    walls: [...box(), { ax: 560, ay: 420, bx: 860, by: 420 }, { ax: 860, ay: 420, bx: 860, by: 380 }],
-    balls: [{ x: 830, y: 398 }],
-    fixed: [600, 650, 700, 750].map((x) => ({ kind: "domino" as const, x, y: 412, angle: 0 })),
+    hint: "A falling domino can shove another ball. Pass the baton.",
+    start: { x: 300, y: 80 },
+    walls: [...box(), { ax: 420, ay: 430, bx: 880, by: 430 }],
+    balls: [{ x: 852, y: 408 }],
+    fixed: [560, 610, 660, 710].map((x) => ({ kind: "domino" as const, x, y: 422, angle: 0 })),
     targets: [
-      { x: 700, y: 330 },
-      { x: 1040, y: 160 },
+      { x: 690, y: 330 },
+      { x: 1100, y: 668 },
     ],
     inventory: { ramp: 2, spring: 1, domino: 2 },
   },
@@ -107,16 +111,16 @@ export const LEVELS: Level[] = [
     name: "Chain Gang",
     hint: "Bombs set off nearby bombs. Bridge the gaps to light the whole fuse.",
     start: { x: 140, y: 80 },
-    walls: box(),
+    walls: [...box(), ...cage(720, 520), ...cage(1020, 520)],
     fixed: [
       { kind: "bomb", x: 420, y: 674, angle: 0 },
-      { kind: "bomb", x: 760, y: 674, angle: 0 },
-      { kind: "bomb", x: 1090, y: 674, angle: 0 },
+      { kind: "bomb", x: 720, y: 674, angle: 0 },
+      { kind: "bomb", x: 1020, y: 674, angle: 0 },
     ],
     targets: [
-      { x: 430, y: 520 },
-      { x: 770, y: 520 },
-      { x: 1100, y: 520 },
+      { x: 420, y: 565 },
+      { x: 720, y: 565 },
+      { x: 1020, y: 565 },
     ],
     inventory: { ramp: 1, bomb: 2 },
   },

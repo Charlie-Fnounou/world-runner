@@ -21,7 +21,7 @@ export const RAMP_LEN = 150;
 export const RAMP_R = 5;
 export const SPRING_LEN = 70;
 export const SPRING_R = 7;
-export const SPRING_SPEED = 1050;
+export const SPRING_SPEED = 1250;
 export const BUMPER_R = 24;
 export const BUMPER_KICK = 640;
 export const BOMB_R = 18;
@@ -29,6 +29,8 @@ export const TARGET_R = 20;
 export const BLAST_R = 210;
 export const BLAST_SPEED = 1100;
 export const STAR_BLAST_R = 105;
+/** Bombs within this distance of an explosion go off too. */
+export const CHAIN_R = 180;
 export const WALL_R = 8;
 
 const DOMINO_M = 0.8;
@@ -460,7 +462,8 @@ function collideBodyCirc(w: World, b: Body, c: Circ, first: boolean) {
   b.y = c.y + ny * R;
   const vn = b.vx * nx + b.vy * ny;
   if (c.kind === "bomb") {
-    if (Math.hypot(b.vx, b.vy) > 25) trigger(c);
+    // Only real balls set bombs off (debris would make chains too random).
+    if (b.kind === "ball" && Math.hypot(b.vx, b.vy) > 25) trigger(c);
     if (vn < 0) {
       b.vx -= 1.3 * vn * nx;
       b.vy -= 1.3 * vn * ny;
@@ -661,7 +664,7 @@ export function explode(w: World, c: Circ) {
   }
   for (const o of w.circs) {
     if (o === c || !o.alive || o.kind !== "bomb") continue;
-    if (Math.hypot(o.x - c.x, o.y - c.y) < BLAST_R * 0.75) trigger(o, 0.14);
+    if (Math.hypot(o.x - c.x, o.y - c.y) < CHAIN_R) trigger(o, 0.14);
   }
   for (let ti = 0; ti < w.targets.length; ti++) {
     const t = w.targets[ti];
@@ -746,4 +749,104 @@ export function staticSegs(walls: WallDef[], parts: Part[]) {
     out.push({ ax, ay, bx, by, r: p.kind === "ramp" ? RAMP_R : SPRING_R });
   }
   return out;
+}
+
+/** Squared distance between segments P1Q1 and P2Q2. */
+export function segSegDist(p1x: number, p1y: number, q1x: number, q1y: number, p2x: number, p2y: number, q2x: number, q2y: number): number {
+  const d1x = q1x - p1x;
+  const d1y = q1y - p1y;
+  const d2x = q2x - p2x;
+  const d2y = q2y - p2y;
+  const rx = p1x - p2x;
+  const ry = p1y - p2y;
+  const a = d1x * d1x + d1y * d1y;
+  const e = d2x * d2x + d2y * d2y;
+  const f = d2x * rx + d2y * ry;
+  let s: number;
+  let t: number;
+  if (a < 1e-9 && e < 1e-9) return Math.hypot(rx, ry);
+  if (a < 1e-9) {
+    s = 0;
+    t = Math.min(1, Math.max(0, f / e));
+  } else {
+    const c = d1x * rx + d1y * ry;
+    if (e < 1e-9) {
+      t = 0;
+      s = Math.min(1, Math.max(0, -c / a));
+    } else {
+      const b = d1x * d2x + d1y * d2y;
+      const denom = a * e - b * b;
+      s = denom > 1e-9 ? Math.min(1, Math.max(0, (b * f - c * e) / denom)) : 0;
+      t = (b * s + f) / e;
+      if (t < 0) {
+        t = 0;
+        s = Math.min(1, Math.max(0, -c / a));
+      } else if (t > 1) {
+        t = 1;
+        s = Math.min(1, Math.max(0, (b - c) / a));
+      }
+    }
+  }
+  const cx = p1x + d1x * s - (p2x + d2x * t);
+  const cy = p1y + d1y * s - (p2y + d2y * t);
+  return Math.hypot(cx, cy);
+}
+
+/** Capsule (segment + radius) used for placement overlap checks. */
+export interface Shape {
+  ax: number;
+  ay: number;
+  bx: number;
+  by: number;
+  r: number;
+}
+
+export function partShape(p: Part): Shape {
+  switch (p.kind) {
+    case "ramp":
+    case "spring": {
+      const [ax, ay, bx, by] = segEnds(p);
+      return { ax, ay, bx, by, r: p.kind === "ramp" ? RAMP_R : SPRING_R };
+    }
+    case "bumper":
+      return { ax: p.x, ay: p.y, bx: p.x, by: p.y, r: BUMPER_R };
+    case "bomb":
+      return { ax: p.x, ay: p.y, bx: p.x, by: p.y, r: BOMB_R };
+    default:
+      // Upright domino, trimmed at the base so it may stand on a surface.
+      return { ax: p.x, ay: p.y - 12, bx: p.x, by: p.y - DOMINO_H, r: DOMINO_W / 2 };
+  }
+}
+
+function shapesOverlap(a: Shape, b: Shape, margin = 0) {
+  return segSegDist(a.ax, a.ay, a.bx, a.by, b.ax, b.ay, b.bx, b.by) < a.r + b.r + margin;
+}
+
+/**
+ * Can `cand` sit here? Parts may not overlap dominoes, balls, targets or the
+ * drop point. Round parts and dominoes may not sit inside walls. Ramps and
+ * springs may touch walls and each other (to build chutes).
+ */
+export function placementOk(level: LevelGeometry, parts: Part[], cand: Part): boolean {
+  const s = partShape(cand);
+  const seg = cand.kind === "ramp" || cand.kind === "spring";
+  if (Math.max(s.ax, s.bx) < 0 || Math.min(s.ax, s.bx) > WORLD_W || Math.max(s.ay, s.by) < 0 || Math.min(s.ay, s.by) > WORLD_H) return false;
+  const pts = [{ x: level.start.x, y: level.start.y, r: BALL_R + 10 }, ...(level.balls ?? []).map((b) => ({ x: b.x, y: b.y, r: BALL_R + 4 })), ...level.targets.map((t) => ({ x: t.x, y: t.y, r: TARGET_R }))];
+  for (const p of pts) {
+    if (segSegDist(s.ax, s.ay, s.bx, s.by, p.x, p.y, p.x, p.y) < s.r + p.r) return false;
+  }
+  if (!seg) {
+    for (const w of level.walls) {
+      if (shapesOverlap(s, { ax: w.ax, ay: w.ay, bx: w.bx, by: w.by, r: w.r ?? WALL_R }, -1)) return false;
+    }
+  }
+  for (const o of parts) {
+    if (o.id === cand.id) continue;
+    const oSeg = o.kind === "ramp" || o.kind === "spring";
+    if (seg && oSeg) continue;
+    // Keep a little clearance around dominoes so nothing nudges them at rest.
+    const margin = cand.kind === "domino" || o.kind === "domino" ? 4 : 0;
+    if (shapesOverlap(s, partShape(o), margin)) return false;
+  }
+  return true;
 }
