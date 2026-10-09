@@ -15,7 +15,7 @@ export function GameCard({ game, size = "md", index }: { game: GameMeta; size?: 
       className="group relative flex h-full flex-col overflow-hidden rounded-[22px] border-2 border-ink bg-paper shadow-[0_5px_0_0_var(--color-ink)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_9px_0_0_var(--color-ink)] focus-visible:-translate-y-1"
     >
       <div
-        className={`relative overflow-hidden border-b-2 border-ink ${size === "lg" ? "aspect-[16/10]" : "aspect-[4/3]"}`}
+        className={`relative overflow-hidden border-b-2 border-ink ${size === "lg" ? "aspect-[16/10] lg:aspect-auto lg:min-h-[320px] lg:flex-1" : "aspect-[4/3]"}`}
         style={{ background: game.theme.bg }}
       >
         {Art && <Art className="absolute inset-0 h-full w-full transition duration-500 ease-out group-hover:scale-[1.06]" />}

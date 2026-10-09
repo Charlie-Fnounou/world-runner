@@ -320,7 +320,7 @@ function Setup({
               })}
             </ul>
           </div>
-          <p className="font-mono text-xs text-paper/50">Scoring: 1st place earns {settings.count - 1} pts, last earns 0. Ties share.</p>
+          <p className="font-mono text-xs text-paper/50">Scoring: 1st place earns {settings.count - 1} {settings.count - 1 === 1 ? "pt" : "pts"}, last earns 0. Ties share.</p>
           <button onClick={onStart} className="btn mt-auto bg-amber text-lg text-ink" style={{ borderColor: "#ffbf1f", boxShadow: "0 4px 0 0 #b07f00" }}>
             <Shuffle size={20} /> Shuffle &amp; start
           </button>

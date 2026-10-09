@@ -688,7 +688,9 @@ function buildResult(s: MatchState, players: PlayerConfig[]): GameResult {
   const humansOnWinner = s.fs.filter((f) => f.team === w && f.playerIndex >= 0).length;
   const headline = `${label(w)} ${humansOnWinner > 1 ? "win" : "wins"}!`;
   let subline: string;
-  if (s.golden && s.lastGoal) {
+  if (s.golden && s.score[0] === s.score[1]) {
+    subline = "Sudden-death stalemate — decided on possession.";
+  } else if (s.golden && s.lastGoal) {
     const who = s.lastGoal.scorer >= 0 ? nameOf(s, players, s.lastGoal.scorer) : "";
     subline = s.lastGoal.own ? `Decided by a golden own goal${who ? ` from ${who}` : ""}.` : `Golden goal from ${who}!`;
   } else if (s.score[w] >= 3) {

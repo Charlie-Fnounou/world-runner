@@ -118,6 +118,8 @@ export interface MatchState {
   phase: Phase;
   phaseT: number;
   golden: boolean;
+  /** Seconds spent in golden goal; capped so a stalemate can't stall Party Mode. */
+  goldenT: number;
   winner: Team | null;
   endAfterGoal: boolean;
   possession: [number, number];
@@ -202,6 +204,7 @@ export function createMatch(seats: PlayerSeat[], seed: number): MatchState {
     phase: "kickoff",
     phaseT: 0,
     golden: false,
+    goldenT: 0,
     winner: null,
     endAfterGoal: false,
     possession: [0, 0],
@@ -709,6 +712,8 @@ function checkGoal(s: MatchState) {
   }
 }
 
+const GOLDEN_GOAL_CAP = 60;
+
 /**
  * Advance the match. `inputs[playerIndex]` holds each human's input
  * (CPU seats are ignored and driven by the AI).
@@ -742,7 +747,16 @@ export function step(s: MatchState, inputs: (Input | null)[], rawDt: number) {
 
   if (s.phase === "play") {
     s.elapsed += dt;
-    if (!s.golden) {
+    if (s.golden) {
+      s.goldenT += dt;
+      if (s.goldenT >= GOLDEN_GOAL_CAP) {
+        // Still level after a minute of sudden death: the team with more possession takes it.
+        s.winner = s.possession[0] >= s.possession[1] ? 0 : 1;
+        s.phase = "over";
+        s.events.push({ type: "end", winner: s.winner });
+        return;
+      }
+    } else {
       s.remaining = Math.max(0, s.remaining - dt);
       if (s.remaining <= 0) {
         if (s.score[0] === s.score[1]) {
