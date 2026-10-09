@@ -7,6 +7,8 @@ import { BOOST_LEN, BOOST_WID, H, HUD_H, W, pointAt, project, wrapDist, type Tra
 export const LAPS = 3;
 export const CHECKPOINTS = 16;
 export const FINISH_GRACE = 15;
+/** Hard cap so an idle/AFK race can never stall (e.g. in Party Mode). */
+export const MAX_RACE_TIME = 180;
 export const CAR_R = 12;
 export const CAR_LEN = 30;
 export const CAR_WID = 16;
@@ -435,6 +437,10 @@ export function stepRace(race: Race, inputs: (CarInput | null)[], dt: number): R
   collisions(race, events);
   for (const c of race.cars) checkpoints(race, c, events);
   race.leaderLap = Math.max(...race.cars.map((c) => lapOf(c)));
+  if (race.graceEnd === null && race.time >= MAX_RACE_TIME - FINISH_GRACE) {
+    race.graceEnd = race.time + FINISH_GRACE;
+    race.phase = "finishing";
+  }
   const allDone = race.cars.every((c) => c.finished);
   if (allDone || (race.graceEnd !== null && race.time >= race.graceEnd)) {
     race.phase = "over";

@@ -25,6 +25,7 @@ export const en = {
     mute: "Mute sound",
     unmute: "Unmute sound",
     keyboardRequired: "This game needs a physical keyboard.",
+    keyboardGame: "Keyboard game — each player uses their own keys.",
     finish: "Finish",
   },
   party: {

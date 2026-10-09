@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Smartphone, Users } from "lucide-react";
+import { Keyboard, Smartphone, Users } from "lucide-react";
 import type { GameMeta } from "@/lib/types";
 import { GAME_ART } from "@/games/arts";
 import { readableOn } from "@/lib/color";
@@ -51,6 +51,11 @@ export function GameCard({ game, size = "md", index }: { game: GameMeta; size?: 
           </span>
           {game.cpuOpponents && <span className="rounded-full border-[1.5px] border-ink px-2 py-0.5">vs CPU</span>}
           {game.party && <span className="rounded-full bg-ink px-2 py-0.5 text-paper">Party</span>}
+          {!game.touch && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-amber px-2 py-0.5 text-ink" title="Needs a physical keyboard">
+              <Keyboard size={12} /> Keyboard
+            </span>
+          )}
           {game.touch && (
             <span className="inline-flex items-center gap-1 rounded-full border-[1.5px] border-ink px-2 py-0.5" title="Works on touch screens">
               <Smartphone size={12} /> Touch

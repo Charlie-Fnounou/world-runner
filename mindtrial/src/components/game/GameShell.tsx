@@ -8,6 +8,7 @@ import { makeRoster } from "@/lib/players";
 import { countPlay, getRecord, submitScore, type RecordEntry } from "@/lib/records";
 import { formatRecord } from "@/lib/format";
 import { readableOn } from "@/lib/color";
+import { FEEDBACK_URL } from "@/lib/links";
 import { isMuted, onMuteChange, setMuted, sfx } from "@/lib/sound";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 import { t } from "@/lib/i18n";
@@ -102,7 +103,9 @@ export function GameShell({ meta, Game, party }: Props) {
       if (finishedRef.current) return;
       finishedRef.current = true;
       let best = false;
-      if (!party && meta.record && typeof r.score === "number" && players.filter((p) => !p.cpu).length === 1) {
+      // A zero on a "higher is better" game isn't a record worth celebrating.
+      const meaningful = typeof r.score === "number" && (meta.record?.better === "lower" || r.score > 0);
+      if (!party && meta.record && meaningful && typeof r.score === "number" && players.filter((p) => !p.cpu).length === 1) {
         best = submitScore(meta.slug, r.score, meta.record.better);
         setRecord(getRecord(meta.slug));
       }
@@ -253,7 +256,7 @@ export function GameShell({ meta, Game, party }: Props) {
 
         {phase === "playing" && paused && (
           <Overlay>
-            <div className="w-full max-w-sm animate-pop rounded-3xl p-8 text-center" style={{ background: theme.ink, color: theme.bg }}>
+            <div className="my-auto w-full max-w-sm animate-pop rounded-3xl p-8 text-center" style={{ background: theme.ink, color: theme.bg }}>
               <p className="font-mono text-xs uppercase tracking-[0.3em] opacity-70">{t.shell.paused}</p>
               <p className="mt-2 font-display text-4xl font-black">Take a breath.</p>
               <div className="mt-6 flex flex-col gap-3">
@@ -324,7 +327,7 @@ function IconButton({
 
 function Overlay({ children }: { children: React.ReactNode }) {
   return (
-    <div className="absolute inset-0 z-20 flex items-start justify-center overflow-y-auto bg-black/45 p-4 backdrop-blur-[3px] sm:items-center">
+    <div className="absolute inset-0 z-20 flex items-start justify-center overflow-y-auto bg-black/45 p-4 backdrop-blur-[3px]">
       {children}
     </div>
   );
@@ -427,9 +430,12 @@ function IntroCard({
           </div>
         )}
 
-        {!meta.touch && coarse && (
-          <p className="mt-5 flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2 text-sm">
-            <Keyboard size={16} /> {t.shell.keyboardRequired}
+        {!meta.touch && (
+          <p
+            className="mt-5 flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold"
+            style={coarse ? { background: theme.accent, color: readableOn(theme.accent) } : { background: "color-mix(in srgb, currentColor 10%, transparent)" }}
+          >
+            <Keyboard size={16} /> {coarse ? t.shell.keyboardRequired : t.shell.keyboardGame}
           </p>
         )}
       </div>
@@ -512,6 +518,11 @@ function EndCard({
         )}
       </div>
       <div className="flex flex-wrap items-center justify-end gap-3 px-6 pb-6 sm:px-8 sm:pb-8">
+        {!party && (
+          <a href={FEEDBACK_URL} target="_blank" rel="noopener noreferrer" className="order-last w-full text-right font-mono text-xs underline opacity-60 hover:opacity-100">
+            Feedback on {meta.title}?
+          </a>
+        )}
         {party ? (
           <button ref={btnRef} onClick={() => party.onDone(result)} className="btn text-lg" style={{ background: theme.accent, color: readableOn(theme.accent), borderColor: theme.accent }}>
             {t.party.continue} →

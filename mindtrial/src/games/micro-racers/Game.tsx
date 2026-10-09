@@ -145,8 +145,11 @@ export default function MicroRacers({ players, paused, reducedMotion, onFinish }
     });
     stats.push({ label: "Track", value: race.track.def.name });
     const result: GameResult = {
-      headline: `${winner.name} takes the checkered flag!`,
-      subline: race.cars[winnerIdx].finishTime !== null ? `${LAPS} laps of ${race.track.def.name} in ${fmtSec(race.cars[winnerIdx].finishTime!)}.` : undefined,
+      headline: race.cars[winnerIdx].finishTime !== null ? `${winner.name} takes the checkered flag!` : `${winner.name} leads at the time limit!`,
+      subline:
+        race.cars[winnerIdx].finishTime !== null
+          ? `${LAPS} laps of ${race.track.def.name} in ${fmtSec(race.cars[winnerIdx].finishTime!)}.`
+          : "Nobody finished in time — ranked by distance covered.",
       placements,
       stats,
     };

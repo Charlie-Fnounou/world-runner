@@ -13,14 +13,30 @@ const instrument = Instrument_Serif({
 const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains", display: "swap" });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ??
+      (process.env.VERCEL_ENV === "production" && process.env.VERCEL_PROJECT_PRODUCTION_URL
+        ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+        : process.env.VERCEL_URL
+          ? `https://${process.env.VERCEL_URL}`
+          : "http://localhost:3000"),
+  ),
   title: { default: "MINDTRIAL — games, experiments & party chaos", template: "%s · MINDTRIAL" },
   description:
     "An arcade, a museum and an intelligence playground. Free browser games, brain challenges, physics toys and local multiplayer party games. No sign-up.",
+  applicationName: "MINDTRIAL",
+  keywords: ["browser games", "brain games", "local multiplayer", "party games", "physics sandbox", "reaction test", "memory game"],
   openGraph: {
-    title: "MINDTRIAL",
-    description: "Free browser games, brain challenges, physics toys and local multiplayer party games.",
+    title: "MINDTRIAL — games, experiments & party chaos",
+    description: "12 free browser games: physics toys, brain challenges and 1–4 player party games. No sign-up.",
     type: "website",
+    siteName: "MINDTRIAL",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MINDTRIAL — games, experiments & party chaos",
+    description: "12 free browser games: physics toys, brain challenges and 1–4 player party games. No sign-up.",
   },
 };
 

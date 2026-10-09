@@ -634,14 +634,14 @@ export default function ChainReaction({ paused, reducedMotion, onFinish }: GameP
       {/* Header */}
       <div className="flex shrink-0 items-start justify-between gap-3 px-3 pt-1 sm:px-5">
         <div className="min-w-0">
-          <p className="font-mono text-[11px] uppercase tracking-[0.25em]" style={{ color: BLUE }}>
+          <p className="font-mono text-[11px] uppercase tracking-[0.25em] [@media(max-height:520px)]:hidden" style={{ color: BLUE }}>
             Level {String(levelIdx + 1).padStart(2, "0")} / {String(LEVELS.length).padStart(2, "0")}
           </p>
-          <h2 className="font-serif text-2xl italic leading-tight sm:text-3xl">{level.name}</h2>
-          <p className="hidden max-w-xl text-sm opacity-70 sm:block">{level.hint}</p>
+          <h2 className="font-serif text-2xl italic leading-tight sm:text-3xl [@media(max-height:520px)]:text-xl">{level.name}</h2>
+          <p className="hidden max-w-xl text-sm opacity-70 sm:block [@media(max-height:520px)]:hidden">{level.hint}</p>
         </div>
         <div className="shrink-0 text-right">
-          <p className="font-mono text-[11px] uppercase tracking-[0.25em] opacity-60">Score</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.25em] opacity-60 [@media(max-height:520px)]:hidden">Score</p>
           <p className="font-display text-2xl font-black tabular-nums leading-tight">{fmt(totalScore)}</p>
           <p className="font-mono text-xs tabular-nums" style={{ color: RED }}>
             ★ {mode === "build" ? 0 : starsLit}/{level.targets.length}
@@ -729,7 +729,11 @@ export default function ChainReaction({ paused, reducedMotion, onFinish }: GameP
 
       {/* Toolbar */}
       <div className="shrink-0 px-2 pb-2 pt-1 sm:px-4">
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 [scrollbar-width:thin]">
+        <p className="mb-1.5 rounded-lg px-2 py-1 text-center font-mono text-[10px] uppercase tracking-wider sm:hidden landscape:hidden" style={{ background: "rgba(46,107,255,0.12)", color: BLUE }}>
+          Tip: turn your phone sideways for a bigger machine
+        </p>
+        <div className="flex items-center gap-1.5">
+        <div className="flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto pb-1 [scrollbar-width:thin]">
           <button
             type="button"
             onClick={() => {
@@ -754,6 +758,7 @@ export default function ChainReaction({ paused, reducedMotion, onFinish }: GameP
                 onClick={() => pickTool(k)}
                 disabled={mode !== "build" || left <= 0}
                 aria-pressed={active}
+                aria-label={`${KIND_LABEL[k]}, ${left} left`}
                 title={`${KIND_LABEL[k]} (${KINDS.indexOf(k) + 1}) — ${KIND_TIP[k]}`}
                 className="flex h-11 shrink-0 items-center gap-1.5 rounded-xl pl-1.5 pr-2.5 text-sm font-semibold transition disabled:opacity-40"
                 style={{
@@ -763,7 +768,7 @@ export default function ChainReaction({ paused, reducedMotion, onFinish }: GameP
                 }}
               >
                 <PartIcon kind={k} />
-                <span>{KIND_LABEL[k]}</span>
+                <span className="hidden sm:inline">{KIND_LABEL[k]}</span>
                 <span className="rounded-md px-1 font-mono text-xs tabular-nums" style={{ background: left > 0 ? INK : "transparent", color: left > 0 ? PAPER : INK }}>
                   ×{left}
                 </span>
@@ -788,12 +793,13 @@ export default function ChainReaction({ paused, reducedMotion, onFinish }: GameP
           >
             <Trash2 size={17} />
           </button>
-          <div className="ml-auto flex shrink-0 items-center gap-2 pl-2">
+        </div>
+          <div className="flex shrink-0 items-center gap-2 pb-1 pl-1">
             <button
               type="button"
               onClick={toggleRun}
               disabled={mode === "cleared"}
-              className="flex h-11 items-center gap-2 rounded-full px-5 font-display text-base font-extrabold transition hover:-translate-y-0.5 disabled:opacity-40"
+              className="flex h-11 items-center gap-2 rounded-full px-4 font-display sm:px-5 text-base font-extrabold transition hover:-translate-y-0.5 disabled:opacity-40"
               style={{ background: mode === "build" ? RED : INK, color: mode === "build" ? INK : PAPER, border: `2px solid ${INK}`, boxShadow: `0 4px 0 0 ${INK}` }}
             >
               {mode === "build" ? <Play size={16} fill="currentColor" /> : <Square size={14} fill="currentColor" />}

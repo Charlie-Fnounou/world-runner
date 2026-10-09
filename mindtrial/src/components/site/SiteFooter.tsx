@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Wordmark } from "./Wordmark";
 import { GAMES } from "@/lib/catalog";
+import { FEEDBACK_URL } from "@/lib/links";
 
 export function SiteFooter() {
   return (
@@ -35,6 +36,11 @@ export function SiteFooter() {
             </li>
             <li>
               <Link href="/records" className="hover:underline">My Records</Link>
+            </li>
+            <li>
+              <a href={FEEDBACK_URL} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                Send feedback ↗
+              </a>
             </li>
           </ul>
         </div>

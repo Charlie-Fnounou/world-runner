@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Gamepad2, Trophy, Users } from "lucide-react";
+import { Gamepad2, MessageSquare, Trophy, Users } from "lucide-react";
+import { FEEDBACK_URL } from "@/lib/links";
 import { Wordmark } from "./Wordmark";
 import { t } from "@/lib/i18n";
 
@@ -23,6 +24,15 @@ export function SiteHeader() {
           <Link href="/records" className="flex items-center gap-1.5 rounded-full px-3 py-2 transition hover:bg-ink hover:text-paper">
             <Trophy size={16} /> <span className="hidden sm:inline">{t.nav.records}</span>
           </Link>
+          <a
+            href={FEEDBACK_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Send feedback (opens GitHub)"
+            className="flex items-center gap-1.5 rounded-full border-2 border-ink px-3 py-1.5 transition hover:bg-ink hover:text-paper"
+          >
+            <MessageSquare size={16} /> <span className="hidden lg:inline">Feedback</span>
+          </a>
         </nav>
       </div>
     </header>
