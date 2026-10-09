@@ -441,7 +441,7 @@ export default function ImpossibleScale({ paused, reducedMotion, onFinish }: Gam
 
       {/* Guess card */}
       {showCard && cpObj !== undefined && (
-        <div data-ui className="absolute inset-x-0 bottom-0 flex justify-center p-3 sm:p-5" style={{ paddingRight: RULER_W * 0.6 }} onPointerDown={(e) => e.stopPropagation()}>
+        <div data-ui className="absolute inset-x-0 bottom-0 flex justify-center p-3 sm:p-5" style={{ paddingRight: 66 }} onPointerDown={(e) => e.stopPropagation()}>
           <div className="w-full max-w-xl animate-rise rounded-3xl p-4 shadow-2xl sm:p-5" style={{ background: C.ink, color: C.bg }}>
             <div className="flex items-baseline justify-between gap-3">
               <span className="font-mono text-[10px] tracking-[0.25em] uppercase opacity-60">
