@@ -5,11 +5,11 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
 import { Logo } from "./Logo";
-import { WhatsAppIcon, InstagramIcon, ArrowIcon } from "./Icons";
+import { InstagramIcon, ArrowIcon } from "./Icons";
 import { ProductPhoto } from "./ProductPhoto";
 import { categories, products, type CategorySlug, type Product } from "@/data/catalog";
 import type { PhotoKey } from "@/data/photos";
-import { instagramLink, site, whatsappLink } from "@/data/site";
+import { instagramLink, site } from "@/data/site";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -282,16 +282,6 @@ export function Header() {
                 <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-500 ease-[var(--ease-out)] group-hover:scale-x-100" />
               </Link>
             ))}
-            <a
-              href={whatsappLink("Hola Fresh Lovers 👋")}
-              target="_blank"
-              rel="noopener noreferrer"
-              onMouseEnter={scheduleClose}
-              className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-[0.95rem] text-paper transition-transform duration-300 hover:-translate-y-0.5"
-            >
-              <WhatsAppIcon className="h-4 w-4" />
-              Escríbenos
-            </a>
           </nav>
 
           <button

@@ -9,10 +9,9 @@ export const site = {
   tagline: "calidad y sabor", // label sticker "— calidad y sabor —"
   since: 2018, // freshloverspty.com/about
   email: "freshloverspty@gmail.com", // Catálogo de Productos 2026 (cover)
-  // Phone printed on every label. Used for WhatsApp: confirm before launch.
+  // Phone printed on every label (structured data only — not shown as a contact).
   phoneDisplay: "6864-4453",
   phoneE164: "+50768644453",
-  whatsapp: "50768644453",
   instagram: "freshloverspty", // instagram.com/freshloverspty
   plant: {
     line1: "Planta #1747l, La Herradura",
@@ -34,8 +33,5 @@ export const site = {
   glutenFreeNote:
     "Sí. Tenemos una amplia gama de productos sin gluten, incluyendo quesos, arepas, yogures, harina de yuca, harina de arroz, harina de plátano y cafés.",
 } as const;
-
-export const whatsappLink = (text?: string) =>
-  `https://wa.me/${site.whatsapp}${text ? `?text=${encodeURIComponent(text)}` : ""}`;
 
 export const instagramLink = `https://www.instagram.com/${site.instagram}/`;

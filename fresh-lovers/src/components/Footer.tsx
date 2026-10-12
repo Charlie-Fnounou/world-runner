@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { categories } from "@/data/catalog";
-import { instagramLink, site, whatsappLink } from "@/data/site";
+import { instagramLink, site } from "@/data/site";
 
 export function Footer() {
   return (
@@ -26,11 +26,6 @@ export function Footer() {
         <div className="md:col-span-4">
           <p className="kicker mb-5 text-paper/50">Contacto</p>
           <ul className="space-y-2 text-[0.95rem] text-paper/85">
-            <li>
-              <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" className="hover:underline">
-                WhatsApp {site.phoneDisplay}
-              </a>
-            </li>
             <li>
               <a href={`mailto:${site.email}`} className="hover:underline">
                 {site.email}

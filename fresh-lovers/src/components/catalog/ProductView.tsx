@@ -5,10 +5,8 @@ import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ProductPhoto, shotsFor } from "@/components/ProductPhoto";
-import { WhatsAppIcon } from "@/components/Icons";
 import { cartoucheClipPath } from "@/lib/cartouche";
 import type { Category, Product } from "@/data/catalog";
-import { whatsappLink } from "@/data/site";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -166,17 +164,14 @@ export function ProductView({ product: p, category }: { product: Product; catego
         )}
 
         <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-          <a
-            href={whatsappLink(`Hola Fresh Lovers, quiero información sobre ${p.name}${p.variants.length > 1 ? ` (${v.name})` : ""}.`)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex h-13 items-center justify-center gap-2.5 rounded-full bg-ink px-7 py-4 text-paper transition-transform hover:-translate-y-0.5"
+          <Link
+            href="/#donde-comprar"
+            className="inline-flex items-center justify-center rounded-full bg-ink px-7 py-4 text-paper transition-transform hover:-translate-y-0.5"
           >
-            <WhatsAppIcon />
-            Preguntar por WhatsApp
-          </a>
-          <Link href="/#donde-comprar" className="inline-flex items-center justify-center rounded-full border border-ink/25 px-7 py-4 hover:border-ink">
             Dónde comprar
+          </Link>
+          <Link href={`/productos?c=${p.category}`} className="inline-flex items-center justify-center rounded-full border border-ink/25 px-7 py-4 hover:border-ink">
+            Ver más productos
           </Link>
         </div>
         <p className="mt-6 text-xs text-ink/50">

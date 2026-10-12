@@ -3,14 +3,14 @@
 import { useRef } from "react";
 import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
 import { cartoucheClipPath } from "@/lib/cartouche";
-import { WhatsAppIcon, InstagramIcon } from "@/components/Icons";
+import { InstagramIcon } from "@/components/Icons";
 import { MaskLine, Reveal } from "@/components/Reveal";
-import { instagramLink, site, whatsappLink } from "@/data/site";
+import { instagramLink, site } from "@/data/site";
 import { faqs } from "@/data/faqs";
 
 
 
-/** WhatsApp CTA shaped like the brand cartouche, with a magnetic pull on desktop. */
+/** Instagram CTA shaped like the brand cartouche, with a magnetic pull on desktop. */
 function MagneticCartouche() {
   const ref = useRef<HTMLAnchorElement>(null);
   const reduce = useReducedMotion();
@@ -31,28 +31,28 @@ function MagneticCartouche() {
   return (
     <motion.a
       ref={ref}
-      href={whatsappLink("Hola Fresh Lovers 👋")}
+      href={instagramLink}
       target="_blank"
       rel="noopener noreferrer"
       onPointerMove={onMove}
       onPointerLeave={reset}
       style={{ x, y }}
       className="group relative block aspect-[1.55] w-full max-w-[560px]"
-      aria-label={`Escríbenos por WhatsApp al ${site.phoneDisplay}`}
+      aria-label={`Fresh Lovers en Instagram, @${site.instagram}`}
     >
       <svg width="0" height="0" className="absolute" aria-hidden="true">
         <clipPath id="cta-cartouche" clipPathUnits="objectBoundingBox">
           <path d={cartoucheClipPath(1.55)} />
         </clipPath>
       </svg>
-      <span className="absolute inset-0 bg-ink transition-colors duration-500 group-hover:bg-[#25D366]" style={{ clipPath: "url(#cta-cartouche)" }} />
+      <span className="absolute inset-0 bg-ink transition-colors duration-500 group-hover:bg-[#5B60D6]" style={{ clipPath: "url(#cta-cartouche)" }} />
       <svg viewBox="0 0 1 1" preserveAspectRatio="none" className="pointer-events-none absolute inset-[4%] h-[92%] w-[92%]" aria-hidden="true">
         <path d={cartoucheClipPath(1.55)} fill="none" stroke="#f4efe6" strokeOpacity=".6" strokeWidth="1" vectorEffect="non-scaling-stroke" />
       </svg>
-      <span className="absolute inset-0 flex flex-col items-center justify-center text-paper transition-colors duration-500 group-hover:text-ink">
-        <WhatsAppIcon className="h-7 w-7 md:h-9 md:w-9" />
-        <span className="font-display mt-3 text-[9vw] leading-none md:text-[3.4vw]">WhatsApp</span>
-        <span className="kicker mt-3">{site.phoneDisplay}</span>
+      <span className="absolute inset-0 flex flex-col items-center justify-center text-paper">
+        <InstagramIcon className="h-7 w-7 md:h-9 md:w-9" />
+        <span className="font-display mt-3 text-[9vw] leading-none md:text-[3.4vw]">Instagram</span>
+        <span className="kicker mt-3">@{site.instagram}</span>
       </span>
     </motion.a>
   );
@@ -71,7 +71,7 @@ export function Contact() {
             </MaskLine>
           </h2>
           <Reveal className="mt-8 max-w-sm text-[1.05rem] leading-relaxed text-ink-2">
-            Pedidos, distribución o una pregunta sobre un producto. Te respondemos por WhatsApp.
+            Pedidos, distribución o una pregunta sobre un producto. Escríbenos por correo o por Instagram.
           </Reveal>
           <Reveal delay={0.1}>
             <ul className="mt-8 space-y-2 text-[1rem]">

@@ -3,8 +3,6 @@
 import Link from "next/link";
 import { motion, useMotionValueEvent, useScroll } from "motion/react";
 import { useState } from "react";
-import { WhatsAppIcon } from "./Icons";
-import { whatsappLink } from "@/data/site";
 
 /** Thumb-zone actions for phones (most traffic arrives from Instagram). */
 export function MobileBar() {
@@ -24,15 +22,12 @@ export function MobileBar() {
         <Link href="/productos" className="flex h-12 flex-1 items-center justify-center rounded-full text-[0.95rem]">
           Productos
         </Link>
-        <a
-          href={whatsappLink("Hola Fresh Lovers 👋")}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-paper text-[0.95rem] text-ink"
+        <Link
+          href="/#donde-comprar"
+          className="flex h-12 flex-1 items-center justify-center rounded-full bg-paper text-[0.95rem] text-ink"
         >
-          <WhatsAppIcon className="h-[18px] w-[18px]" />
-          WhatsApp
-        </a>
+          Dónde comprar
+        </Link>
       </div>
     </motion.div>
   );

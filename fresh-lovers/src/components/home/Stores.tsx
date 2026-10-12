@@ -1,6 +1,5 @@
 import { Reveal } from "@/components/Reveal";
-import { WhatsAppIcon } from "@/components/Icons";
-import { site, whatsappLink } from "@/data/site";
+import { site } from "@/data/site";
 
 /** label colours, one per row on hover */
 const sweep = ["#C3D2E1", "#F6C3CB", "#5B60D6", "#F2C14E", "#C3C59A", "#E9D8C4"];
@@ -36,17 +35,6 @@ export function Stores() {
               </div>
             </Reveal>
           ))}
-          <li className="list-none">
-            <a
-              href={whatsappLink("Hola Fresh Lovers, ¿dónde consigo sus productos cerca de mí?")}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-8 inline-flex items-center gap-2 text-[1rem] underline-offset-4 hover:underline"
-            >
-              <WhatsAppIcon className="h-4 w-4" />
-              ¿No lo encuentras? Pregúntanos por WhatsApp
-            </a>
-          </li>
         </ol>
       </div>
     </section>
