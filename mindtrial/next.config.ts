@@ -3,10 +3,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  // This app sits inside the world-runner repo; pin the root so the parent
-  // app's lockfile and src/ are never picked up.
-  turbopack: { root: path.join(__dirname) },
-  outputFileTracingRoot: path.join(__dirname),
+  // This app lives in the mindtrial/ folder of the world-runner repo. Vercel's
+  // build output step expects files to be traced from the repository root, so
+  // the tracing root is the parent folder. Builds use webpack (see package.json):
+  // Turbopack would then treat the parent folder as its project root and pick
+  // up the other app's src/proxy.ts.
+  outputFileTracingRoot: path.join(__dirname, ".."),
 };
 
 export default nextConfig;

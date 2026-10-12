@@ -29,6 +29,11 @@ npm run lint         # ESLint
 npm run typecheck    # tsc --noEmit
 ```
 
+Builds use webpack (`--webpack`) rather than Turbopack: because this app is nested
+inside another Next.js app, Turbopack would treat the repository root as its project
+root and compile the parent app's `src/proxy.ts`. `next.config.ts` traces output files
+from the repository root, which is what Vercel expects for a Root Directory deployment.
+
 The build downloads the three Google fonts (Bricolage Grotesque, Instrument Serif,
 JetBrains Mono) through `next/font`, so it needs network access the first time.
 
