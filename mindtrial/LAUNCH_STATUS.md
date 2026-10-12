@@ -4,11 +4,10 @@ _Last updated: 2026-10-12_
 
 ## Summary
 
-All 12 planned games are implemented and playable. The homepage, Party Mode, the records
-page and the 404 page are complete, and the production build succeeds (`next build`, 18
-static pages). The app is **ready to deploy as a public beta** to Vercel with the root
-directory set to `mindtrial/`. It has **not** been deployed or published yet; that needs
-the owner's go-ahead.
+All 12 games are implemented and playable. The homepage, Party Mode, the records page and
+the 404 page are complete, and the production build succeeds (`npm run build`, 23 static
+routes). A **Preview deployment** on Vercel passes the browser test suite. **Production has
+not been deployed** and is blocked until the owner approves it.
 
 ## Games
 
@@ -17,7 +16,7 @@ the owner's go-ahead.
 | 1 | Element Lab | Experiment | 1 | ✅ | Reactions found (12 to discover) |
 | 2 | Impossible Scale | Experiment | 1 | ✅ | Guess score |
 | 3 | Fortune Factory | Experiment | 1 | ✅ | Final net worth |
-| 4 | Chain Reaction | Experiment | 1 | ✅ (cramped on phones) | Total score, 9 levels |
+| 4 | Chain Reaction | Experiment | 1 | ✅ (best in landscape) | Total score, 9 levels |
 | 5 | Perfect Timing | Brain | 1–4 (party) | ✅ | Total error (ms) |
 | 6 | Pattern Breaker | Brain | 1 | ✅ | Score |
 | 7 | Ghost Memory | Brain | 1 | ✅ | Level reached |
@@ -37,7 +36,11 @@ Party Mode rotation: Perfect Timing, Mini Football, Bumper Arena, Speed Duel, Mi
 - Every game: start screen → Start → gameplay renders → keyboard and mouse input → **Esc opens the pause overlay** → resume → **Restart** re-mounts the game. All 12 passed with **no console errors or page errors**.
 - Every game page was screenshotted and inspected (desktop 1440×900), along with eight touch-capable games at phone size (390×844). There is no horizontal overflow on the homepage, Party Mode or those game pages.
 - **Full Party Mode tournament:** 2 players, 3 rounds, driven by keyboard. Covers setup, key check-in, round intro, game, results with points, scoreboard, champion screen and rematch.
-- **Solo run to completion (Perfect Timing):** end screen, "New personal best!", Play again, and the record shown on `/records`.
+- **Every solo game played to its results screen** (Element Lab, Impossible Scale, Fortune Factory, Chain Reaction, Perfect Timing, Pattern Breaker, Ghost Memory, Visual Hunt). All 8 runs then appear on `/records`.
+- **CPU opponents:** with the human idle, every arcade game finished on its own against the CPU (Micro Racers in 50 s, Speed Duel 55 s, Mini Football 92 s, Bumper Arena 116 s). Screenshots show the CPUs chasing the ball, pushing rivals and racing laps.
+- **Chain Reaction on touch:** a part can be selected and placed by tapping, and Run stays visible in portrait and landscape.
+- **Preview deployment on Vercel:** the same route and per-game suite passes on the preview URL with no console errors.
+- **Metadata:** Open Graph and Twitter image, favicon, apple icon and web manifest are all served.
 
 **Headless logic tests by the game developers** (scripts kept outside the repo):
 
@@ -59,27 +62,32 @@ Party Mode rotation: Perfect Timing, Mini Football, Bumper Arena, Speed Duel, Mi
 
 ## Known limitations / needs improvement
 
-- **Chain Reaction on phones:** the play area is small in portrait, and the toolbar has to be scrolled sideways. It's usable but best on a tablet or desktop.
+- **Chain Reaction on phones:** usable in portrait, where Run is pinned and a tip suggests rotating, but the machine is small. Landscape or a tablet is better.
 - **Mini Football, Bumper Arena and Micro Racers need a physical keyboard.** The start screen tells touch users this.
 - **Element Lab** sizes its grid once when it loads, so rotating a phone letterboxes the canvas rather than re-flowing it.
-- **Mini Football golden goal** is capped at 60 s. A sudden death still level after that is decided on possession.
+- **Time caps so Party Mode can't stall:** Mini Football's golden goal ends after 60 s (decided on possession), and a Micro Racers race ends after 3 minutes (ranked by distance).
+- **Speed Duel with only idle humans** keeps voiding rounds until someone fires. Quit is always available.
 - **Visual Hunt** uses `oklch()` colours and **Ghost Memory** uses container query units, so both need a 2023+ browser.
 - **Records** are per browser, stored in `localStorage`. There are no global leaderboards, by design for the MVP.
 - **Spanish:** UI strings are centralised in `src/lib/i18n/en.ts` and game copy in `src/lib/catalog.ts`, but no Spanish translation exists yet.
-- **No Open Graph image yet;** link previews show title and description only.
 - **No analytics** (deliberately).
 
 ## Vercel setup
 
 - Separate Vercel project **`mindtrial`** (team Charlie-Fnounou), Root Directory `mindtrial`, linked to this repo.
   The existing `world-runner` project was not touched.
-- **Production builds are paused** by the project's *Ignored Build Step*
-  (`if [ "$VERCEL_ENV" = "production" ]; then exit 0; else exit 1; fi`), so merging to `main` cannot
-  publish MINDTRIAL by accident. To launch: clear that setting in Project → Settings → Git, then redeploy.
+- **Production builds are paused** by the project's *Ignored Build Step*, so merging to `main`
+  cannot publish MINDTRIAL by accident. The same step skips builds of branches that don't contain
+  this app. To launch: Project → Settings → Git → Ignored Build Step → remove the production
+  line, then redeploy to production.
+- Previews are protected by Vercel Authentication, the team default: only team members can open
+  them, or use a share link.
+- Builds use webpack, and the file-tracing root is the repo root, which Vercel requires for a
+  subfolder app (see README).
 
 ## Deployment checklist
 
-1. Vercel → New Project → import `world-runner` → **Root Directory: `mindtrial`**.
-2. Optional: `NEXT_PUBLIC_SITE_URL` = final domain.
-3. Deploy, then smoke-test `/`, `/party` and a few games on the preview URL.
+1. ✅ Vercel project `mindtrial` created (Root Directory `mindtrial`).
+2. ✅ Preview deployed and tested.
+3. ⏳ Owner approval → un-pause production, deploy, then set `NEXT_PUBLIC_SITE_URL` once a domain is chosen.
 4. Note: the root `vercel.json` (cron for world-runner) belongs to the other app and does not apply to a project rooted at `mindtrial/`.
