@@ -9,9 +9,6 @@ export const site = {
   tagline: "calidad y sabor", // label sticker "— calidad y sabor —"
   since: 2018, // freshloverspty.com/about
   email: "freshloverspty@gmail.com", // Catálogo de Productos 2026 (cover)
-  // Phone printed on every label (structured data only — not shown as a contact).
-  phoneDisplay: "6864-4453",
-  phoneE164: "+50768644453",
   instagram: "freshloverspty", // instagram.com/freshloverspty
   plant: {
     line1: "Planta #1747l, La Herradura",

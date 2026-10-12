@@ -21,7 +21,6 @@ export default function Home() {
             legalName: site.legalName,
             url: site.url,
             email: site.email,
-            telephone: site.phoneE164,
             foundingDate: String(site.since),
             sameAs: [`https://www.instagram.com/${site.instagram}/`],
             address: {
