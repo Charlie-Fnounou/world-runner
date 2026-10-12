@@ -1,6 +1,6 @@
 # MINDTRIAL — Launch status (public beta)
 
-_Last updated: 2026-10-09_
+_Last updated: 2026-10-12_
 
 ## Summary
 
@@ -68,6 +68,14 @@ Party Mode rotation: Perfect Timing, Mini Football, Bumper Arena, Speed Duel, Mi
 - **Spanish:** UI strings are centralised in `src/lib/i18n/en.ts` and game copy in `src/lib/catalog.ts`, but no Spanish translation exists yet.
 - **No Open Graph image yet;** link previews show title and description only.
 - **No analytics** (deliberately).
+
+## Vercel setup
+
+- Separate Vercel project **`mindtrial`** (team Charlie-Fnounou), Root Directory `mindtrial`, linked to this repo.
+  The existing `world-runner` project was not touched.
+- **Production builds are paused** by the project's *Ignored Build Step*
+  (`if [ "$VERCEL_ENV" = "production" ]; then exit 0; else exit 1; fi`), so merging to `main` cannot
+  publish MINDTRIAL by accident. To launch: clear that setting in Project → Settings → Git, then redeploy.
 
 ## Deployment checklist
 
