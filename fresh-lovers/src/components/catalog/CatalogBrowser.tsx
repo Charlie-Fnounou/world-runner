@@ -121,7 +121,7 @@ export function CatalogBrowser() {
     <div>
       <div className="catalog-bar sticky top-16 z-20 -mx-[var(--gutter)] mt-8 border-b border-ink/10 bg-paper px-[var(--gutter)] pb-4 pt-4 md:top-20">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div role="group" aria-label="Filtrar por categoría" className="no-scrollbar -mx-[var(--gutter)] flex gap-2 overflow-x-auto px-[var(--gutter)] md:mx-0 md:flex-wrap md:px-0">
+          <div role="group" aria-label="Filtrar por categoría" className="flex flex-wrap gap-2">
             {[{ slug: "all" as const, name: "Todo" }, ...categories].map((c) => (
               <button key={c.slug} type="button" aria-pressed={active === c.slug} onClick={() => choose(c.slug)} className={chip(active === c.slug)}>
                 {c.name}
@@ -140,7 +140,7 @@ export function CatalogBrowser() {
           </label>
         </div>
         {lines.length > 1 && (
-          <div role="group" aria-label="Filtrar por línea" className="no-scrollbar -mx-[var(--gutter)] mt-3 flex gap-2 overflow-x-auto px-[var(--gutter)] md:mx-0 md:flex-wrap md:px-0">
+          <div role="group" aria-label="Filtrar por línea" className="mt-3 flex flex-wrap gap-2">
             <button type="button" aria-pressed={!line} onClick={() => chooseLine(null)} className={`${chip(!line)} py-1.5 text-[0.85rem]`}>
               Todas
             </button>

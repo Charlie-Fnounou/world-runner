@@ -77,7 +77,7 @@ export function Shelf() {
       </div>
 
       {/* category selector — horizontally scrollable on phones */}
-      <div role="tablist" aria-label="Categorías" className="no-scrollbar gutter mt-10 flex gap-2 overflow-x-auto pb-1">
+      <div role="tablist" aria-label="Categorías" className="gutter mt-10 flex flex-wrap gap-2">
         {categories.map((c) => {
           const on = c.slug === active;
           return (
@@ -128,7 +128,7 @@ export function Shelf() {
                 <Link
                   href={`/productos/${p.slug}${p.variants.length > 1 && !("all" in rest) ? `?v=${i}` : ""}`}
                   className="group block"
-                  draggable={false}
+                 
                 >
                   <div className="relative aspect-[4/5] overflow-hidden rounded-[1.5rem] bg-black/10">
                     <ProductPhoto

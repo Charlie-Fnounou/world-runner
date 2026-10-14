@@ -7,7 +7,6 @@ import { ProductPhoto } from "@/components/ProductPhoto";
 import { ArrowIcon } from "@/components/Icons";
 import { MaskLine, Reveal } from "@/components/Reveal";
 import { getProduct, productsIn } from "@/data/catalog";
-import { useDragScroll } from "@/lib/useDragScroll";
 
 /* ───────────── Labne ───────────── */
 
@@ -64,8 +63,6 @@ function Labne() {
 
 function Arepas() {
   const arepas = productsIn("arepas").filter((p) => p.shape === "arepas");
-  const rail = useRef<HTMLDivElement>(null);
-  useDragScroll(rail);
   return (
     <section aria-labelledby="arepas-title" className="relative overflow-hidden bg-[#F2C14E] py-20 text-[#3B2406] md:py-28">
       <div className="gutter flex flex-wrap items-end justify-between gap-6">
@@ -80,10 +77,10 @@ function Arepas() {
         </Reveal>
       </div>
 
-      <div ref={rail} style={{ scrollPaddingInline: "var(--gutter)" }} className="no-scrollbar mt-12 flex snap-x gap-6 overflow-x-auto px-[var(--gutter)] pb-4 md:cursor-grab md:gap-8">
+      <div className="gutter mt-12 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 md:grid-cols-4 md:gap-x-8 lg:grid-cols-7">
         {arepas.map((p, n) => (
-          <Reveal key={p.slug} delay={n * 0.06} className="w-[48vw] shrink-0 snap-start sm:w-[30vw] md:w-[17vw]">
-            <Link href={`/productos/${p.slug}`} className="group block text-center" draggable={false}>
+          <Reveal key={p.slug} delay={n * 0.06}>
+            <Link href={`/productos/${p.slug}`} className="group block text-center">
               <div className="relative aspect-square overflow-hidden rounded-full shadow-[0_24px_40px_-20px_rgba(59,36,6,0.6)] transition-transform duration-700 ease-[var(--ease-out)] group-hover:-translate-y-2">
                 <ProductPhoto product={p} photo={p.image} fill sizes="(min-width: 768px) 18vw, 50vw" className="transition-transform duration-[1.2s] group-hover:scale-110" />
               </div>
