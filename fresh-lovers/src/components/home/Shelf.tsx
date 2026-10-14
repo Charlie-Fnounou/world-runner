@@ -1,12 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useRef, useState } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ProductPhoto } from "@/components/ProductPhoto";
 import { ArrowIcon } from "@/components/Icons";
 import { categories, products, skuCount, type CategorySlug } from "@/data/catalog";
-import { useDragScroll } from "@/lib/useDragScroll";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -26,15 +25,7 @@ export function Shelf() {
   const [active, setActive] = useState<CategorySlug>("yogurt");
   const cat = categories.find((c) => c.slug === active)!;
   const idx = categories.indexOf(cat);
-  const items = useMemo(() => shelfItems(active), [active]);
-  const rail = useRef<HTMLDivElement>(null);
-  useDragScroll(rail);
-
-  const select = (slug: CategorySlug) => {
-    setActive(slug);
-    rail.current?.scrollTo({ left: 0, behavior: "instant" as ScrollBehavior });
-  };
-  const nudge = (dir: 1 | -1) => rail.current?.scrollBy({ left: dir * rail.current.clientWidth * 0.7, behavior: "smooth" });
+  const items = shelfItems(active);
 
   return (
     <motion.section
@@ -95,7 +86,7 @@ export function Shelf() {
               role="tab"
               aria-selected={on}
               aria-controls="estante-rail"
-              onClick={() => select(c.slug)}
+              onClick={() => setActive(c.slug)}
               className={`relative shrink-0 rounded-full border px-4 py-2.5 text-[0.95rem] transition-colors duration-300 ${
                 on ? "border-current" : "border-current/20 opacity-70 hover:opacity-100"
               }`}
@@ -121,17 +112,14 @@ export function Shelf() {
       <div className="relative mt-10 md:mt-14">
         <div
           id="estante-rail"
-          ref={rail}
           role="tabpanel"
           aria-label={cat.name}
-          style={{ scrollPaddingInline: "var(--gutter)" }}
-          className="no-scrollbar flex snap-x snap-mandatory gap-2 overflow-x-auto px-[var(--gutter)] pb-6 md:cursor-grab md:gap-4 md:active:cursor-grabbing"
+          className="gutter grid grid-cols-2 gap-x-3 gap-y-8 pb-6 sm:grid-cols-3 md:grid-cols-4 md:gap-x-5 md:gap-y-10 lg:grid-cols-5"
         >
           <AnimatePresence mode="popLayout" initial={false}>
             {items.map(({ p, i, v, ...rest }, n) => (
               <motion.div
                 key={`${p.slug}-${i}`}
-                className="w-[58vw] shrink-0 snap-start sm:w-[36vw] md:w-[21vw] lg:w-[17vw]"
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }}
@@ -147,7 +135,7 @@ export function Shelf() {
                       product={p}
                       variant={i}
                       fill
-                      sizes="(min-width: 1024px) 18vw, (min-width: 768px) 22vw, 60vw"
+                      sizes="(min-width: 1024px) 20vw, (min-width: 768px) 25vw, (min-width: 640px) 33vw, 50vw"
                       className="transition-transform duration-[1.1s] ease-[var(--ease-out)] group-hover:scale-[1.06]"
                     />
                   </div>
@@ -165,10 +153,10 @@ export function Shelf() {
               </motion.div>
             ))}
           </AnimatePresence>
-          <div className="w-[40vw] shrink-0 snap-start sm:w-[30vw] md:w-[17vw]">
+          <div>
             <Link
               href={`/productos?c=${cat.slug}`}
-              className="flex aspect-[3/4] flex-col items-center justify-center gap-3 rounded-[2rem] border border-current/30 text-center transition-colors hover:bg-black/5"
+              className="flex aspect-[4/5] flex-col items-center justify-center gap-3 rounded-[2rem] border border-current/30 text-center transition-colors hover:bg-black/5"
               style={{ borderColor: "color-mix(in srgb, currentColor 30%, transparent)" }}
             >
               <ArrowIcon className="h-6 w-6" />
@@ -176,19 +164,11 @@ export function Shelf() {
             </Link>
           </div>
         </div>
-        <div className="gutter mt-4 hidden items-center justify-between md:flex">
+        <div className="gutter mt-4">
           <Link href="/productos" className="group inline-flex items-center gap-2 text-[0.95rem]">
             Catálogo completo
             <ArrowIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
-          <div className="flex gap-2">
-            <button type="button" aria-label="Desplazar a la izquierda" onClick={() => nudge(-1)} className="grid h-11 w-11 place-items-center rounded-full border border-current/30 hover:bg-black/5" style={{ borderColor: "color-mix(in srgb, currentColor 30%, transparent)" }}>
-              <ArrowIcon dir="left" />
-            </button>
-            <button type="button" aria-label="Desplazar a la derecha" onClick={() => nudge(1)} className="grid h-11 w-11 place-items-center rounded-full border border-current/30 hover:bg-black/5" style={{ borderColor: "color-mix(in srgb, currentColor 30%, transparent)" }}>
-              <ArrowIcon />
-            </button>
-          </div>
         </div>
       </div>
     </motion.section>

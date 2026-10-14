@@ -90,40 +90,37 @@ export function Hero() {
         — {site.tagline} —
       </motion.p>
 
-      <div className="relative flex min-h-[64svh] flex-1 items-center justify-center md:min-h-0">
-        {/* oversized wordmark behind the stage */}
-        <motion.h1
-          style={{ x: typeX }}
-          className="font-display pointer-events-none absolute inset-0 z-0 select-none text-ink"
-        >
-          <span className="sr-only">Fresh Lovers Panamá — yogurt, quesos, labne, arepas y café</span>
-          <span aria-hidden="true" className="flex h-full flex-col justify-between py-[1svh] leading-[0.8] md:flex-row md:items-center md:px-[3vw] md:py-0">
-            <span className="block overflow-hidden self-start pl-[4vw] md:self-auto md:pl-0">
-              <motion.span
-                className="block text-[31vw] tracking-[-0.03em] md:text-[19vw]"
-                initial={{ y: "100%" }}
-                animate={{ y: "0%" }}
-                transition={{ duration: 1.3, delay: 0.25, ease: EASE }}
-              >
-                Fresh
-              </motion.span>
-            </span>
-            <span className="block overflow-hidden self-end pr-[4vw] md:self-auto md:pr-0">
-              <motion.em
-                className="block pb-[0.06em] text-[31vw] tracking-[-0.03em] md:text-[19vw]"
-                initial={{ y: "100%" }}
-                animate={{ y: "0%" }}
-                transition={{ duration: 1.3, delay: 0.38, ease: EASE }}
-              >
-                lovers
-              </motion.em>
-            </span>
+      {/* the wordmark reads in full the moment the page opens */}
+      <motion.h1 style={{ x: typeX }} className="font-display relative z-10 mt-2 select-none text-center text-ink md:mt-1">
+        <span className="sr-only">Fresh Lovers Panamá — yogurt, quesos, labne, arepas y café</span>
+        <span aria-hidden="true" className="flex flex-wrap items-baseline justify-center gap-x-[4vw] md:gap-x-[2.5vw] leading-[0.85]">
+          <span className="block overflow-hidden">
+            <motion.span
+              className="block text-[24vw] tracking-[-0.03em] md:text-[12.5vw]"
+              initial={{ y: "100%" }}
+              animate={{ y: "0%" }}
+              transition={{ duration: 1.1, delay: 0.1, ease: EASE }}
+            >
+              Fresh
+            </motion.span>
           </span>
-        </motion.h1>
+          <span className="block overflow-hidden">
+            <motion.em
+              className="block pb-[0.06em] text-[24vw] tracking-[-0.03em] md:text-[12.5vw]"
+              initial={{ y: "100%" }}
+              animate={{ y: "0%" }}
+              transition={{ duration: 1.1, delay: 0.2, ease: EASE }}
+            >
+              lovers
+            </motion.em>
+          </span>
+        </span>
+      </motion.h1>
 
+      <div className="relative flex flex-1 items-center justify-center py-4">
         {/* the cartouche stage */}
         <motion.div
-          className="relative z-10 aspect-[0.72] w-[min(56vw,32svh)] md:w-[min(25vw,52svh)]"
+          className="relative z-10 aspect-[0.72] w-[min(46vw,28svh)] md:w-[min(18vw,34svh)]"
           initial={{ scale: 0.55, opacity: 0, rotate: -4 }}
           animate={{ scale: 1, opacity: 1, rotate: 0 }}
           transition={{ duration: 1.2, ease: EASE }}
