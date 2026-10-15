@@ -120,7 +120,7 @@ export function GreekSequence() {
                   type="button"
                   onClick={() => setI(n)}
                   aria-current={n === i}
-                  className={`font-display text-[1.1rem] italic transition-opacity md:text-[1.3rem] ${n === i ? "underline decoration-1 underline-offset-[6px]" : "opacity-90 hover:opacity-100"}`}
+                  className={`font-display text-[1.1rem] italic transition-opacity md:text-[1.3rem] ${n === i ? "underline decoration-1 underline-offset-[6px]" : "hover:underline decoration-1 underline-offset-[6px]"}`}
                 >
                   <span className="mr-1.5 font-sans text-[0.65rem] not-italic tracking-widest">{String(n + 1).padStart(2, "0")}</span>
                   {f.name.toLowerCase()}
