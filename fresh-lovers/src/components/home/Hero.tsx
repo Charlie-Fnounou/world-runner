@@ -176,14 +176,7 @@ export function Hero() {
 
       {/* bottom readout */}
       <div className="gutter relative z-10 grid grid-cols-1 items-end gap-5 pb-24 md:grid-cols-3 md:pb-8">
-        <motion.p
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 0.9, ease: EASE }}
-          className="max-w-[22rem] text-[1.02rem] leading-snug text-ink-2 md:text-[1.05rem]"
-        >
-          Yogurt griego, labne, quesos frescos, arepas, granola y café.
-        </motion.p>
+        <div className="hidden md:block" aria-hidden="true" />
 
         <div className="hidden justify-center md:flex">
           <Link href="#estante" className="group inline-flex items-center gap-3 text-sm text-ink">
