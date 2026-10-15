@@ -38,7 +38,7 @@ export function Shelf() {
     >
       <div className="gutter flex flex-wrap items-end justify-between gap-6">
         <div>
-          <p className="kicker opacity-70">
+          <p className="kicker opacity-85">
             El estante · {categories.length} categorías · {skuCount} productos
           </p>
           <h2 id="estante-title" className="font-display mt-4 text-[15vw] leading-[0.85] tracking-[-0.02em] md:text-[9vw]">
@@ -58,7 +58,7 @@ export function Shelf() {
           </h2>
         </div>
         <div className="max-w-sm">
-          <p className="kicker opacity-60">
+          <p className="kicker opacity-85">
             {String(idx + 1).padStart(2, "0")} / {String(categories.length).padStart(2, "0")}
           </p>
           <AnimatePresence mode="wait" initial={false}>
@@ -88,7 +88,7 @@ export function Shelf() {
               aria-controls="estante-rail"
               onClick={() => setActive(c.slug)}
               className={`relative shrink-0 rounded-full border px-4 py-2.5 text-[0.95rem] transition-colors duration-300 ${
-                on ? "border-current" : "border-current/20 opacity-70 hover:opacity-100"
+                on ? "border-current" : "border-current/20 opacity-85 hover:opacity-100"
               }`}
               style={{ borderColor: on ? "currentColor" : undefined }}
             >

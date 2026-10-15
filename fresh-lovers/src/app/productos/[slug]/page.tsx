@@ -71,7 +71,7 @@ export default async function ProductPage({ params }: PageProps<"/productos/[slu
           },
         ]}
       />
-      <nav aria-label="Ruta" className="kicker mb-8 flex flex-wrap gap-2 text-[0.62rem] text-ink/55">
+      <nav aria-label="Ruta" className="kicker mb-8 flex flex-wrap gap-2 text-[0.62rem] text-ink/65">
         <Link href="/" className="hover:text-ink">Inicio</Link>/
         <Link href="/productos" className="hover:text-ink">Productos</Link>/
         <Link href={`/productos?c=${category.slug}`} className="hover:text-ink">{category.name}</Link>

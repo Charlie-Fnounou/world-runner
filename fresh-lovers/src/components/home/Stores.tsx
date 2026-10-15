@@ -9,7 +9,7 @@ export function Stores() {
     <section id="donde-comprar" aria-labelledby="stores-title" className="relative bg-paper-2 py-24 md:py-36">
       <div className="gutter grid gap-10 md:grid-cols-12">
         <div className="md:col-span-4">
-          <p className="kicker text-ink/60">Dónde comprar</p>
+          <p className="kicker text-ink/65">Dónde comprar</p>
           <h2 id="stores-title" className="font-display mt-6 text-[13vw] leading-[0.9] tracking-[-0.02em] md:text-[5vw]">
             En tu súper, <em>en todo el país.</em>
           </h2>
@@ -28,7 +28,7 @@ export function Stores() {
                   aria-hidden="true"
                   className="absolute inset-0 origin-bottom scale-y-0 bg-[var(--sweep)] transition-transform duration-500 ease-[var(--ease-out)] group-hover:scale-y-100"
                 />
-                <span className="kicker relative w-8 text-ink/50">{String(n + 1).padStart(2, "0")}</span>
+                <span className="kicker relative w-8 text-ink/65">{String(n + 1).padStart(2, "0")}</span>
                 <span className="font-display relative text-[9vw] leading-none transition-transform duration-500 ease-[var(--ease-out)] group-hover:translate-x-3 md:text-[4.2vw]">
                   {s}
                 </span>

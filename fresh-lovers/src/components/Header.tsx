@@ -78,7 +78,7 @@ function MegaMenu({ active, setActive, close }: { active: CategorySlug; setActiv
     <div className="gutter grid grid-cols-12 gap-8 pb-12 pt-8">
       {/* level 1 — categories */}
       <div className="col-span-3 border-r border-ink/10 pr-6 xl:col-span-2">
-        <p className="kicker mb-4 text-ink/45">Categorías</p>
+        <p className="kicker mb-4 text-ink/65">Categorías</p>
         <ul className="space-y-0.5">
           {categories.map((c) => {
             const on = c.slug === active;
@@ -93,9 +93,9 @@ function MegaMenu({ active, setActive, close }: { active: CategorySlug; setActiv
                 >
                   <span className="font-display text-[1.3rem] leading-tight">{c.name}</span>
                   {layoutFor(c.slug) === "lines" ? (
-                    <span aria-hidden="true" className={on ? "text-paper/70" : "text-ink/40"}>›</span>
+                    <span aria-hidden="true" className={on ? "text-paper/70" : "text-ink/65"}>›</span>
                   ) : (
-                    <span className={`text-xs ${on ? "text-paper/60" : "text-ink/40"}`}>{inCategory(c.slug).length}</span>
+                    <span className={`text-xs ${on ? "text-paper/75" : "text-ink/65"}`}>{inCategory(c.slug).length}</span>
                   )}
                 </Link>
               </li>
@@ -117,7 +117,7 @@ function MegaMenu({ active, setActive, close }: { active: CategorySlug; setActiv
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.25, ease: EASE }}
         >
-          <p className="kicker mb-4 text-ink/45">{cat.name}</p>
+          <p className="kicker mb-4 text-ink/65">{cat.name}</p>
           <ul className="space-y-0.5">
             {list.map((p) => {
               const on = p.slug === lineProduct.slug;
@@ -131,7 +131,7 @@ function MegaMenu({ active, setActive, close }: { active: CategorySlug; setActiv
                     className={`flex items-center justify-between rounded-lg px-3 py-2 text-[0.98rem] transition-colors ${on ? "bg-ink/[0.07] text-ink" : "text-ink/75 hover:bg-ink/5 hover:text-ink"}`}
                   >
                     <span>{p.name.replace(/^Yogurt /, "")}</span>
-                    <span className="text-xs text-ink/40">{p.variants.length}</span>
+                    <span className="text-xs text-ink/65">{p.variants.length}</span>
                   </Link>
                 </li>
               );
@@ -143,7 +143,7 @@ function MegaMenu({ active, setActive, close }: { active: CategorySlug; setActiv
       {/* level 3 — products / flavours with photos, each links straight to its page */}
       <div className={layout === "lines" ? "col-span-7 xl:col-span-8" : "col-span-9 xl:col-span-10"}>
         <div className="mb-4 flex items-baseline justify-between">
-          <p className="kicker text-ink/45">{heading}</p>
+          <p className="kicker text-ink/65">{heading}</p>
           <Link href={headingHref} onClick={close} className="text-sm text-ink/70 hover:text-ink">
             Ver {heading.toLowerCase()} →
           </Link>
@@ -172,7 +172,7 @@ function MegaMenu({ active, setActive, close }: { active: CategorySlug; setActiv
                     />
                   </div>
                   <p className="mt-2 text-[0.95rem] leading-tight text-ink">{c.title}</p>
-                  <p className="text-xs text-ink/55">{c.sub}</p>
+                  <p className="text-xs text-ink/65">{c.sub}</p>
                 </Link>
               </li>
             ))}
@@ -196,6 +196,7 @@ export function Header() {
   const { scrollY } = useScroll();
   const pathname = usePathname();
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const openedAt = useRef(0);
 
   useMotionValueEvent(scrollY, "change", (y) => {
     const prev = scrollY.getPrevious() ?? 0;
@@ -233,8 +234,11 @@ export function Header() {
   // hover intent: open immediately, close after a short grace period
   const openMega = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
+    if (!mega) openedAt.current = Date.now();
     setMega(true);
   };
+  // hover/focus already opened it a moment ago — a click right after must not close it again
+  const toggleMega = () => (mega && Date.now() - openedAt.current > 400 ? setMega(false) : openMega());
   const scheduleClose = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
     closeTimer.current = setTimeout(() => setMega(false), 160);
@@ -267,7 +271,7 @@ export function Header() {
               aria-controls="mega-menu"
               onMouseEnter={openMega}
               onFocus={openMega}
-              onClick={() => setMega((m) => !m)}
+              onClick={toggleMega}
               className="group relative inline-flex items-center gap-1.5 text-[0.95rem] text-ink"
             >
               Productos
@@ -385,7 +389,7 @@ export function Header() {
                             className="flex w-full items-center justify-between py-3 text-left text-[1.15rem]"
                           >
                             {c.name}
-                            <span aria-hidden="true" className={`text-paper/60 transition-transform duration-300 ${on ? "rotate-90" : ""}`}>
+                            <span aria-hidden="true" className={`text-paper/75 transition-transform duration-300 ${on ? "rotate-90" : ""}`}>
                               ›
                             </span>
                           </button>
@@ -409,7 +413,7 @@ export function Header() {
                                   </li>
                                 ))}
                                 <li>
-                                  <Link href={`/productos?c=${c.slug}`} onClick={closeAll} className="block py-2 pb-4 text-sm text-paper/60">
+                                  <Link href={`/productos?c=${c.slug}`} onClick={closeAll} className="block py-2 pb-4 text-sm text-paper/75">
                                     Ver todo {c.name.toLowerCase()} →
                                   </Link>
                                 </li>

@@ -12,7 +12,7 @@ export function Footer() {
           </p>
         </div>
         <nav aria-label="Categorías" className="md:col-span-3">
-          <p className="kicker mb-5 text-paper/50">Productos</p>
+          <p className="kicker mb-5 text-paper/75">Productos</p>
           <ul className="grid grid-cols-2 gap-x-6 gap-y-2 text-[0.95rem] text-paper/85 md:grid-cols-1">
             {categories.map((c) => (
               <li key={c.slug}>
@@ -24,7 +24,7 @@ export function Footer() {
           </ul>
         </nav>
         <div className="md:col-span-4">
-          <p className="kicker mb-5 text-paper/50">Contacto</p>
+          <p className="kicker mb-5 text-paper/75">Contacto</p>
           <ul className="space-y-2 text-[0.95rem] text-paper/85">
             <li>
               <a href={`mailto:${site.email}`} className="hover:underline">
@@ -47,7 +47,7 @@ export function Footer() {
         </p>
       </div>
 
-      <div className="gutter flex flex-col gap-2 border-t border-paper/10 py-6 pb-24 text-xs text-paper/50 md:flex-row md:items-center md:justify-between md:pb-6">
+      <div className="gutter flex flex-col gap-2 border-t border-paper/10 py-6 pb-24 text-xs text-paper/75 md:flex-row md:items-center md:justify-between md:pb-6">
         <p>
           © {new Date().getFullYear()} {site.legalName} · {site.plant.line1}, {site.plant.line2}
         </p>

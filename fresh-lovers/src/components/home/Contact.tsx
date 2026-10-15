@@ -63,11 +63,10 @@ export function Contact() {
     <section id="contacto" aria-labelledby="contacto-title" className="relative overflow-hidden bg-paper py-24 md:py-36">
       <div className="gutter grid items-center gap-14 md:grid-cols-12">
         <div className="md:col-span-6">
-          <p className="kicker text-ink/60">Contacto</p>
-          <h2 id="contacto-title" className="font-display mt-6 text-[19vw] leading-[0.84] tracking-[-0.03em] md:text-[9vw]">
-            <MaskLine>Escrí</MaskLine>
-            <MaskLine delay={0.08}>
-              <em>benos.</em>
+          <p className="kicker text-ink/65">Contacto</p>
+          <h2 id="contacto-title" className="font-display mt-6 text-[15vw] leading-[0.9] tracking-[-0.03em] md:text-[6.4vw]">
+            <MaskLine>
+              <em>Escríbenos.</em>
             </MaskLine>
           </h2>
           <Reveal className="mt-8 max-w-sm text-[1.05rem] leading-relaxed text-ink-2">

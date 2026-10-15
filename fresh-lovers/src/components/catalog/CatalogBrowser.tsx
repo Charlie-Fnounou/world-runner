@@ -49,7 +49,7 @@ function Card({ item: { p, v }, cat, full }: { item: Item; cat: Category; full?:
       </div>
       <div className="mt-3 px-1">
         <h4 className="text-[1.02rem] leading-tight">{many ? (full ? `${p.name} ${x.name.toLowerCase()}` : x.name) : p.name}</h4>
-        <p className="mt-0.5 text-[0.85rem] text-ink/55">{many && !full ? p.name : p.sizes.join(" · ")}</p>
+        <p className="mt-0.5 text-[0.85rem] text-ink/65">{many && !full ? p.name : p.sizes.join(" · ")}</p>
       </div>
     </Link>
   );
@@ -149,7 +149,7 @@ export function CatalogBrowser({ initialC = null, initialL = null }: { initialC?
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Buscar: labne, fresa, yuca…"
-              className="h-11 w-full rounded-full border border-ink/20 bg-transparent px-5 text-[0.95rem] placeholder:text-ink/45 focus:border-ink focus:outline-none"
+              className="h-11 w-full rounded-full border border-ink/20 bg-transparent px-5 text-[0.95rem] placeholder:text-ink/60 focus:border-ink focus:outline-none"
             />
           </label>
         </div>
@@ -166,7 +166,7 @@ export function CatalogBrowser({ initialC = null, initialL = null }: { initialC?
             ))}
           </div>
         )}
-        <p className="kicker mt-4 text-ink/55" aria-live="polite">
+        <p className="kicker mt-4 text-ink/65" aria-live="polite">
           {list.length} {list.length === 1 ? "producto" : "productos"}
           {active !== "all" && ` · ${categories.find((c) => c.slug === active)?.name}`}
           {line && ` · ${products.find((p) => p.slug === line)?.name}`}
@@ -192,11 +192,11 @@ export function CatalogBrowser({ initialC = null, initialL = null }: { initialC?
                 <div className="flex items-baseline justify-between gap-4 border-b border-ink/15 pb-2">
                   <h3 className="font-display text-[1.6rem] italic leading-tight md:text-[2rem]">
                     {p.name}
-                    <span className="kicker ml-3 align-middle text-[0.6rem] not-italic text-ink/50">
+                    <span className="kicker ml-3 align-middle text-[0.6rem] not-italic text-ink/65">
                       {p.variants.length > 1 ? `${p.variants.length} ${p.category === "cafe" || p.category === "harinas" ? "variedades" : "sabores"}` : p.sizes.join(" · ")}
                     </span>
                   </h3>
-                  <Link href={`/productos/${p.slug}`} className="shrink-0 text-[0.85rem] text-ink/60 underline-offset-4 hover:text-ink hover:underline">
+                  <Link href={`/productos/${p.slug}`} className="shrink-0 text-[0.85rem] text-ink/65 underline-offset-4 hover:text-ink hover:underline">
                     Ficha
                   </Link>
                 </div>

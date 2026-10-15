@@ -29,7 +29,7 @@ export default function ProductosPage() {
         }}
       />
       <header className="pt-28 md:pt-36">
-        <p className="kicker text-ink/55">
+        <p className="kicker text-ink/65">
           Catálogo · {categories.length} categorías · {skuCount} productos
         </p>
         <h1 className="font-display mt-4 text-[20vw] leading-[0.82] tracking-[-0.03em] md:text-[11vw]">

@@ -82,7 +82,7 @@ export function Hero() {
       </svg>
 
       <motion.p
-        className="kicker gutter relative z-10 text-center text-ink/60"
+        className="kicker gutter relative z-10 text-center text-ink/65"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.9, duration: 1 }}
@@ -189,7 +189,7 @@ export function Hero() {
 
         <div className="flex items-end justify-between gap-4 md:justify-end">
           <div className="min-w-0 md:text-right" aria-live="polite">
-            <p className="kicker text-ink/50">
+            <p className="kicker text-ink/65">
               {String(i + 1).padStart(2, "0")} / {String(lineup.length).padStart(2, "0")}
             </p>
             <AnimatePresence mode="wait" initial={false}>

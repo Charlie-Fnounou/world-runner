@@ -90,7 +90,7 @@ export function ProductView({ product: p, category, start = 0 }: Props & { start
 
       {/* details */}
       <div className="md:col-span-6 md:pt-6">
-        <p className="kicker text-ink/55">{category.name}</p>
+        <p className="kicker text-ink/65">{category.name}</p>
         <h1 className="font-display mt-4 text-[13vw] leading-[0.88] tracking-[-0.02em] md:text-[5.4vw]">{p.name}</h1>
         <AnimatePresence mode="wait" initial={false}>
           <motion.p
@@ -108,7 +108,7 @@ export function ProductView({ product: p, category, start = 0 }: Props & { start
 
         {p.variants.length > 1 && (
           <fieldset className="mt-10">
-            <legend className="kicker mb-4 text-ink/55">
+            <legend className="kicker mb-4 text-ink/65">
               {p.category === "cafe" || p.category === "harinas" ? "Variedad" : "Sabor"} · {p.variants.length}
             </legend>
             <div className="flex flex-wrap gap-2">
@@ -182,7 +182,7 @@ export function ProductView({ product: p, category, start = 0 }: Props & { start
             Ver más productos
           </Link>
         </div>
-        <p className="mt-6 text-xs text-ink/50">
+        <p className="mt-6 text-xs text-ink/65">
           Información tomada del catálogo y las etiquetas Fresh Lovers. Consulta siempre la etiqueta del producto.
         </p>
       </div>

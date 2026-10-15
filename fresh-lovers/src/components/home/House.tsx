@@ -26,12 +26,12 @@ function Labne() {
         <motion.h2
           id="labne-title"
           style={{ x }}
-          className="font-display mt-4 whitespace-nowrap text-[30vw] leading-[0.8] tracking-[-0.02em] md:text-[27vw]"
+          className="font-display mt-4 whitespace-nowrap text-[24vw] leading-[0.8] tracking-[-0.02em] md:text-[27vw]"
         >
           LABNE
         </motion.h2>
 
-        <div className="relative mt-[-14vw] grid items-end gap-10 md:mt-[-12vw] md:grid-cols-12">
+        <div className="relative mt-20 grid items-end gap-10 md:mt-[-12vw] md:grid-cols-12">
           <div className="relative flex items-start gap-3 md:col-span-7 md:col-start-1">
             <motion.div style={{ y: tubY, rotate: tubR }} className="relative aspect-[4/3] w-[78%] overflow-hidden rounded-[2rem] shadow-[0_40px_80px_-30px_rgba(0,0,0,0.5)]">
               <ProductPhoto product={labne} photo={labne.image} fill sizes="(min-width: 768px) 45vw, 78vw" />
