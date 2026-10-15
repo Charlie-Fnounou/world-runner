@@ -116,14 +116,12 @@ export function Shelf() {
           aria-label={cat.name}
           className="gutter grid grid-cols-2 gap-x-3 gap-y-8 pb-6 sm:grid-cols-3 md:grid-cols-4 md:gap-x-5 md:gap-y-10 lg:grid-cols-5"
         >
-          <AnimatePresence mode="popLayout" initial={false}>
             {items.map(({ p, i, v, ...rest }, n) => (
               <motion.div
-                key={`${p.slug}-${i}`}
-                initial={{ opacity: 0, y: 40 }}
+                key={`${active}-${p.slug}-${i}`}
+                initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }}
-                transition={{ duration: 0.7, delay: n * 0.05, ease: EASE }}
+                transition={{ duration: 0.6, delay: Math.min(n, 10) * 0.04, ease: EASE }}
               >
                 <Link
                   href={`/productos/${p.slug}${p.variants.length > 1 && !("all" in rest) ? `?v=${i}` : ""}`}
@@ -152,7 +150,6 @@ export function Shelf() {
                 </Link>
               </motion.div>
             ))}
-          </AnimatePresence>
           <div>
             <Link
               href={`/productos?c=${cat.slug}`}

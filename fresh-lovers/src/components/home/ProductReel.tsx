@@ -12,7 +12,7 @@ const items: Item[] = [
   { photo: "studio-labne", name: "Labne", detail: "solo o con za'atar", href: "/productos/labne", bg: "#5B60D6", ink: "#FFFFFF" },
   { photo: "studio-parfait", name: "Parfait", detail: "yogurt, mermelada y granola", href: "/productos/parfait", bg: "#8E2B2B", ink: "#FFF4EE" },
   { photo: "studio-arepa-maiz-con-queso", name: "Arepas", detail: "siete maneras", href: "/productos?c=arepas", bg: "#F2C14E", ink: "#3B2406" },
-  { photo: "studio-queso-prensado", name: "Queso Prensado", detail: "con sal o bajo en sal", href: "/productos/queso-prensado", bg: "#EFE3C4", ink: "#3A2E12" },
+  { photo: "studio-queso-nacional", name: "Quesos", detail: "prensado, cremoso, nacional y mozzarella", href: "/productos?c=quesos", bg: "#EFE3C4", ink: "#3A2E12" },
   { photo: "studio-yogurt-en-pouch", name: "Yogurt en Pouch", detail: "250 ml y Pouch de niños", href: "/productos/yogurt-en-pouch", bg: "#E9C8C0", ink: "#5C1A22" },
   { photo: "studio-granola", name: "Granola", detail: "avena integral", href: "/productos/granola", bg: "#E9D8C4", ink: "#6E3B3C" },
   { photo: "studio-yogurt-copa-especiales", name: "Yogurt Copa", detail: "chocolate · dulce de leche · mermelada", href: "/productos/yogurt-copa-especiales", bg: "#D8CFC6", ink: "#3A2A20" },

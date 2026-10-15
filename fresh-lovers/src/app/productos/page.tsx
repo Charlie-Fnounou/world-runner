@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { CatalogBrowser } from "@/components/catalog/CatalogBrowser";
+import { CatalogBrowser, CatalogBrowserFromUrl } from "@/components/catalog/CatalogBrowser";
 import { JsonLd } from "@/components/JsonLd";
 import { categories, products, skuCount } from "@/data/catalog";
 import { site } from "@/data/site";
@@ -36,8 +36,8 @@ export default function ProductosPage() {
           Productos
         </h1>
       </header>
-      <Suspense fallback={<div className="h-96" />}>
-        <CatalogBrowser />
+      <Suspense fallback={<CatalogBrowser />}>
+        <CatalogBrowserFromUrl />
       </Suspense>
     </div>
   );

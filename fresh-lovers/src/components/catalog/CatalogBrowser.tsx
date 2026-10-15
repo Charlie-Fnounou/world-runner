@@ -27,7 +27,7 @@ const items: Item[] = products.flatMap((p) => {
   return p.variants.map((x, v) => ({ p, v, key: `${p.slug}-${v}`, hay: norm(`${base} ${x.name}`) }));
 });
 
-function Card({ item: { p, v }, cat }: { item: Item; cat: Category }) {
+function Card({ item: { p, v }, cat, full }: { item: Item; cat: Category; full?: boolean }) {
   const x = p.variants[v];
   const many = p.variants.length > 1;
   return (
@@ -48,14 +48,14 @@ function Card({ item: { p, v }, cat }: { item: Item; cat: Category }) {
         </div>
       </div>
       <div className="mt-3 px-1">
-        <h4 className="text-[1.02rem] leading-tight">{many ? x.name : p.name}</h4>
-        <p className="mt-0.5 text-[0.85rem] text-ink/55">{many ? p.name : p.sizes.join(" · ")}</p>
+        <h4 className="text-[1.02rem] leading-tight">{many ? (full ? `${p.name} ${x.name.toLowerCase()}` : x.name) : p.name}</h4>
+        <p className="mt-0.5 text-[0.85rem] text-ink/55">{many && !full ? p.name : p.sizes.join(" · ")}</p>
       </div>
     </Link>
   );
 }
 
-function Grid({ list, cat }: { list: Item[]; cat: Category }) {
+function Grid({ list, cat, full }: { list: Item[]; cat: Category; full?: boolean }) {
   return (
     <ul className="mt-5 grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-3 md:gap-x-5 md:gap-y-10 lg:grid-cols-4 xl:grid-cols-5">
       {list.map((it) => (
@@ -66,19 +66,25 @@ function Grid({ list, cat }: { list: Item[]; cat: Category }) {
           viewport={{ once: true, margin: "0px 0px -40px 0px" }}
           transition={{ duration: 0.5, ease: EASE }}
         >
-          <Card item={it} cat={cat} />
+          <Card item={it} cat={cat} full={full} />
         </motion.li>
       ))}
     </ul>
   );
 }
 
-export function CatalogBrowser() {
+/** Opens on the category/line named in ?c= and ?l=. */
+export function CatalogBrowserFromUrl() {
   const params = useSearchParams();
+  const c = params.get("c");
+  const l = params.get("l");
+  return <CatalogBrowser initialC={c as CategorySlug | null} initialL={l} />;
+}
+
+/** Without filters it renders on the server too, so the static HTML lists every product. */
+export function CatalogBrowser({ initialC = null, initialL = null }: { initialC?: CategorySlug | null; initialL?: string | null }) {
   const router = useRouter();
   const pathname = usePathname();
-  const initialC = params.get("c") as CategorySlug | null;
-  const initialL = params.get("l");
   const [active, setActive] = useState<CategorySlug | "all">(initialC && categories.some((c) => c.slug === initialC) ? initialC : "all");
   const [line, setLine] = useState<string | null>(initialL && products.some((p) => p.slug === initialL && p.category === initialC) ? initialL : null);
   const [q, setQ] = useState("");
@@ -93,7 +99,7 @@ export function CatalogBrowser() {
   }, [active, line, q]);
 
   const sync = (c: CategorySlug | "all", l: string | null) => {
-    const sp = new URLSearchParams(params.toString());
+    const sp = new URLSearchParams(window.location.search);
     if (c === "all") sp.delete("c");
     else sp.set("c", c);
     if (l) sp.set("l", l);
@@ -110,7 +116,15 @@ export function CatalogBrowser() {
       groups: products
         .filter((p) => p.category === cat.slug)
         .map((p) => ({ p, list: list.filter((it) => it.p === p) }))
-        .filter((g) => g.list.length),
+        .filter((g) => g.list.length)
+        // lines with one or two items share a single grid instead of a heading each
+        .reduce<{ p: Product | null; list: Item[] }[]>((acc, g) => {
+          const last = acc[acc.length - 1];
+          if (g.list.length >= 3) acc.push(g);
+          else if (last && !last.p) last.list.push(...g.list);
+          else acc.push({ p: null, list: [...g.list] });
+          return acc;
+        }, []),
     }))
     .filter((s) => s.groups.length);
 
@@ -173,8 +187,8 @@ export function CatalogBrowser() {
           )}
           {active !== "all" && <h2 id={`cat-${cat.slug}`} className="sr-only">{cat.name}</h2>}
           {groups.map(({ p, list: gl }) => (
-            <div key={p.slug} className="mt-8 first:mt-6">
-              {(groups.length > 1 || p.variants.length > 1) && (
+            <div key={p?.slug ?? gl[0].key} className="mt-8 first:mt-6">
+              {p && (groups.length > 1 || p.variants.length > 1) && (
                 <div className="flex items-baseline justify-between gap-4 border-b border-ink/15 pb-2">
                   <h3 className="font-display text-[1.6rem] italic leading-tight md:text-[2rem]">
                     {p.name}
@@ -187,7 +201,7 @@ export function CatalogBrowser() {
                   </Link>
                 </div>
               )}
-              <Grid list={gl} cat={cat} />
+              <Grid list={gl} cat={cat} full={!p} />
             </div>
           ))}
         </section>

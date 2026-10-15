@@ -12,9 +12,17 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 
 const pale = (hex: string) => ["#F4ECE0", "#F7F5F0", "#F6F3EC", "#FBF8F3", "#FBFAF7", "#141210"].includes(hex);
 
-export function ProductView({ product: p, category }: { product: Product; category: Category }) {
+type Props = { product: Product; category: Category };
+
+/** Opens on the flavour named in ?v=. */
+export function ProductViewFromUrl(props: Props) {
   const params = useSearchParams();
-  const start = Math.min(Math.max(0, Number(params.get("v") ?? 0) || 0), p.variants.length - 1);
+  const start = Math.min(Math.max(0, Number(params.get("v") ?? 0) || 0), props.product.variants.length - 1);
+  return <ProductView key={start} {...props} start={start} />;
+}
+
+/** Without ?v= it renders on the server too, so the static HTML carries the name, photo and text. */
+export function ProductView({ product: p, category, start = 0 }: Props & { start?: number }) {
   const [i, setI] = useState(start);
   const [shot, setShot] = useState(0);
   const [shotFor, setShotFor] = useState(start);

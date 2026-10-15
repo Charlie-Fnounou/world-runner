@@ -11,11 +11,11 @@ import { photos, type PhotoKey } from "@/data/photos";
 import { site } from "@/data/site";
 
 /** Studio shots of the real packaging — one per family. */
-const lineupData: { slug: string; photo: PhotoKey; caption: string }[] = [
+const lineupData: { slug: string; photo: PhotoKey; caption: string; href?: string }[] = [
   { slug: "yogurt-griego", photo: "studio-griego-hero", caption: "Yogurt griego" },
   { slug: "labne", photo: "studio-labne", caption: "Labne" },
   { slug: "yogurt-en-pouch", photo: "studio-yogurt-en-pouch", caption: "Yogurt en pouch" },
-  { slug: "queso-prensado", photo: "studio-queso-prensado", caption: "Queso prensado" },
+  { slug: "queso-prensado", photo: "studio-queso-prensado", caption: "Quesos", href: "/productos?c=quesos" },
   { slug: "arepa-yuca-con-queso", photo: "studio-arepa-yuca-con-queso", caption: "Arepas" },
   { slug: "yosnack", photo: "studio-yosnack", caption: "YoSnack" },
   { slug: "parfait", photo: "studio-parfait", caption: "Parfait con granola" },
@@ -208,7 +208,7 @@ export function Hero() {
                 transition={{ duration: 0.4 }}
                 className="mt-1 truncate text-[1.02rem]"
               >
-                <Link href={`/productos/${item.product.slug}`} className="hover:underline">
+                <Link href={item.href ?? `/productos/${item.product.slug}`} className="hover:underline">
                   {item.caption}
                 </Link>
               </motion.p>

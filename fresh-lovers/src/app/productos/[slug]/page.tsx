@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { ProductView } from "@/components/catalog/ProductView";
+import { ProductView, ProductViewFromUrl } from "@/components/catalog/ProductView";
 import { ProductPhoto } from "@/components/ProductPhoto";
 import { JsonLd } from "@/components/JsonLd";
 import { ArrowIcon } from "@/components/Icons";
@@ -20,10 +20,13 @@ export async function generateMetadata({ params }: PageProps<"/productos/[slug]"
   const { slug } = await params;
   const p = getProduct(slug);
   if (!p) return {};
-  const variants = p.variants.length > 1 ? ` Sabores: ${p.variants.map((v) => v.name).join(", ")}.` : "";
+  const variants = p.variants.length > 1 ? ` Variedades: ${p.variants.map((v) => v.name).join(", ")}.` : ` Presentación: ${p.sizes.join(", ").replace(/\.$/, "")}.`;
+  let description = `${p.description}${variants} Fresh Lovers, hecho en Panamá.`;
+  // keep it under ~158 characters, cut at a word
+  if (description.length > 158) description = `${description.slice(0, 155).replace(/[\s,.;:]+\S*$/, "")}…`;
   return {
     title: p.name,
-    description: `${p.description}${variants}`.slice(0, 158),
+    description,
     alternates: { canonical: `/productos/${p.slug}` },
     openGraph: {
       title: `${p.name} · Fresh Lovers`,
@@ -74,8 +77,8 @@ export default async function ProductPage({ params }: PageProps<"/productos/[slu
         <Link href={`/productos?c=${category.slug}`} className="hover:text-ink">{category.name}</Link>
       </nav>
 
-      <Suspense fallback={<div className="min-h-[80vh]" />}>
-        <ProductView product={p} category={category} />
+      <Suspense fallback={<ProductView product={p} category={category} />}>
+        <ProductViewFromUrl product={p} category={category} />
       </Suspense>
 
       <section aria-labelledby="related" className="mt-28 border-t border-ink/15 pt-10">
