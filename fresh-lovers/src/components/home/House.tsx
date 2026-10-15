@@ -22,7 +22,7 @@ function Labne() {
   return (
     <section ref={ref} aria-labelledby="labne-title" className="relative overflow-hidden bg-[#5B60D6] text-white">
       <div className="gutter relative pb-16 pt-20 md:pb-24 md:pt-28">
-        <p className="kicker opacity-80">Labne & Dips</p>
+        <p className="kicker">Labne & Dips</p>
         <motion.h2
           id="labne-title"
           style={{ x }}
@@ -120,7 +120,7 @@ function Cafe() {
       </div>
       <div className="gutter grid items-center gap-12 py-20 md:grid-cols-12 md:py-28">
         <div className="md:col-span-6">
-          <p className="kicker opacity-70">Café artesanal</p>
+          <p className="kicker opacity-90">Café artesanal</p>
           <h2 id="cafe-title" className="font-display mt-5 text-[13vw] leading-[0.9] tracking-[-0.02em] md:text-[6.2vw]">
             <MaskLine>Cosechado</MaskLine>
             <MaskLine delay={0.08}>
