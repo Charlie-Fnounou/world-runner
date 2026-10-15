@@ -65,7 +65,7 @@ export function GreekSequence() {
 
         <div className="gutter relative z-10 flex flex-1 flex-col pt-20 md:grid md:grid-cols-12 md:items-center md:pt-0">
           <div className="md:col-span-4">
-            <p className="kicker opacity-80">Y O G U R T · copa 150 ml</p>
+            <p className="kicker">Y O G U R T · copa 150 ml</p>
             <h2 id="copa-title" className="font-display mt-2 text-[22vw] leading-[0.82] tracking-[-0.03em] md:mt-4 md:text-[9.5vw]">
               Copa
             </h2>
@@ -120,7 +120,7 @@ export function GreekSequence() {
                   type="button"
                   onClick={() => setI(n)}
                   aria-current={n === i}
-                  className={`font-display text-[1.1rem] italic transition-opacity md:text-[1.3rem] ${n === i ? "opacity-100" : "opacity-45 hover:opacity-80"}`}
+                  className={`font-display text-[1.1rem] italic transition-opacity md:text-[1.3rem] ${n === i ? "underline decoration-1 underline-offset-[6px]" : "opacity-90 hover:opacity-100"}`}
                 >
                   <span className="mr-1.5 font-sans text-[0.65rem] not-italic tracking-widest">{String(n + 1).padStart(2, "0")}</span>
                   {f.name.toLowerCase()}
