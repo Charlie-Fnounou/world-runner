@@ -257,7 +257,7 @@ export const products: Product[] = [
       { name: "Blueberry", photo: "pouch-250-blueberry", bg: "#D4D8F2", ink: "#2B3A8F", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
       { name: "Fresa - Banana", photo: "pouch-250-fresa-banana", bg: "#F8E7A8", ink: "#B32446", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
       { name: "Vainilla", photo: "studio-pouch-vainilla", bg: "#F3E7C9", ink: "#7A5A22", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
-      { name: "Galleta", photo: "studio-pouch-galleta", bg: "#E3D8CB", ink: "#3A2A20", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
+      { name: "Galleta", photo: "pouch-250", bg: "#E3D8CB", ink: "#3A2A20", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
       { name: "Berries", photo: "studio-pouch-berries", bg: "#E5CADF", ink: "#6A2457", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
       { name: "Piña", photo: "studio-pouch-pina", bg: "#F8E08A", ink: "#7A5A0A", note: "250 ml", ingredients: POUCH_INGREDIENTS, seals: ["jalav-israel"] },
       { name: "Pouch de niños · Fresa", photo: "pouch-ninos-fresa", bg: "#EC4F93", ink: "#FFFFFF", accent: "#C21E63" },
@@ -566,7 +566,7 @@ export const products: Product[] = [
     variants: [{ name: "Maíz", bg: "#F6DF8E", ink: "#3B5E1F", accent: "#EFC650" }],
     sizes: ["12 und."],
     shape: "arepas",
-    image: "studio-arepa-maiz",
+    image: "arepa-maiz",
     sources: ["CAT26"],
   },
   {
@@ -644,7 +644,7 @@ export const products: Product[] = [
     variants: [{ name: "Maíz", bg: "#F3C93F", ink: "#2C4E1E", accent: "#F7DE84" }],
     sizes: ["10 und."],
     shape: "tortillas",
-    image: "studio-tortillas-de-maiz",
+    image: "tortillas",
     sources: ["CAT26"],
   },
 
