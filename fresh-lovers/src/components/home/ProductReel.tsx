@@ -15,7 +15,8 @@ const items: Item[] = [
   { photo: "studio-queso-nacional", name: "Quesos", detail: "prensado, cremoso, nacional y mozzarella", href: "/productos?c=quesos", bg: "#EFE3C4", ink: "#3A2E12" },
   { photo: "studio-yogurt-en-pouch", name: "Yogurt en Pouch", detail: "250 ml y Pouch de niños", href: "/productos/yogurt-en-pouch", bg: "#E9C8C0", ink: "#5C1A22" },
   { photo: "studio-granola", name: "Granola", detail: "avena integral", href: "/productos/granola", bg: "#E9D8C4", ink: "#6E3B3C" },
-  { photo: "studio-yogurt-copa-especiales", name: "Yogurt Copa", detail: "chocolate · dulce de leche · mermelada", href: "/productos/yogurt-copa-especiales", bg: "#D8CFC6", ink: "#3A2A20" },
+  { photo: "studio-yogurt-copa", name: "Yogurt Copa", detail: "natural · fresa · vainilla · galleta", href: "/productos/yogurt-copa", bg: "#F6C3CB", ink: "#7A1F33" },
+  { photo: "studio-yogurt-copa-especiales", name: "Copa Especiales", detail: "chocolate · dulce de leche · mermelada", href: "/productos/yogurt-copa-especiales", bg: "#D8CFC6", ink: "#3A2A20" },
   { photo: "studio-cafe-artesanal", name: "Café Artesanal", detail: "cuenca del Canal de Panamá", href: "/productos/cafe-artesanal", bg: "#22305F", ink: "#F4EFE6" },
   { photo: "studio-aceitunas-condimentadas", name: "Aceitunas", detail: "condimentadas · 10 oz", href: "/productos/aceitunas-condimentadas", bg: "#C3C59A", ink: "#2E3517" },
   { photo: "studio-sopas", name: "Sopas", detail: "sin lácteos", href: "/productos/sopas", bg: "#E9744A", ink: "#2A0F06" },
@@ -66,7 +67,7 @@ export function ProductReel() {
   return (
     <section aria-labelledby="reel-title" className="relative bg-paper py-20 md:py-24">
       <div className="gutter">
-        <p className="kicker text-ink/65">Productos · {items.length} categorías</p>
+        <p className="kicker text-ink/65">Productos</p>
         <h2 id="reel-title" className="font-display mt-2 text-[12vw] leading-[0.85] tracking-[-0.02em] md:text-[5.6vw]">
           Para cada <em>antojo</em>
         </h2>
