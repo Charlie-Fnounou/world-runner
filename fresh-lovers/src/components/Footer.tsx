@@ -36,6 +36,11 @@ export function Footer() {
                 Instagram @{site.instagram}
               </a>
             </li>
+            <li>
+              <Link href="/helado" className="hover:underline">
+                Estación de helado
+              </Link>
+            </li>
           </ul>
         </div>
       </div>

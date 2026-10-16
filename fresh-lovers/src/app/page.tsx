@@ -4,6 +4,7 @@ import { ProductReel } from "@/components/home/ProductReel";
 import { GreekSequence } from "@/components/home/GreekSequence";
 import { House } from "@/components/home/House";
 import { Stores } from "@/components/home/Stores";
+import { IceCream } from "@/components/home/IceCream";
 import { Contact } from "@/components/home/Contact";
 import { JsonLd } from "@/components/JsonLd";
 import { faqs } from "@/data/faqs";
@@ -47,6 +48,7 @@ export default function Home() {
       <Shelf />
       <GreekSequence />
       <House />
+      <IceCream />
       <Stores />
       <Contact />
     </>

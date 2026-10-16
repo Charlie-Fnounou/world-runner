@@ -14,6 +14,7 @@ import { instagramLink, site } from "@/data/site";
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 const nav = [
+  { href: "/helado", label: "Helado" },
   { href: "/#donde-comprar", label: "Dónde comprar" },
   { href: "/#contacto", label: "Contacto" },
 ];
