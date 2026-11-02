@@ -378,10 +378,10 @@ export const products: Product[] = [
     kicker: "Queso fresco",
     title: "Cremoso",
     description: "Queso fresco suave con textura cremosa.",
-    variants: [{ name: "Cremoso", bg: "#141210", ink: "#FFFFFF", accent: "#E58F3B" }],
+    variants: [{ name: "Cremoso", bg: "#141210", ink: "#FFFFFF", accent: "#EE7F99" }],
     sizes: ["8 oz"],
     shape: "block",
-    image: "studio-queso-cremoso",
+    image: "queso-cremoso",
     sources: ["CAT26", "CAT22"],
   },
   {

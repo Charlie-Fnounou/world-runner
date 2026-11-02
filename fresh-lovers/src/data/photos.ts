@@ -101,7 +101,6 @@ export const photos = {
   "studio-mix-sopero": { src: "/studio/mix-sopero.webp", w: 1200, h: 1500 },
   "studio-mozzarella": { src: "/studio/mozzarella.webp", w: 1200, h: 1500 },
   "studio-parfait": { src: "/studio/parfait.webp", w: 1200, h: 1500 },
-  "studio-queso-cremoso": { src: "/studio/queso-cremoso.webp", w: 1200, h: 1500 },
   "studio-queso-cremoso-aceituna": { src: "/studio/queso-cremoso-aceituna.webp", w: 1200, h: 1500 },
   "studio-queso-cremoso-aleppo": { src: "/studio/queso-cremoso-aleppo.webp", w: 1200, h: 1500 },
   "studio-queso-nacional": { src: "/studio/queso-nacional.webp", w: 1200, h: 1500 },
