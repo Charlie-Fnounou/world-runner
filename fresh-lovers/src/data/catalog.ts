@@ -109,7 +109,7 @@ export const categories: Category[] = [
   },
   {
     slug: "labne-dips",
-    name: "Labne & Dips",
+    name: "Labneh & Dips",
     blurb: "Para untar, mojar y compartir.",
     bg: "#5B60D6",
     ink: "#FFFFFF",
@@ -456,11 +456,11 @@ export const products: Product[] = [
   /* ─────────────────────────── LABNE & DIPS ─────────────────────────── */
   {
     slug: "labne",
-    name: "Labne",
+    name: "Labneh",
     category: "labne-dips",
-    kicker: "Labne",
-    title: "Labne",
-    description: "Labne cremoso, solo o con za'atar y aceite de oliva.",
+    kicker: "Labneh",
+    title: "Labneh",
+    description: "Labneh cremoso, solo o con za'atar y aceite de oliva.",
     variants: [
       {
         name: "Natural",
@@ -521,14 +521,14 @@ export const products: Product[] = [
   },
   {
     slug: "dip-aceituna",
-    name: "Dip Aceituna",
+    name: "Dip de Aceitunas",
     category: "labne-dips",
     kicker: "Dip",
-    title: "Aceituna",
+    title: "Aceitunas",
     description: "Dip cremoso con aceitunas verdes.",
     variants: [
       {
-        name: "Aceituna",
+        name: "Aceitunas",
         bg: "#8C8C45",
         ink: "#FFFFFF",
         accent: "#6F7F2A",

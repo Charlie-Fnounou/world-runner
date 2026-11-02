@@ -20,15 +20,15 @@ function Labne() {
   const tubR = useTransform(scrollYProgress, [0, 1], [-8, 6]);
 
   return (
-    <section ref={ref} aria-labelledby="labne-title" className="relative overflow-hidden bg-[#5B60D6] text-white">
+    <section ref={ref} aria-labelledby="labne-title" className="relative overflow-hidden bg-[#3F82BF] text-white">
       <div className="gutter relative pb-16 pt-20 md:pb-24 md:pt-28">
-        <p className="kicker">Labne & Dips</p>
+        <p className="kicker">Labneh & Dips</p>
         <motion.h2
           id="labne-title"
           style={{ x }}
           className="font-display mt-4 whitespace-nowrap text-[24vw] leading-[0.8] tracking-[-0.02em] md:text-[27vw]"
         >
-          LABNE
+          LABNEH
         </motion.h2>
 
         <div className="relative mt-20 grid items-end gap-10 md:mt-[-12vw] md:grid-cols-12">
@@ -45,11 +45,11 @@ function Labne() {
               Solo, o con <em>za&apos;atar</em> y aceite de oliva.
             </p>
             <ul className="mt-6 space-y-1 text-[0.98rem] opacity-85">
-              <li>266 ml · Jalav Israel</li>
-              <li>También: Labne con Chips, Ricotta, Dip Aceituna</li>
+              <li>300 g · Kosher</li>
+              <li>También: Labne con Chips, Ricotta, Dip de Aceitunas</li>
             </ul>
             <Link href="/productos?c=labne-dips" className="group mt-8 inline-flex items-center gap-2 border-b border-white/50 pb-1 text-[0.98rem]">
-              Ver Labne & Dips
+              Ver Labneh & Dips
               <ArrowIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </Reveal>

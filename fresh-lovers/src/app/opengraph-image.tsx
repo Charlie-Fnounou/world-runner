@@ -15,7 +15,7 @@ export default function OG() {
             <span>Fresh</span>
             <span style={{ fontStyle: "italic", paddingLeft: 140 }}>lovers</span>
           </div>
-          <div style={{ display: "flex", fontSize: 30 }}>Yogurt griego · Labne · Quesos · Arepas · Café — Panamá</div>
+          <div style={{ display: "flex", fontSize: 30 }}>Yogurt griego · Labneh · Quesos · Arepas · Café — Panamá</div>
         </div>
       </div>
     ),
