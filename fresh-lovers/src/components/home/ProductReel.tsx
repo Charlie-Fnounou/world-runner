@@ -9,7 +9,7 @@ type Item = { photo: PhotoKey; name: string; detail: string; href: string; bg: s
 
 /** Studio shots of the real packaging. */
 const items: Item[] = [
-  { photo: "studio-labne", name: "Labne", detail: "solo o con za'atar", href: "/productos/labne", bg: "#5B60D6", ink: "#FFFFFF" },
+  { photo: "studio-labne", name: "Labne", detail: "solo o con za'atar", href: "/productos/labne", bg: "#3F82BF", ink: "#FFFFFF" },
   { photo: "studio-parfait", name: "Parfait", detail: "yogurt, mermelada y granola", href: "/productos/parfait", bg: "#8E2B2B", ink: "#FFF4EE" },
   { photo: "studio-arepa-maiz-con-queso", name: "Arepas", detail: "siete maneras", href: "/productos?c=arepas", bg: "#F2C14E", ink: "#3B2406" },
   { photo: "studio-queso-nacional", name: "Quesos", detail: "prensado, cremoso, nacional y mozzarella", href: "/productos?c=quesos", bg: "#EFE3C4", ink: "#3A2E12" },
