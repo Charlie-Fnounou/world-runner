@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, useMotionValueEvent, useScroll } from "motion/react";
 import { useState } from "react";
 
@@ -9,6 +10,8 @@ export function MobileBar() {
   const { scrollY } = useScroll();
   const [show, setShow] = useState(false);
   useMotionValueEvent(scrollY, "change", (y) => setShow(y > 280));
+  // the Pesaj order page has its own bottom bar
+  if (usePathname()?.startsWith("/pesaj")) return null;
 
   return (
     <motion.div
