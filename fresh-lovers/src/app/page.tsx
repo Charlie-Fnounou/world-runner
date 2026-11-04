@@ -45,11 +45,11 @@ export default function Home() {
         ]}
       />
       <Hero />
+      <PesajPoster />
       <ProductReel />
       <Shelf />
       <GreekSequence />
       <House />
-      <PesajPoster />
       <IceCream />
       <Stores />
       <Contact />
