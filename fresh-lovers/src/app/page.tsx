@@ -4,6 +4,7 @@ import { ProductReel } from "@/components/home/ProductReel";
 import { GreekSequence } from "@/components/home/GreekSequence";
 import { House } from "@/components/home/House";
 import { PesajPoster } from "@/components/pesaj/PesajPoster";
+import { PESAJ_LIVE } from "@/data/pesaj";
 import { Stores } from "@/components/home/Stores";
 import { IceCream } from "@/components/home/IceCream";
 import { Contact } from "@/components/home/Contact";
@@ -45,7 +46,7 @@ export default function Home() {
         ]}
       />
       <Hero />
-      <PesajPoster />
+      {PESAJ_LIVE && <PesajPoster />}
       <ProductReel />
       <Shelf />
       <GreekSequence />

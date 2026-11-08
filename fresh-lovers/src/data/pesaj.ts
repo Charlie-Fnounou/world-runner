@@ -16,6 +16,9 @@ const ji = (id: string, price: number): PesajOption[] => [
 ];
 const one = (id: string, price: number): PesajOption[] => [{ id, price }];
 
+/** turn on to show Pesaj on the site again (home poster, menu link, /pesaj, sitemap) */
+export const PESAJ_LIVE = false;
+
 export const pesaj = {
   whatsapp: "50766136607",
   phoneDisplay: "6613-6607",

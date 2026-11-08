@@ -1,5 +1,6 @@
 "use client";
 
+import { PESAJ_LIVE } from "@/data/pesaj";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -14,7 +15,7 @@ import { instagramLink, site } from "@/data/site";
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 const nav = [
-  { href: "/pesaj", label: "Pesaj" },
+  ...(PESAJ_LIVE ? [{ href: "/pesaj", label: "Pesaj" }] : []),
   { href: "/helado", label: "Helado" },
   { href: "/#donde-comprar", label: "Dónde comprar" },
   { href: "/#contacto", label: "Contacto" },

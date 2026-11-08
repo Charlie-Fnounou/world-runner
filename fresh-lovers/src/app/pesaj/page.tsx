@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PesajOrder } from "@/components/pesaj/PesajOrder";
 import { PesajPoster } from "@/components/pesaj/PesajPoster";
-import { pesaj } from "@/data/pesaj";
+import { notFound } from "next/navigation";
+import { pesaj, PESAJ_LIVE } from "@/data/pesaj";
 
 export const metadata: Metadata = {
   title: "Pesaj · Limited edition",
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default function PesajPage() {
+  if (!PESAJ_LIVE) notFound();
   return (
     <div className="bg-[#EFE9DC] text-[#3A3226]">
       <div className="gutter flex items-center justify-between pb-6 pt-24 md:pt-28">
