@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Fresh Lovers site is a separate Next.js project with its own config.
+    "fresh-lovers/**",
   ]),
 ]);
 
