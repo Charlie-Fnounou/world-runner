@@ -5,7 +5,7 @@ import { RadarSeccion } from "@/components/Radar";
 export const metadata: Metadata = {
   title: "Radar de carreras",
   description:
-    "Carreras de running nuevas, cambios de fecha y de precio, últimos cupos y cancelaciones detectados cada día en más de 90 fuentes oficiales.",
+    "Carreras de running nuevas, cambios de fecha y de precio, últimos cupos y cancelaciones detectados cada día en más de 70 fuentes oficiales.",
 };
 
 export const revalidate = 86400;
