@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
-import { PRECIOS, planDeUsuario, type PlanActual } from "@/lib/planes";
+import { PRECIOS, estadoDesdePayPal, pagoPaseValido, planDeUsuario, vigenciaAlActivar, type PlanActual } from "@/lib/planes";
 import { requireAdmin } from "@/lib/admin";
 import {
   cancelarSuscripcionPayPal,
@@ -44,11 +44,15 @@ export async function confirmarSuscripcion(subscriptionId: string): Promise<Resu
   if (s.custom_id !== user.id) return { ok: false, error: "no-coincide" };
   const periodo = s.plan_id === config.planMensualId ? "mensual" : s.plan_id === config.planAnualId ? "anual" : null;
   if (!periodo) return { ok: false, error: "plan-desconocido" };
-  if (s.status !== "ACTIVE" && s.status !== "APPROVED") return { ok: false, error: "no-activa" };
+  // Solo ACTIVE: "APPROVED" todavía no es una suscripción cobrable. Si
+  // PayPal tarda en activarla, el webhook la activa después.
+  if (estadoDesdePayPal(s.status) !== "activa") return { ok: false, error: "no-activa" };
 
-  const vigenteHasta = s.billing_info?.next_billing_time
-    ? new Date(s.billing_info.next_billing_time)
-    : new Date(Date.now() + PRECIOS.diasPrueba * 864e5);
+  const anterior = await prisma.suscripcion.findUnique({ where: { usuarioId: user.id }, select: { vigenteHasta: true } });
+  const vigenteHasta = vigenciaAlActivar(
+    s.billing_info?.next_billing_time ? new Date(s.billing_info.next_billing_time) : new Date(Date.now() + PRECIOS.diasPrueba * 864e5),
+    anterior?.vigenteHasta,
+  );
 
   const datos = { plan: "PRO" as const, periodo, estado: "activa", paypalSubscriptionId: s.id, paypalOrderId: null, vigenteHasta };
   await prisma.suscripcion.upsert({ where: { usuarioId: user.id }, update: datos, create: { usuarioId: user.id, ...datos } });
@@ -69,15 +73,12 @@ export async function completarPase(orderId: string): Promise<Resultado> {
   const user = await usuarioActual();
   if (!user) return { ok: false, error: "no-auth" };
 
+  // Idempotente: si esta orden ya se acreditó (doble clic, reintento), no se suman días otra vez.
+  const yaAcreditada = await prisma.suscripcion.findUnique({ where: { paypalOrderId: orderId }, select: { usuarioId: true } });
+  if (yaAcreditada) return yaAcreditada.usuarioId === user.id ? { ok: true } : { ok: false, error: "pago-invalido" };
+
   const orden = await capturarOrden(orderId);
-  const captura = orden.purchase_units[0]?.payments?.captures?.[0];
-  const pagoValido =
-    orden.status === "COMPLETED" &&
-    captura?.status === "COMPLETED" &&
-    captura.custom_id === user.id &&
-    captura.amount.currency_code === "USD" &&
-    captura.amount.value === PRECIOS.pase60.toFixed(2);
-  if (!pagoValido) return { ok: false, error: "pago-invalido" };
+  if (!pagoPaseValido(orden, user.id, PRECIOS.pase60)) return { ok: false, error: "pago-invalido" };
 
   // Si ya tenía un pase vigente, los 60 días se suman al final.
   const actual = await prisma.suscripcion.findUnique({ where: { usuarioId: user.id } });

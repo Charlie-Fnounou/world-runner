@@ -17,10 +17,12 @@ import type { CarreraExterna } from "./types";
 // EstadoCollector hasta qué carrera se llegó la última corrida, y la
 // siguiente sigue desde ahí, dando la vuelta cuando termina la lista.
 
-const URL_AJAX = "https://www.laufen.de/dlv-laufkalender/ajax";
+// En noviembre de 2026 laufen.de movió el calendario: la ruta vieja
+// (/dlv-laufkalender/ajax) da 404 y ahora es una búsqueda paginada por POST.
+const URL_BUSQUEDA = "https://www.laufen.de/laufkalender/ajax/search";
 const BASE_URL = "https://www.laufen.de/";
 const COLLECTOR_ID = "laufen";
-const POR_CORRIDA = 250;
+const PAGINAS_POR_CORRIDA = 15;
 
 interface FilaLaufen {
   href: string;
@@ -88,12 +90,15 @@ function tipoDistanciaDesdeKm(km: number): TipoDistancia {
   return TipoDistancia.ULTRA;
 }
 
-function aCarreraExterna(fila: FilaLaufen): CarreraExterna | null {
+export function aCarreraExterna(fila: FilaLaufen): CarreraExterna | null {
   const fecha = fechaDesdeTexto(fila.fecha);
   if (!fecha || !fila.nombre) return null;
 
   const urlCompleta = fila.href.startsWith("http") ? fila.href : `${BASE_URL}${fila.href}`;
-  const detalleId = fila.href.match(/laufkalender\/details\/([A-Za-z0-9]+)/)?.[1];
+  // El id es todo lo que sigue a /details/ (puede ser un código o un slug
+  // como "1-wuppertaler-löwenlauf"; antes se cortaba en el primer guion y
+  // carreras distintas compartían el id "1").
+  const detalleId = fila.href.match(/laufkalender\/details\/([^"/?#]+)/)?.[1];
   const externalId = detalleId ?? `${normalizar(fila.fecha)}-${normalizar(fila.nombre).replace(/[^a-z0-9]+/g, "-")}`.slice(0, 140);
   const km = kmDesdeTexto(fila.distanciasTexto);
 
@@ -117,44 +122,61 @@ function aCarreraExterna(fila: FilaLaufen): CarreraExterna | null {
   };
 }
 
+export async function obtenerPagina(pagina: number): Promise<{ filas: FilaLaufen[]; paginas: number }> {
+  const res = await fetch(URL_BUSQUEDA, {
+    method: "POST",
+    headers: {
+      "User-Agent": "WorldRunnerBot/1.0 (+https://theworldrunner.com)",
+      "Content-Type": "application/x-www-form-urlencoded",
+      "X-Requested-With": "XMLHttpRequest",
+    },
+    body: new URLSearchParams({ page: String(pagina) }).toString(),
+  });
+  if (!res.ok) throw new Error(`laufen.de respondió ${res.status}`);
+  const data = (await res.json()) as { pages?: number; events?: string; topevents?: string };
+  return { filas: parsearEventos(String(data.events ?? "") + String(data.topevents ?? "")), paginas: Number(data.pages) || 1 };
+}
+
 export async function correrCollectorLaufen() {
   return registrarEjecucion("laufen", async () => {
-    const res = await fetch(URL_AJAX, {
-      headers: { "User-Agent": "WorldRunnerBot/1.0 (+https://theworldrunner.com)" },
-    });
-    if (!res.ok) throw new Error(`laufen.de respondió ${res.status}`);
-    const data = await res.json();
-    const filas = parsearEventos(String(data.events ?? ""));
-
+    // El cursor guarda la última página procesada: cada corrida sigue desde ahí.
     const estado = await prisma.estadoCollector.findUnique({ where: { collector: COLLECTOR_ID } });
-    let inicio = (estado?.cursor ?? -1) + 1;
-    if (inicio >= filas.length) inicio = 0;
-
-    const tanda = filas.slice(inicio, inicio + POR_CORRIDA);
+    let pagina = Math.max(1, (estado?.cursor ?? 0) + 1);
 
     let nuevas = 0;
     let actualizadas = 0;
     let errores = 0;
+    let omitidas = 0;
+    const vistos = new Set<string>();
 
-    for (const fila of tanda) {
-      try {
-        const externa = aCarreraExterna(fila);
-        if (!externa) continue;
-        const { creada } = await upsertCarreraExterna(externa);
-        if (creada) nuevas++;
-        else actualizadas++;
-      } catch {
-        errores++;
+    for (let i = 0; i < PAGINAS_POR_CORRIDA; i++) {
+      const { filas, paginas } = await obtenerPagina(pagina);
+      for (const fila of filas) {
+        if (vistos.has(fila.href)) continue;
+        vistos.add(fila.href);
+        try {
+          const externa = aCarreraExterna(fila);
+          if (!externa) {
+            omitidas++;
+            continue;
+          }
+          const { creada } = await upsertCarreraExterna(externa);
+          if (creada) nuevas++;
+          else actualizadas++;
+        } catch {
+          errores++;
+        }
       }
+      pagina = pagina >= paginas ? 1 : pagina + 1;
+      if (pagina === 1) break;
     }
 
-    const siguienteCursor = inicio + tanda.length - 1;
     await prisma.estadoCollector.upsert({
       where: { collector: COLLECTOR_ID },
-      update: { cursor: siguienteCursor >= filas.length - 1 ? -1 : siguienteCursor },
-      create: { collector: COLLECTOR_ID, cursor: siguienteCursor >= filas.length - 1 ? -1 : siguienteCursor },
+      update: { cursor: pagina - 1 },
+      create: { collector: COLLECTOR_ID, cursor: pagina - 1 },
     });
 
-    return { nuevas, actualizadas, errores };
+    return { nuevas, actualizadas, errores, detalle: omitidas ? `${omitidas} sin fecha válida` : undefined };
   });
 }

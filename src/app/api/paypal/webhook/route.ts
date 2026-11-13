@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { configActual, obtenerSuscripcion, verificarFirmaWebhook } from "@/lib/paypal";
+import { estadoDesdePayPal, vigenciaAlActivar } from "@/lib/planes";
 
 // PayPal avisa acá cada cobro, cancelación o vencimiento de una suscripción,
 // así el plan se mantiene al día aunque el usuario no vuelva a entrar.
@@ -26,11 +27,18 @@ export async function POST(request: Request) {
   const usuario = await prisma.usuario.findUnique({ where: { id: s.custom_id }, select: { id: true } });
   if (!usuario) return NextResponse.json({ ok: true });
 
-  const estado =
-    s.status === "ACTIVE" ? "activa" : s.status === "CANCELLED" ? "cancelada" : s.status === "SUSPENDED" ? "suspendida" : s.status === "EXPIRED" ? "vencida" : null;
+  const estado = estadoDesdePayPal(s.status);
   if (!estado) return NextResponse.json({ ok: true });
 
-  const proximoCobro = s.billing_info?.next_billing_time ? new Date(s.billing_info.next_billing_time) : undefined;
+  const actual = await prisma.suscripcion.findUnique({ where: { usuarioId: usuario.id }, select: { vigenteHasta: true, paypalSubscriptionId: true } });
+  // Un aviso viejo de otra suscripción (ej. una cancelada antes de volver a
+  // suscribirse) no debe pisar la suscripción vigente del usuario.
+  if (actual?.paypalSubscriptionId && actual.paypalSubscriptionId !== s.id && estado !== "activa") return NextResponse.json({ ok: true });
+
+  const proximoCobro =
+    s.billing_info?.next_billing_time && estado === "activa"
+      ? vigenciaAlActivar(new Date(s.billing_info.next_billing_time), actual?.vigenteHasta)
+      : undefined;
   const datos = {
     plan: "PRO" as const,
     periodo,

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { soltarCandado, tomarCandado } from "@/lib/cronLock";
 import { corregirCalidadDeDatos } from "@/lib/sanidad";
 import { traducirDescripcionesFaltantes } from "@/lib/traducciones";
 import { rellenarDatosFaltantes } from "@/lib/rellenoDatos";
@@ -258,73 +259,81 @@ export async function GET(request: Request) {
     return NextResponse.json(resultados);
   }
 
-  let indiceSemanal = 0;
+  // Un solo cron a la vez (ver cronLock.ts).
+  if (!(await tomarCandado())) {
+    return NextResponse.json({ error: "Ya hay una corrida en curso" }, { status: 409 });
+  }
+  try {
+    let indiceSemanal = 0;
 
-  for (const { clave, correr, frecuencia } of COLLECTORES) {
-    const esSemanal = frecuencia === "semanal";
-    const corresponde = forzarTodos || frecuencia === "diaria" || leTocaHoy(indiceSemanal);
-    if (esSemanal) indiceSemanal++;
-    if (!corresponde) continue;
+    for (const { clave, correr, frecuencia } of COLLECTORES) {
+      const esSemanal = frecuencia === "semanal";
+      const corresponde = forzarTodos || frecuencia === "diaria" || leTocaHoy(indiceSemanal);
+      if (esSemanal) indiceSemanal++;
+      if (!corresponde) continue;
 
-    try {
-      resultados[clave] = await conLimiteDeTiempo(correr(), TIEMPOS_ESPECIALES[clave] ?? 60_000);
-    } catch (e) {
-      resultados[clave] = { error: e instanceof Error ? e.message : "error desconocido" };
+      try {
+        resultados[clave] = await conLimiteDeTiempo(correr(), TIEMPOS_ESPECIALES[clave] ?? 60_000);
+      } catch (e) {
+        resultados[clave] = { error: e instanceof Error ? e.message : "error desconocido" };
+      }
     }
-  }
 
-  // Barrida de calidad de datos: corrige sola, todos los días, sin que
-  // haga falta que nadie entre a revisar manualmente (ver sanidad.ts).
-  try {
-    resultados["_sanidad"] = await corregirCalidadDeDatos();
-  } catch (e) {
-    resultados["_sanidad"] = { error: e instanceof Error ? e.message : "error desconocido" };
-  }
-
-  // Traduce (con IA, gratis) las descripciones de carreras que todavía no
-  // tienen versión en inglés/portugués/francés — así las que traen los
-  // collectors nuevos quedan traducidas solas, sin intervención manual.
-  try {
-    resultados["_traducciones"] = await traducirDescripcionesFaltantes();
-  } catch (e) {
-    resultados["_traducciones"] = { error: e instanceof Error ? e.message : "error desconocido" };
-  }
-
-  // Resumen semanal por email a quienes siguen un país/ciudad (ver
-  // resumenesUbicacion.ts — cada suscripción se procesa ~cada 7 días).
-  try {
-    resultados["_resumenesUbicacion"] = await enviarResumenesUbicacion();
-  } catch (e) {
-    resultados["_resumenesUbicacion"] = { error: e instanceof Error ? e.message : "error desconocido" };
-  }
-
-  // Completa precio/distancia/cupo real de carreras de RunSignup que
-  // solo tienen los datos básicos del listado (ver runsignup.ts).
-  try {
-    resultados["_enriquecerRunSignup"] = await enriquecerCarrerasRunSignup();
-  } catch (e) {
-    resultados["_enriquecerRunSignup"] = { error: e instanceof Error ? e.message : "error desconocido" };
-  }
-
-  // Agente de IA que revisa toda la web para completar huecos (precio,
-  // cupo, desnivel, tiempo límite, descripción) que ningún collector pudo
-  // llenar — 1 vez por semana (lunes), no todos los días: cada carrera le
-  // cuesta una búsqueda real en internet, no se puede hacer en lote como
-  // las traducciones (ver rellenoDatos.ts).
-  if (forzarTodos || new Date().getDay() === 1) {
+    // Barrida de calidad de datos: corrige sola, todos los días, sin que
+    // haga falta que nadie entre a revisar manualmente (ver sanidad.ts).
     try {
-      resultados["_rellenoDatos"] = await rellenarDatosFaltantes();
+      resultados["_sanidad"] = await corregirCalidadDeDatos();
     } catch (e) {
-      resultados["_rellenoDatos"] = { error: e instanceof Error ? e.message : "error desconocido" };
+      resultados["_sanidad"] = { error: e instanceof Error ? e.message : "error desconocido" };
     }
+
+    // Traduce (con IA, gratis) las descripciones de carreras que todavía no
+    // tienen versión en inglés/portugués/francés — así las que traen los
+    // collectors nuevos quedan traducidas solas, sin intervención manual.
+    try {
+      resultados["_traducciones"] = await traducirDescripcionesFaltantes();
+    } catch (e) {
+      resultados["_traducciones"] = { error: e instanceof Error ? e.message : "error desconocido" };
+    }
+
+    // Resumen semanal por email a quienes siguen un país/ciudad (ver
+    // resumenesUbicacion.ts — cada suscripción se procesa ~cada 7 días).
+    try {
+      resultados["_resumenesUbicacion"] = await enviarResumenesUbicacion();
+    } catch (e) {
+      resultados["_resumenesUbicacion"] = { error: e instanceof Error ? e.message : "error desconocido" };
+    }
+
+    // Completa precio/distancia/cupo real de carreras de RunSignup que
+    // solo tienen los datos básicos del listado (ver runsignup.ts).
+    try {
+      resultados["_enriquecerRunSignup"] = await enriquecerCarrerasRunSignup();
+    } catch (e) {
+      resultados["_enriquecerRunSignup"] = { error: e instanceof Error ? e.message : "error desconocido" };
+    }
+
+    // Agente de IA que revisa toda la web para completar huecos (precio,
+    // cupo, desnivel, tiempo límite, descripción) que ningún collector pudo
+    // llenar — 1 vez por semana (lunes), no todos los días: cada carrera le
+    // cuesta una búsqueda real en internet, no se puede hacer en lote como
+    // las traducciones (ver rellenoDatos.ts).
+    if (forzarTodos || new Date().getDay() === 1) {
+      try {
+        resultados["_rellenoDatos"] = await rellenarDatosFaltantes();
+      } catch (e) {
+        resultados["_rellenoDatos"] = { error: e instanceof Error ? e.message : "error desconocido" };
+      }
+    }
+
+    // Las páginas públicas se regeneran 1 vez por día (revalidate = 86400),
+    // no cada 5 minutos: los datos solo cambian cuando corre este cron, y
+    // regenerarlas seguido descargaba el catálogo entero una y otra vez
+    // hasta agotar la cuota de tráfico de Supabase. Acá se las marca para
+    // regenerar justo después de que entraron los datos nuevos del día.
+    revalidatePath("/", "layout");
+
+    return NextResponse.json(resultados);
+  } finally {
+    await soltarCandado();
   }
-
-  // Las páginas públicas se regeneran 1 vez por día (revalidate = 86400),
-  // no cada 5 minutos: los datos solo cambian cuando corre este cron, y
-  // regenerarlas seguido descargaba el catálogo entero una y otra vez
-  // hasta agotar la cuota de tráfico de Supabase. Acá se las marca para
-  // regenerar justo después de que entraron los datos nuevos del día.
-  revalidatePath("/", "layout");
-
-  return NextResponse.json(resultados);
 }

@@ -98,6 +98,11 @@ export interface Diccionario {
     colCorredores: string;
     colPrecio: string;
     historialNota: string;
+    fuenteTitulo: string;
+    fuenteDe: (nombre: string) => string;
+    verificadoEl: (fecha: string) => string;
+    sinFuente: string;
+    faltanDatos: string;
     perfilElevacion: string;
     desnivelAcumulado: (n: string) => string;
     records: string;
@@ -147,6 +152,7 @@ export interface Diccionario {
     analizando: string;
     errorNoConfigurado: string;
     errorGenerico: string;
+    errorLimite: string;
     ejemplos: string[];
   };
   mapa: {
@@ -225,7 +231,8 @@ export interface Diccionario {
   rankings: {
     titulo: string;
     subtitulo: string;
-    tabs: { rapidas: string; populares: string; economicas: string; dificiles: string; valoradas: string; frescas: string };
+    tabs: { planas: string; populares: string; economicas: string; desnivel: string; valoradas: string };
+    moneda: string;
     corredoresSufijo: string;
     sinDatos: string;
   };
@@ -334,7 +341,7 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       heroDescripcion:
         "Descubre, compara y planifica maratones, medias maratones, 10K, trails y ultras en cualquier país, con links de inscripción oficiales.",
       buscarPlaceholder: "Busca una carrera, ciudad o país (ej. medellin, maraton berlim)",
-      statsCarreras: (n, paises) => `${n} carreras verificadas en ${paises} países`,
+      statsCarreras: (n, paises) => `${n} carreras de fuentes oficiales en ${paises} países`,
       destacadas: "★ Carreras destacadas",
       proximasAperturas: "Próximas aperturas e inscripciones abiertas",
       mapaMundial: "Mapa mundial",
@@ -382,7 +389,12 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       colEdicion: "Edición",
       colCorredores: "Corredores*",
       colPrecio: "Precio*",
-      historialNota: "* Estimado a partir de la edición actual. Se reemplaza por datos reales cuando los robots registren cada edición.",
+      historialNota: "Ediciones anteriores registradas por nuestros robots desde la fuente oficial.",
+      fuenteTitulo: "De dónde sale esta información",
+      fuenteDe: (n) => `Fuente: ${n}`,
+      verificadoEl: (f) => `Última verificación: ${f}`,
+      sinFuente: "Esta carrera se cargó a mano y todavía no tiene una fuente que la actualice sola. Confirmá fecha y precio en el sitio oficial.",
+      faltanDatos: "La fuente oficial no publica algunos datos de esta carrera (los marcamos con —). Confirmalos en el sitio oficial antes de inscribirte.",
       perfilElevacion: "Perfil de elevación",
       desnivelAcumulado: (n) => `Desnivel positivo acumulado: ${n} m`,
       records: "Récords",
@@ -446,6 +458,7 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       analizando: "Analizando fechas, precios, clima y desniveles…",
       errorNoConfigurado: "El asistente todavía no está activado. Hace falta configurar la clave de la IA.",
       errorGenerico: "No pude consultar al asistente en este momento. Inténtalo de nuevo.",
+      errorLimite: "Hiciste muchas preguntas seguidas. Esperá un momento y volvé a intentar.",
       ejemplos: [
         "Quiero correr una media maratón en octubre por menos de $150",
         "Un maratón plano y fresco para hacer mi mejor marca en 2027",
@@ -485,7 +498,7 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
     planes: {
       eyebrow: "Planes",
       titulo: "Enterate antes que nadie",
-      subtitulo: "Las carreras cambian de fecha, suben de precio, se quedan sin cupos o se cancelan. Nuestros robots revisan más de 90 fuentes oficiales y te avisan por email cuando pasa algo en las carreras que seguís.",
+      subtitulo: "Las carreras cambian de fecha, suben de precio, se quedan sin cupos o se cancelan. Nuestros robots revisan más de 70 fuentes oficiales y te avisan por email cuando pasa algo en las carreras que seguís.",
       mensual: "Mensual",
       anual: "Anual",
       ahorroAnual: "ahorrás 42%",
@@ -524,7 +537,7 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       comoFuncionaTitulo: "Cómo funciona",
       pasos: [
         { titulo: "Elegí tus carreras", texto: "Activá las alertas en cualquier carrera o seguí un país o ciudad entero." },
-        { titulo: "Nuestros robots las vigilan", texto: "Revisamos más de 90 fuentes oficiales: las más grandes todos los días y el resto al menos una vez por semana." },
+        { titulo: "Nuestros robots las vigilan", texto: "Revisamos más de 70 fuentes oficiales: las más grandes todos los días y el resto al menos una vez por semana." },
         { titulo: "Te avisamos por email", texto: "Cuando detectamos un cambio de fecha o de precio, últimos cupos o una cancelación, te llega un email con el link a la carrera." },
       ],
       preguntasTitulo: "Preguntas",
@@ -554,7 +567,7 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
     radar: {
       eyebrow: "Radar de carreras",
       titulo: "Lo que cambió en el mundo del running",
-      subtitulo: "Carreras nuevas, cambios de fecha y de precio, últimos cupos y cancelaciones que detectan nuestros robots en más de 90 fuentes oficiales.",
+      subtitulo: "Carreras nuevas, cambios de fecha y de precio, últimos cupos y cancelaciones que detectan nuestros robots en más de 70 fuentes oficiales.",
       stats: { proximos30: "carreras en los próximos 30 días", paises: "países con carreras", nuevas: "carreras nuevas esta semana", cambios: "cambios detectados esta semana" },
       tipos: { nueva: "Nueva carrera", fecha: "Cambió la fecha", precio: "Cambió el precio", pocosCupos: "Últimos cupos", cancelada: "Cancelada", abrio: "Abrió la inscripción", cerro: "Cerró la inscripción" },
       antesAhora: (a, b) => `Antes ${a} · ahora ${b}`,
@@ -565,15 +578,15 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
     },
     rankings: {
       titulo: "Rankings mundiales",
-      subtitulo: "Generados automáticamente a partir de los datos de cada carrera.",
+      subtitulo: "Solo carreras próximas con datos publicados por su fuente. Un ranking aparece cuando hay al menos 3 carreras con el dato.",
       tabs: {
-        rapidas: "⚡ Más rápidas",
-        populares: "👥 Más populares",
+        planas: "⛰️ Maratones más planas",
+        populares: "👥 Más corredores",
         economicas: "💰 Más económicas",
-        dificiles: "🔥 Más difíciles",
+        desnivel: "🔥 Mayor desnivel",
         valoradas: "⭐ Mejor valoradas",
-        frescas: "❄️ Mejor clima frío",
       },
+      moneda: "Moneda:",
       corredoresSufijo: "corredores",
       sinDatos: "Todavía no hay suficientes carreras para este ranking.",
     },
@@ -682,7 +695,7 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       heroDescripcion:
         "Discover, compare and plan marathons, half marathons, 10Ks, trails and ultras in any country, with official registration links.",
       buscarPlaceholder: "Search a race, city or country (e.g. medellin, berlin marathon)",
-      statsCarreras: (n, paises) => `${n} verified races in ${paises} countries`,
+      statsCarreras: (n, paises) => `${n} races from official sources in ${paises} countries`,
       destacadas: "★ Featured races",
       proximasAperturas: "Upcoming and open registrations",
       mapaMundial: "World map",
@@ -730,7 +743,12 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       colEdicion: "Edition",
       colCorredores: "Runners*",
       colPrecio: "Price*",
-      historialNota: "* Estimated from the current edition. Replaced with real data as robots record each edition.",
+      historialNota: "Previous editions recorded by our robots from the official source.",
+      fuenteTitulo: "Where this information comes from",
+      fuenteDe: (n) => `Source: ${n}`,
+      verificadoEl: (f) => `Last checked: ${f}`,
+      sinFuente: "This race was added by hand and doesn't have a source that updates it automatically yet. Confirm date and price on the official website.",
+      faltanDatos: "The official source doesn't publish some details for this race (marked with —). Confirm them on the official website before signing up.",
       perfilElevacion: "Elevation profile",
       desnivelAcumulado: (n) => `Total elevation gain: ${n} m`,
       records: "Records",
@@ -794,6 +812,7 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       analizando: "Analyzing dates, prices, weather and elevation…",
       errorNoConfigurado: "The assistant isn't activated yet. The AI key needs to be configured.",
       errorGenerico: "I couldn't reach the assistant right now. Please try again.",
+      errorLimite: "You asked a lot of questions in a row. Wait a moment and try again.",
       ejemplos: [
         "I want to run a half marathon in October for under $150",
         "A flat, cool marathon to set my best time in 2027",
@@ -833,7 +852,7 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
     planes: {
       eyebrow: "Plans",
       titulo: "Be the first to know",
-      subtitulo: "Races change dates, raise prices, run out of spots or get cancelled. Our robots check 90+ official sources and email you when something happens to the races you follow.",
+      subtitulo: "Races change dates, raise prices, run out of spots or get cancelled. Our robots check 70+ official sources and email you when something happens to the races you follow.",
       mensual: "Monthly",
       anual: "Yearly",
       ahorroAnual: "save 42%",
@@ -872,7 +891,7 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       comoFuncionaTitulo: "How it works",
       pasos: [
         { titulo: "Pick your races", texto: "Turn on alerts for any race or follow a whole country or city." },
-        { titulo: "Our robots watch them", texto: "We check 90+ official sources: the biggest every day and the rest at least once a week." },
+        { titulo: "Our robots watch them", texto: "We check 70+ official sources: the biggest every day and the rest at least once a week." },
         { titulo: "We email you", texto: "When we detect a date or price change, last spots or a cancellation, you get an email with a link to the race." },
       ],
       preguntasTitulo: "Questions",
@@ -902,7 +921,7 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
     radar: {
       eyebrow: "Race radar",
       titulo: "What changed in the running world",
-      subtitulo: "New races, date and price changes, last spots and cancellations our robots detect across 90+ official sources.",
+      subtitulo: "New races, date and price changes, last spots and cancellations our robots detect across 70+ official sources.",
       stats: { proximos30: "races in the next 30 days", paises: "countries with races", nuevas: "new races this week", cambios: "changes detected this week" },
       tipos: { nueva: "New race", fecha: "Date changed", precio: "Price changed", pocosCupos: "Last spots", cancelada: "Cancelled", abrio: "Registration opened", cerro: "Registration closed" },
       antesAhora: (a, b) => `Was ${a} · now ${b}`,
@@ -913,15 +932,15 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
     },
     rankings: {
       titulo: "World rankings",
-      subtitulo: "Automatically generated from each race's data.",
+      subtitulo: "Only upcoming races with data published by their source. A ranking appears when at least 3 races have the data.",
       tabs: {
-        rapidas: "⚡ Fastest",
-        populares: "👥 Most popular",
+        planas: "⛰️ Flattest marathons",
+        populares: "👥 Most runners",
         economicas: "💰 Most affordable",
-        dificiles: "🔥 Toughest",
+        desnivel: "🔥 Most elevation gain",
         valoradas: "⭐ Top rated",
-        frescas: "❄️ Coolest climate",
       },
+      moneda: "Currency:",
       corredoresSufijo: "runners",
       sinDatos: "Not enough races yet for this ranking.",
     },
@@ -1030,7 +1049,7 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       heroDescripcion:
         "Descubra, compare e planeje maratonas, meias maratonas, 10K, trails e ultras em qualquer país, com links oficiais de inscrição.",
       buscarPlaceholder: "Busque uma corrida, cidade ou país (ex. medellin, maratona berlim)",
-      statsCarreras: (n, paises) => `${n} corridas verificadas em ${paises} países`,
+      statsCarreras: (n, paises) => `${n} corridas de fontes oficiais em ${paises} países`,
       destacadas: "★ Corridas em destaque",
       proximasAperturas: "Próximas aberturas e inscrições abertas",
       mapaMundial: "Mapa mundial",
@@ -1078,7 +1097,12 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       colEdicion: "Edição",
       colCorredores: "Corredores*",
       colPrecio: "Preço*",
-      historialNota: "* Estimado a partir da edição atual. Substituído por dados reais conforme os robôs registram cada edição.",
+      historialNota: "Edições anteriores registradas por nossos robôs a partir da fonte oficial.",
+      fuenteTitulo: "De onde vem esta informação",
+      fuenteDe: (n) => `Fonte: ${n}`,
+      verificadoEl: (f) => `Última verificação: ${f}`,
+      sinFuente: "Esta corrida foi cadastrada à mão e ainda não tem uma fonte que a atualize sozinha. Confirme data e preço no site oficial.",
+      faltanDatos: "A fonte oficial não publica alguns dados desta corrida (marcados com —). Confirme no site oficial antes de se inscrever.",
       perfilElevacion: "Perfil de elevação",
       desnivelAcumulado: (n) => `Ganho de elevação total: ${n} m`,
       records: "Recordes",
@@ -1142,6 +1166,7 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       analizando: "Analisando datas, preços, clima e desnível…",
       errorNoConfigurado: "O assistente ainda não está ativado. É preciso configurar a chave da IA.",
       errorGenerico: "Não consegui consultar o assistente agora. Tente de novo.",
+      errorLimite: "Você fez muitas perguntas seguidas. Espere um pouco e tente de novo.",
       ejemplos: [
         "Quero correr uma meia maratona em outubro por menos de $150",
         "Uma maratona plana e fresca para bater meu recorde em 2027",
@@ -1181,7 +1206,7 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
     planes: {
       eyebrow: "Planos",
       titulo: "Saiba antes de todo mundo",
-      subtitulo: "As corridas mudam de data, aumentam o preço, ficam sem vagas ou são canceladas. Nossos robôs verificam mais de 90 fontes oficiais e te avisam por e-mail quando algo acontece nas corridas que você segue.",
+      subtitulo: "As corridas mudam de data, aumentam o preço, ficam sem vagas ou são canceladas. Nossos robôs verificam mais de 70 fontes oficiais e te avisam por e-mail quando algo acontece nas corridas que você segue.",
       mensual: "Mensal",
       anual: "Anual",
       ahorroAnual: "economize 42%",
@@ -1220,7 +1245,7 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       comoFuncionaTitulo: "Como funciona",
       pasos: [
         { titulo: "Escolha suas corridas", texto: "Ative os alertas em qualquer corrida ou siga um país ou cidade inteira." },
-        { titulo: "Nossos robôs vigiam", texto: "Verificamos mais de 90 fontes oficiais: as maiores todos os dias e o resto pelo menos uma vez por semana." },
+        { titulo: "Nossos robôs vigiam", texto: "Verificamos mais de 70 fontes oficiais: as maiores todos os dias e o resto pelo menos uma vez por semana." },
         { titulo: "Avisamos por e-mail", texto: "Quando detectamos mudança de data ou preço, últimas vagas ou cancelamento, você recebe um e-mail com o link da corrida." },
       ],
       preguntasTitulo: "Perguntas",
@@ -1250,7 +1275,7 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
     radar: {
       eyebrow: "Radar de corridas",
       titulo: "O que mudou no mundo da corrida",
-      subtitulo: "Corridas novas, mudanças de data e preço, últimas vagas e cancelamentos que nossos robôs detectam em mais de 90 fontes oficiais.",
+      subtitulo: "Corridas novas, mudanças de data e preço, últimas vagas e cancelamentos que nossos robôs detectam em mais de 70 fontes oficiais.",
       stats: { proximos30: "corridas nos próximos 30 dias", paises: "países com corridas", nuevas: "corridas novas esta semana", cambios: "mudanças detectadas esta semana" },
       tipos: { nueva: "Nova corrida", fecha: "Mudou a data", precio: "Mudou o preço", pocosCupos: "Últimas vagas", cancelada: "Cancelada", abrio: "Inscrições abertas", cerro: "Inscrições encerradas" },
       antesAhora: (a, b) => `Antes ${a} · agora ${b}`,
@@ -1261,15 +1286,15 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
     },
     rankings: {
       titulo: "Rankings mundiais",
-      subtitulo: "Gerados automaticamente a partir dos dados de cada corrida.",
+      subtitulo: "Só corridas futuras com dados publicados pela fonte. Um ranking aparece quando há pelo menos 3 corridas com o dado.",
       tabs: {
-        rapidas: "⚡ Mais rápidas",
-        populares: "👥 Mais populares",
+        planas: "⛰️ Maratonas mais planas",
+        populares: "👥 Mais corredores",
         economicas: "💰 Mais baratas",
-        dificiles: "🔥 Mais difíceis",
+        desnivel: "🔥 Maior desnível",
         valoradas: "⭐ Melhor avaliadas",
-        frescas: "❄️ Melhor clima frio",
       },
+      moneda: "Moeda:",
       corredoresSufijo: "corredores",
       sinDatos: "Ainda não há corridas suficientes para este ranking.",
     },
@@ -1378,7 +1403,7 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       heroDescripcion:
         "Découvrez, comparez et planifiez marathons, semi-marathons, 10 km, trails et ultras dans n'importe quel pays, avec liens d'inscription officiels.",
       buscarPlaceholder: "Cherchez une course, ville ou pays (ex. medellin, marathon berlin)",
-      statsCarreras: (n, paises) => `${n} courses vérifiées dans ${paises} pays`,
+      statsCarreras: (n, paises) => `${n} courses de sources officielles dans ${paises} pays`,
       destacadas: "★ Courses à la une",
       proximasAperturas: "Prochaines ouvertures et inscriptions ouvertes",
       mapaMundial: "Carte du monde",
@@ -1426,7 +1451,12 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       colEdicion: "Édition",
       colCorredores: "Coureurs*",
       colPrecio: "Prix*",
-      historialNota: "* Estimé à partir de l'édition actuelle. Remplacé par des données réelles au fur et à mesure que les robots enregistrent chaque édition.",
+      historialNota: "Éditions précédentes enregistrées par nos robots depuis la source officielle.",
+      fuenteTitulo: "D'où viennent ces informations",
+      fuenteDe: (n) => `Source : ${n}`,
+      verificadoEl: (f) => `Dernière vérification : ${f}`,
+      sinFuente: "Cette course a été ajoutée à la main et n'a pas encore de source qui la met à jour automatiquement. Vérifiez la date et le prix sur le site officiel.",
+      faltanDatos: "La source officielle ne publie pas certaines données de cette course (marquées —). Vérifiez-les sur le site officiel avant de vous inscrire.",
       perfilElevacion: "Profil d'élévation",
       desnivelAcumulado: (n) => `Dénivelé positif total : ${n} m`,
       records: "Records",
@@ -1490,6 +1520,7 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       analizando: "Analyse des dates, prix, météo et dénivelé…",
       errorNoConfigurado: "L'assistant n'est pas encore activé. La clé de l'IA doit être configurée.",
       errorGenerico: "Impossible de contacter l'assistant pour le moment. Réessayez.",
+      errorLimite: "Vous avez posé beaucoup de questions d'affilée. Patientez un instant et réessayez.",
       ejemplos: [
         "Je veux courir un semi-marathon en octobre pour moins de 150 $",
         "Un marathon plat et frais pour battre mon record en 2027",
@@ -1529,7 +1560,7 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
     planes: {
       eyebrow: "Formules",
       titulo: "Soyez le premier informé",
-      subtitulo: "Les courses changent de date, augmentent leurs prix, n'ont plus de places ou sont annulées. Nos robots surveillent plus de 90 sources officielles et vous préviennent par e-mail quand quelque chose change sur les courses que vous suivez.",
+      subtitulo: "Les courses changent de date, augmentent leurs prix, n'ont plus de places ou sont annulées. Nos robots surveillent plus de 70 sources officielles et vous préviennent par e-mail quand quelque chose change sur les courses que vous suivez.",
       mensual: "Mensuel",
       anual: "Annuel",
       ahorroAnual: "économisez 42 %",
@@ -1568,7 +1599,7 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
       comoFuncionaTitulo: "Comment ça marche",
       pasos: [
         { titulo: "Choisissez vos courses", texto: "Activez les alertes sur n'importe quelle course ou suivez un pays ou une ville entière." },
-        { titulo: "Nos robots les surveillent", texto: "Nous vérifions plus de 90 sources officielles : les plus grandes chaque jour, les autres au moins une fois par semaine." },
+        { titulo: "Nos robots les surveillent", texto: "Nous vérifions plus de 70 sources officielles : les plus grandes chaque jour, les autres au moins une fois par semaine." },
         { titulo: "Nous vous prévenons par e-mail", texto: "Quand nous détectons un changement de date ou de prix, les dernières places ou une annulation, vous recevez un e-mail avec le lien de la course." },
       ],
       preguntasTitulo: "Questions",
@@ -1598,7 +1629,7 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
     radar: {
       eyebrow: "Radar des courses",
       titulo: "Ce qui a changé dans le monde de la course",
-      subtitulo: "Nouvelles courses, changements de date et de prix, dernières places et annulations détectés par nos robots sur plus de 90 sources officielles.",
+      subtitulo: "Nouvelles courses, changements de date et de prix, dernières places et annulations détectés par nos robots sur plus de 70 sources officielles.",
       stats: { proximos30: "courses dans les 30 prochains jours", paises: "pays avec des courses", nuevas: "nouvelles courses cette semaine", cambios: "changements détectés cette semaine" },
       tipos: { nueva: "Nouvelle course", fecha: "Date modifiée", precio: "Prix modifié", pocosCupos: "Dernières places", cancelada: "Annulée", abrio: "Inscriptions ouvertes", cerro: "Inscriptions closes" },
       antesAhora: (a, b) => `Avant ${a} · maintenant ${b}`,
@@ -1609,15 +1640,15 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
     },
     rankings: {
       titulo: "Classements mondiaux",
-      subtitulo: "Générés automatiquement à partir des données de chaque course.",
+      subtitulo: "Uniquement les courses à venir avec des données publiées par leur source. Un classement apparaît quand au moins 3 courses ont la donnée.",
       tabs: {
-        rapidas: "⚡ Les plus rapides",
-        populares: "👥 Les plus populaires",
+        planas: "⛰️ Marathons les plus plats",
+        populares: "👥 Le plus de coureurs",
         economicas: "💰 Les moins chères",
-        dificiles: "🔥 Les plus difficiles",
+        desnivel: "🔥 Plus fort dénivelé",
         valoradas: "⭐ Les mieux notées",
-        frescas: "❄️ Meilleur climat frais",
       },
+      moneda: "Devise :",
       corredoresSufijo: "coureurs",
       sinDatos: "Pas encore assez de courses pour ce classement.",
     },
@@ -1710,10 +1741,10 @@ const ETIQUETAS_CONTINENTE: Record<Idioma, Record<string, string>> = {
 };
 
 const ETIQUETAS_ESTADO: Record<Idioma, Record<EstadoInscripcion, string>> = {
-  es: { abierta: "Inscripción abierta", ultimos: "Últimos cupos", sorteo: "Sorteo / ballot", proximamente: "Abre pronto", cerrada: "Inscripción cerrada" },
-  en: { abierta: "Registration open", ultimos: "Few spots left", sorteo: "Lottery / ballot", proximamente: "Opens soon", cerrada: "Registration closed" },
-  pt: { abierta: "Inscrição aberta", ultimos: "Últimas vagas", sorteo: "Sorteio / ballot", proximamente: "Abre em breve", cerrada: "Inscrição encerrada" },
-  fr: { abierta: "Inscription ouverte", ultimos: "Dernières places", sorteo: "Tirage au sort", proximamente: "Ouvre bientôt", cerrada: "Inscription fermée" },
+  es: { abierta: "Inscripción abierta", ultimos: "Últimos cupos", sorteo: "Sorteo / ballot", proximamente: "Abre pronto", cerrada: "Inscripción cerrada", cancelada: "Cancelada", sinconfirmar: "Estado sin confirmar" },
+  en: { abierta: "Registration open", ultimos: "Few spots left", sorteo: "Lottery / ballot", proximamente: "Opens soon", cerrada: "Registration closed", cancelada: "Cancelled", sinconfirmar: "Status unconfirmed" },
+  pt: { abierta: "Inscrição aberta", ultimos: "Últimas vagas", sorteo: "Sorteio / ballot", proximamente: "Abre em breve", cerrada: "Inscrição encerrada", cancelada: "Cancelada", sinconfirmar: "Status não confirmado" },
+  fr: { abierta: "Inscription ouverte", ultimos: "Dernières places", sorteo: "Tirage au sort", proximamente: "Ouvre bientôt", cerrada: "Inscription fermée", cancelada: "Annulée", sinconfirmar: "Statut non confirmé" },
 };
 
 const ETIQUETAS_TERRENO: Record<Idioma, Record<string, string>> = {

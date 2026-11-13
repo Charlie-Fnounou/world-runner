@@ -2,11 +2,15 @@
 
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/admin";
+import { soltarCandado, tomarCandado } from "@/lib/cronLock";
 import { corregirCalidadDeDatos } from "@/lib/sanidad";
 import { traducirDescripcionesFaltantes } from "@/lib/traducciones";
 import { rellenarDatosFaltantes } from "@/lib/rellenoDatos";
 import { enviarResumenesUbicacion } from "@/lib/resumenesUbicacion";
-import { correrCollectorRunSignup, enriquecerCarrerasRunSignup } from "@/lib/collectors/runsignup";
+import {
+  correrCollectorRunSignup,
+  enriquecerCarrerasRunSignup,
+} from "@/lib/collectors/runsignup";
 import { correrCollectorFidal } from "@/lib/collectors/fidal";
 import { correrCollectorCorro } from "@/lib/collectors/corro";
 import { correrCollectorRunchile } from "@/lib/collectors/runchile";
@@ -197,26 +201,32 @@ const COLLECTORES = [
 function conLimiteDeTiempo<T>(promesa: Promise<T>, ms: number): Promise<T> {
   return Promise.race([
     promesa,
-    new Promise<T>((_, reject) => setTimeout(() => reject(new Error(`tardó más de ${ms / 1000}s`)), ms)),
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(`tardó más de ${ms / 1000}s`)), ms),
+    ),
   ]);
 }
 
 export async function correrCollectoresAhora() {
   await requireAdmin();
+  if (!(await tomarCandado())) return;
+  try {
+    for (const correr of COLLECTORES) {
+      // RunSignup (EE. UU.) es la fuente más grande con diferencia y
+      // necesita más tiempo que el resto (ver TIEMPOS_ESPECIALES en
+      // api/cron/collectors/route.ts).
+      const limite = correr === correrCollectorRunSignup ? 130_000 : 60_000;
+      await conLimiteDeTiempo(correr(), limite).catch(() => {});
+    }
 
-  for (const correr of COLLECTORES) {
-    // RunSignup (EE. UU.) es la fuente más grande con diferencia y
-    // necesita más tiempo que el resto (ver TIEMPOS_ESPECIALES en
-    // api/cron/collectors/route.ts).
-    const limite = correr === correrCollectorRunSignup ? 130_000 : 60_000;
-    await conLimiteDeTiempo(correr(), limite).catch(() => {});
+    await corregirCalidadDeDatos().catch(() => {});
+    await traducirDescripcionesFaltantes().catch(() => {});
+    await enviarResumenesUbicacion().catch(() => {});
+    await enriquecerCarrerasRunSignup().catch(() => {});
+    await rellenarDatosFaltantes().catch(() => {});
+
+    revalidatePath("/", "layout");
+  } finally {
+    await soltarCandado();
   }
-
-  await corregirCalidadDeDatos().catch(() => {});
-  await traducirDescripcionesFaltantes().catch(() => {});
-  await enviarResumenesUbicacion().catch(() => {});
-  await enriquecerCarrerasRunSignup().catch(() => {});
-  await rellenarDatosFaltantes().catch(() => {});
-
-  revalidatePath("/", "layout");
 }
