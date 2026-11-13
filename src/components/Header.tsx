@@ -32,12 +32,13 @@ export function Header() {
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-3">
         <Link
           href="/"
+          aria-label="The World Runner"
           className="flex items-center gap-2 font-display font-bold text-xl uppercase tracking-wide shrink-0 whitespace-nowrap"
           style={{ color: "var(--wr-ink)" }}
         >
           <Image src="/brand/icono.png" alt="" width={32} height={32} priority />
           <span className="hidden md:inline">
-            <span style={{ color: "var(--wr-acc)", textDecoration: "underline", textUnderlineOffset: "3px" }}>
+            <span style={{ color: "var(--wr-acc-txt)", textDecoration: "underline", textUnderlineOffset: "3px" }}>
               The
             </span>{" "}
             World Runner

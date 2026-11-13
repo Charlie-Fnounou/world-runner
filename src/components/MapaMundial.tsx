@@ -199,7 +199,7 @@ function TileFecha({ fecha, idioma, grande }: { fecha: string; idioma: Idioma; g
       <span className="font-display font-extrabold leading-none" style={{ fontSize: grande ? 34 : 22, color: "var(--wr-ink)" }}>
         {f.dia}
       </span>
-      <span className="font-mono text-[10px] tracking-[0.12em] mt-1" style={{ color: grande ? "var(--wr-acc)" : "var(--wr-mut)" }}>
+      <span className="font-mono text-[10px] tracking-[0.12em] mt-1" style={{ color: grande ? "var(--wr-acc-txt)" : "var(--wr-mut)" }}>
         {f.mes}
       </span>
     </div>
@@ -326,7 +326,7 @@ export function MapaMundial({
                     type="button"
                     onClick={() => setSeleccionados(new Set())}
                     className="text-xs font-semibold hover:underline"
-                    style={{ color: "var(--wr-acc)" }}
+                    style={{ color: "var(--wr-acc-txt)" }}
                   >
                     {t.mapa.limpiarSeleccion}
                   </button>
@@ -367,7 +367,7 @@ export function MapaMundial({
                         </span>
                         <span className="flex items-center gap-2 flex-wrap">
                           <Badge estado={proxima.status} sm />
-                          <span className="font-mono text-[11px]" style={{ color: "var(--wr-acc)" }}>
+                          <span className="font-mono text-[11px]" style={{ color: "var(--wr-acc-txt)" }}>
                             {t.mapa.verCarrera}
                           </span>
                         </span>
@@ -401,7 +401,7 @@ export function MapaMundial({
                         type="button"
                         onClick={() => setLimite((l) => l + PASO_LISTA)}
                         className="self-start text-xs font-semibold hover:underline"
-                        style={{ color: "var(--wr-acc)" }}
+                        style={{ color: "var(--wr-acc-txt)" }}
                       >
                         {t.mapa.verMas(Math.min(PASO_LISTA, delPanel.length - limite))}
                       </button>

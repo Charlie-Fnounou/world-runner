@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMontado } from "@/hooks/useMontado";
 import { useTheme } from "next-themes";
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
-  const [montado, setMontado] = useState(false);
-  useEffect(() => setMontado(true), []);
+  const montado = useMontado();
 
   if (!montado) return <div className="w-9 h-9" />;
 

@@ -1,16 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useMontado } from "@/hooks/useMontado";
 
 export function Countdown({ date, big, light }: { date: string; big?: boolean; light?: boolean }) {
-  const [now, setNow] = useState<number | null>(null);
+  const montado = useMontado();
+  const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
-    setNow(Date.now());
     const i = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(i);
   }, []);
 
-  if (now === null) return null;
+  if (!montado) return null;
 
   const diff = Math.max(0, new Date(date + "T07:00:00").getTime() - now);
   const d = Math.floor(diff / 86400000);

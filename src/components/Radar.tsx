@@ -82,7 +82,7 @@ export function RadarFeed({ novedades }: { novedades: Novedad[] }) {
             <Link href={`/carreras/${n.slug}`} className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 px-4 py-3 group">
               <span
                 className="justify-self-start rounded-full px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.12em]"
-                style={{ background: COLOR_TIPO[n.tipo] + "22", color: COLOR_TIPO[n.tipo] }}
+                style={{ background: COLOR_TIPO[n.tipo] + "22", color: `color-mix(in srgb, ${COLOR_TIPO[n.tipo]} 55%, var(--wr-ink))` }}
               >
                 {t.radar.tipos[n.tipo]}
               </span>
@@ -124,7 +124,7 @@ export function RadarSeccion({ novedades, stats, conLinkTodo = true }: { novedad
           {t.radar.actualizado}
         </span>
         {conLinkTodo && (
-          <Link href="/radar" className="text-sm font-semibold hover:underline" style={{ color: "var(--wr-acc)" }}>
+          <Link href="/radar" className="text-sm font-semibold hover:underline" style={{ color: "var(--wr-acc-txt)" }}>
             {t.radar.verTodo}
           </Link>
         )}

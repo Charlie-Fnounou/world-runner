@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# The World Runner
 
-## Getting Started
+Directorio mundial de carreras de running (theworldrunner.com). Next.js 16 (App Router) + TypeScript + Tailwind, PostgreSQL en Supabase con Prisma 6, alojado en Vercel.
 
-First, run the development server:
+Antes de tocar código de Next.js, leer `AGENTS.md`: esta versión tiene cambios respecto de lo habitual y la documentación correcta está en `node_modules/next/dist/docs/`.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Comandos
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+| Comando | Qué hace |
+| --- | --- |
+| `npm run dev` | Servidor local en http://localhost:3000 (usa la base real de `.env`). |
+| `npm test` | Pruebas automáticas (Node test runner, sin base de datos). |
+| `npm run typecheck` | Chequeo de tipos. |
+| `npm run lint` | ESLint. |
+| `npm run build` | Build de producción. Consulta la base (lectura) para pre-generar páginas. |
+| `npx prisma db push` | Aplica cambios de `prisma/schema.prisma` a la base. **No usar** `prisma migrate dev/reset`: Supabase trae extensiones que Prisma toma como "drift" y quiere resetear. **No actualizar a Prisma 7** (cambia la configuración y rompe `url/directUrl`). |
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Variables de entorno (Vercel → Settings → Environment Variables, y `.env` local)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Variable | Obligatoria | Para qué |
+| --- | --- | --- |
+| `DATABASE_URL` | sí | Postgres de Supabase vía pooler (puerto 6543). |
+| `DIRECT_URL` | sí | Postgres directo (puerto 5432), lo usa `prisma db push`. |
+| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` | sí | Login (email y Google). |
+| `SUPABASE_SERVICE_ROLE_KEY` | sí | Generar links de login por email (solo servidor). |
+| `RESEND_API_KEY` | sí | Envío de emails (login, alertas, resúmenes). |
+| `CRON_SECRET` | sí | Protege `/api/cron/collectors` (Vercel Cron lo manda solo). |
+| `GEMINI_API_KEY` | no | Asistente con IA, traducciones y agente que completa datos. Sin ella esas funciones se apagan solas. |
+| `RUNSIGNUP_CLIENT_ID`, `RUNSIGNUP_CLIENT_SECRET` | no | Conexión OAuth con RunSignup (panel de robots). |
+| `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET` | no | Planes de pago. Sin ellas `/planes` muestra "Muy pronto". |
+| `PAYPAL_ENV` | no | `live` para cobrar de verdad; cualquier otro valor = sandbox (pruebas). |
+| `NEXT_PUBLIC_ADSENSE_CLIENT_ID` | no | Publicidad de Google AdSense (no se muestra a usuarios Pro). |
 
-## Learn More
+Nunca pegar valores de estas variables en comandos de terminal ni en commits.
 
-To learn more about Next.js, take a look at the following resources:
+## Cómo se actualizan las carreras
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `vercel.json` dispara `/api/cron/collectors` **una vez por día** (06:00 UTC; el plan gratis de Vercel no permite más). Ahí corren las fuentes "diarias" y, rotando, 1/7 de las "semanales"; después la limpieza de datos (`sanidad.ts`, incluye marcar duplicados), traducciones, resúmenes por email, enriquecimiento de RunSignup y, los lunes, el agente de IA que completa datos faltantes (`rellenoDatos.ts`).
+- Un candado en la base (`cronLock.ts`) evita dos corridas a la vez.
+- Cada fuente queda registrada en la tabla `EjecucionRobot` y se ve en `/admin/robots`. Una corrida que no trae nada queda como PARCIAL (casi siempre significa que el sitio de la fuente cambió).
+- `/api/salud` responde 200 si la base contesta y el cron corrió en las últimas 30 horas, 503 si no. Sirve para un monitor de uptime gratuito.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Reglas de veracidad (no romperlas)
 
-## Deploy on Vercel
+- El estado de inscripción solo se afirma si la fuente lo informa (`estado` en `CarreraExterna`). Si no, queda `SIN_CONFIRMAR` ("Estado sin confirmar"). Una fecha pasada se muestra como cerrada.
+- Nunca se inventan precio, cupo, desnivel, clima, dificultad ni valoraciones: sin dato se guarda `null` y la web muestra "—".
+- Los rankings solo usan carreras con el dato real y necesitan al menos 3; las valoraciones solo cuentan reseñas reales.
+- Los duplicados no se borran: se marcan con `duplicadoDeId`, salen de los listados y su ficha redirige a la principal.
+- Los robots se identifican como `WorldRunnerBot/1.0`. Si una fuente nos bloquea (403), no se la esquiva haciéndose pasar por un navegador.
+- Lo que llega de fuentes externas se valida (`collectors/validacion.ts`) y se escapa al mostrarlo (`lib/seguridad.ts`).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Publicar (deploy) y volver atrás
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Trabajar en una rama, correr `npm test`, `npm run typecheck`, `npm run lint` y `npm run build`.
+2. Si cambió el esquema: `npx prisma db push` (solo cambios que agregan; nunca borrar columnas con datos sin respaldo).
+3. Unir la rama a `main`: Vercel publica solo.
+4. Si hay un script de datos pendiente (ver abajo), correrlo justo después del deploy.
+
+**Volver atrás:** en Vercel → proyecto world-runner → Deployments → el deploy anterior → "Promote to Production" (instantáneo, no toca la base). Para el código: `git revert <commit>` y push.
+
+**Respaldos de la base:** el plan gratis de Supabase no tiene backups automáticos con restauración a un punto en el tiempo. Los scripts que modifican datos guardan antes un respaldo en `prisma/respaldos/`. Para un respaldo completo manual: `pg_dump "$DIRECT_URL" > respaldo.sql` (necesita las herramientas de PostgreSQL instaladas).
+
+## Scripts de datos
+
+- `scripts/migrar-veracidad.ts`: corrige datos ya guardados (estados deducidos → sin confirmar, datos inventados del catálogo inicial, duplicados). Sin argumentos solo muestra qué cambiaría; `--aplicar` respalda y aplica; `--runsignup` además confirma con RunSignup qué inscripciones están abiertas. Es idempotente.
+
+## Pagos
+
+PayPal (Stripe no acepta comercios de Panamá). Con las variables cargadas, la primera visita a `/planes` crea producto, planes y webhook en la cuenta de PayPal; `/admin/pagos` muestra el estado y permite recrearlos (necesario si cambian los precios de `src/lib/precios.ts`). Toda confirmación de pago se verifica contra la API de PayPal y el webhook (`/api/paypal/webhook`) valida la firma.

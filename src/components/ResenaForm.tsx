@@ -38,7 +38,7 @@ function Estrellas({ valor, onChange, aria }: { valor: number; onChange: (v: num
           key={n}
           type="button"
           onClick={() => onChange(n)}
-          className="text-lg leading-none hover:scale-110 transition-transform"
+          className="text-lg leading-none hover:scale-110 transition-transform w-7 h-7 inline-flex items-center justify-center"
           aria-label={aria(n)}
         >
           {n <= valor ? "★" : "☆"}

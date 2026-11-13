@@ -173,7 +173,7 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
       <div className="grid md:grid-cols-3 gap-4 mt-4">
         <div className="md:col-span-2 flex flex-col gap-4">
           <section className="rounded-2xl p-5 wr-panel">
-            <h3 className="font-bold mb-2">{t.raceDetail.sobreLaCarrera}</h3>
+            <h2 className="font-bold mb-2">{t.raceDetail.sobreLaCarrera}</h2>
             <p className="text-sm leading-relaxed" style={{ color: "var(--wr-mut)" }}>
               {descripcion}
             </p>
@@ -188,7 +188,7 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
 
           {r.history.length > 0 && (
           <section className="rounded-2xl p-5 wr-panel">
-            <h3 className="font-bold mb-3">{t.raceDetail.historialEdiciones}</h3>
+            <h2 className="font-bold mb-3">{t.raceDetail.historialEdiciones}</h2>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
@@ -217,7 +217,7 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
 
           {r.profile.length > 1 && (
             <section className="rounded-2xl p-5 wr-panel">
-              <h3 className="font-bold mb-1">{t.raceDetail.perfilElevacion}</h3>
+              <h2 className="font-bold mb-1">{t.raceDetail.perfilElevacion}</h2>
               <p className="text-xs mb-3" style={{ color: "var(--wr-mut)" }}>
                 {t.raceDetail.desnivelAcumulado(nf(r.elev, idioma))}
               </p>
@@ -227,7 +227,7 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
 
           {(r.recM || r.recF) && (
           <section className="rounded-2xl p-5 wr-panel">
-            <h3 className="font-bold mb-3">{t.raceDetail.records}</h3>
+            <h2 className="font-bold mb-3">{t.raceDetail.records}</h2>
             <div className="grid sm:grid-cols-2 gap-3 text-sm">
               <div>
                 <div className="text-xs uppercase tracking-wider" style={{ color: "var(--wr-mut)" }}>
@@ -246,7 +246,7 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
           )}
 
           <section className="rounded-2xl p-5 wr-panel text-sm flex flex-col gap-1.5">
-            <h3 className="font-bold mb-1">{t.raceDetail.fuenteTitulo}</h3>
+            <h2 className="font-bold mb-1">{t.raceDetail.fuenteTitulo}</h2>
             {r.fuente ? (
               <>
                 <span style={{ color: "var(--wr-ink)" }}>
@@ -271,7 +271,7 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
 
         <div className="flex flex-col gap-4">
           <section className="rounded-2xl p-5 wr-panel">
-            <h3 className="font-bold mb-3">{t.raceDetail.yaLaCorriste}</h3>
+            <h2 className="font-bold mb-3">{t.raceDetail.yaLaCorriste}</h2>
             {completada ? (
               <button
                 onClick={alternarCompletada}
@@ -303,7 +303,7 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
           </section>
 
           <section className="rounded-2xl p-5 wr-panel">
-            <h3 className="font-bold mb-3">{t.raceDetail.informacionPractica}</h3>
+            <h2 className="font-bold mb-3">{t.raceDetail.informacionPractica}</h2>
             <dl className="text-sm flex flex-col gap-2.5">
               <div className="flex justify-between gap-3">
                 <dt style={{ color: "var(--wr-mut)" }}>{t.raceDetail.aeropuerto}</dt>
@@ -316,7 +316,7 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
               <div className="flex justify-between gap-3">
                 <dt style={{ color: "var(--wr-mut)" }}>{t.raceDetail.sitioOficial}</dt>
                 <dd className="text-right truncate max-w-[55%]">
-                  <a href={r.web} target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--wr-acc)" }}>
+                  <a href={r.web} target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--wr-acc-txt)" }}>
                     {hostnameDe(r.web)}
                   </a>
                 </dd>
@@ -333,7 +333,7 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
 
           <section className="rounded-2xl p-5 wr-panel">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-bold">{t.raceDetail.checklistTitulo}</h3>
+              <h2 className="font-bold">{t.raceDetail.checklistTitulo}</h2>
               <span className="text-xs font-mono" style={{ color: "var(--wr-mut)" }}>
                 {done}/{t.raceDetail.checklist.length}
               </span>
@@ -359,11 +359,11 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
 
       <div className="grid md:grid-cols-3 gap-4 mt-4">
         <section className="rounded-2xl p-5 wr-panel">
-          <h3 className="font-bold mb-3">{t.raceDetail.dejaResena}</h3>
+          <h2 className="font-bold mb-3">{t.raceDetail.dejaResena}</h2>
           <ResenaForm eventoId={r.id} />
         </section>
         <section className="rounded-2xl p-5 wr-panel md:col-span-2">
-          <h3 className="font-bold mb-3">{t.raceDetail.resenasCorredores}</h3>
+          <h2 className="font-bold mb-3">{t.raceDetail.resenasCorredores}</h2>
           <ResenasList eventoId={r.id} />
         </section>
       </div>

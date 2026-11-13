@@ -6,13 +6,12 @@ import Link from "next/link";
 import { InstagramIcon, INSTAGRAM_HANDLE, INSTAGRAM_URL } from "./InstagramIcon";
 import { useIdioma } from "./LanguageProvider";
 import { IDIOMAS } from "@/lib/i18n";
+import { useMontado } from "@/hooks/useMontado";
 
 export function MobileNav({ items }: { items: { href: string; label: string }[] }) {
   const { idioma, cambiarIdioma, t } = useIdioma();
   const [abierto, setAbierto] = useState(false);
-  const [montado, setMontado] = useState(false);
-
-  useEffect(() => setMontado(true), []);
+  const montado = useMontado();
 
   useEffect(() => {
     document.body.style.overflow = abierto ? "hidden" : "";

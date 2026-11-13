@@ -33,7 +33,7 @@ export function MiPlan() {
         <span className="font-mono text-[11px] uppercase tracking-[0.14em]" style={{ color: "var(--wr-mut)" }}>
           {m.titulo}
         </span>
-        <span className="font-display font-extrabold text-2xl uppercase" style={{ color: plan.esPro ? "var(--wr-acc)" : "var(--wr-ink)" }}>
+        <span className="font-display font-extrabold text-2xl uppercase" style={{ color: plan.esPro ? "var(--wr-acc-txt)" : "var(--wr-ink)" }}>
           {nombre}
         </span>
         {detalle && (

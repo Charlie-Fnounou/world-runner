@@ -211,7 +211,7 @@ export default async function AdminPublicidadPage() {
               </div>
 
               <details>
-                <summary className="text-xs font-semibold cursor-pointer" style={{ color: "var(--wr-acc)" }}>
+                <summary className="text-xs font-semibold cursor-pointer" style={{ color: "var(--wr-acc-txt)" }}>
                   Editar
                 </summary>
                 <form action={actualizarPatrocinador.bind(null, p.id)} className="flex flex-col gap-3 mt-3 max-w-lg">
@@ -246,7 +246,7 @@ export default async function AdminPublicidadPage() {
         <h2 className="font-bold mb-2">Google AdSense</h2>
         <p className="text-sm" style={{ color: "var(--wr-mut)" }}>
           Ya está preparado el código para mostrar anuncios automáticos de Google. Cuando tengas tu cuenta
-          de AdSense aprobada, dame tu "Publisher ID" (empieza con <code>ca-pub-</code>) y lo activo — no
+          de AdSense aprobada, dame tu &quot;Publisher ID&quot; (empieza con <code>ca-pub-</code>) y lo activo — no
           hace falta tocar código.
         </p>
       </section>

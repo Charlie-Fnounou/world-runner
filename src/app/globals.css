@@ -9,6 +9,9 @@
   --wr-mut: #5b6472;
   --wr-acc: #2547e8;
   --wr-acc-ink: #ffffff;
+  /* Azul para TEXTO (links, etiquetas): el de la marca no llega al
+     contraste mínimo 4.5:1 como texto chico sobre el fondo oscuro. */
+  --wr-acc-txt: #2547e8;
   --wr-chip: #edf0f5;
 }
 
@@ -21,6 +24,7 @@
   --wr-mut: #8b94a7;
   --wr-acc: #3b5bff;
   --wr-acc-ink: #ffffff;
+  --wr-acc-txt: #8fa2ff;
   --wr-chip: #1d2330;
 }
 

@@ -35,7 +35,7 @@ export function ResenasList({ eventoId }: { eventoId: string }) {
             <span className="text-sm font-semibold" style={{ color: "var(--wr-ink)" }}>
               {r.usuarioNombre}
             </span>
-            <span className="text-xs font-mono" style={{ color: "var(--wr-acc)" }}>
+            <span className="text-xs font-mono" style={{ color: "var(--wr-acc-txt)" }}>
               ★ {r.promedio}
             </span>
           </div>

@@ -234,7 +234,7 @@ export function PlanesClient({
               </div>
               <div className="flex flex-col gap-1.5">
                 {c.precio}
-                <span className="font-mono text-[11px] uppercase tracking-[0.1em] min-h-4" style={{ color: c.destacada ? "var(--wr-acc)" : "var(--wr-mut)" }}>
+                <span className="font-mono text-[11px] uppercase tracking-[0.1em] min-h-4" style={{ color: c.destacada ? "var(--wr-acc-txt)" : "var(--wr-mut)" }}>
                   {c.nota ?? ""}
                 </span>
               </div>
@@ -260,7 +260,7 @@ export function PlanesClient({
         <ol className="grid gap-4 md:grid-cols-3">
           {p.pasos.map((paso, i) => (
             <li key={paso.titulo} className="rounded-2xl wr-panel p-5 flex flex-col gap-2">
-              <span className="font-mono text-xs tracking-[0.12em]" style={{ color: "var(--wr-acc)" }}>
+              <span className="font-mono text-xs tracking-[0.12em]" style={{ color: "var(--wr-acc-txt)" }}>
                 {i + 1}
               </span>
               <span className="font-semibold" style={{ color: "var(--wr-ink)" }}>
@@ -281,7 +281,7 @@ export function PlanesClient({
             <details key={q.p} className="group py-4" style={i > 0 ? { borderTop: "1px solid var(--wr-line)" } : undefined}>
               <summary className="cursor-pointer list-none flex items-center justify-between gap-3 text-sm font-semibold" style={{ color: "var(--wr-ink)" }}>
                 {q.p}
-                <span className="font-mono text-base transition-transform group-open:rotate-45" style={{ color: "var(--wr-acc)" }} aria-hidden="true">
+                <span className="font-mono text-base transition-transform group-open:rotate-45" style={{ color: "var(--wr-acc-txt)" }} aria-hidden="true">
                   +
                 </span>
               </summary>

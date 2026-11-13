@@ -49,12 +49,15 @@ export function TripClient({ carreras }: { carreras: Carrera[] }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dest, d1, d2, fDist, fStat]);
 
+  const hoy = useMemo(() => new Date().toISOString().slice(0, 10), []);
   const resultados = useMemo(() => {
     if (!dest && !d1 && !d2) return null;
     return carreras
       .filter((r) => {
         if (dest && !coincideDestino(r, dest)) return false;
-        if (d1 && r.date < d1) return false;
+        // Sin fecha "desde", un viaje se planifica hacia adelante: no se
+        // muestran carreras que ya pasaron.
+        if (r.date < (d1 || hoy)) return false;
         if (d2 && r.date > d2) return false;
         if (fDist === "Trail") {
           if (r.type !== "Trail") return false;
@@ -65,7 +68,7 @@ export function TripClient({ carreras }: { carreras: Carrera[] }) {
         return true;
       })
       .sort((a, b) => a.date.localeCompare(b.date));
-  }, [dest, d1, d2, fDist, fStat, carreras]);
+  }, [dest, d1, d2, fDist, fStat, carreras, hoy]);
 
   return (
     <div className="max-w-5xl mx-auto px-4 pb-16 w-full">
@@ -78,10 +81,11 @@ export function TripClient({ carreras }: { carreras: Carrera[] }) {
 
       <div className="grid sm:grid-cols-3 gap-3 mb-5">
         <div className="rounded-xl p-3 wr-panel">
-          <label className="text-[11px] uppercase tracking-wider block mb-1" style={{ color: "var(--wr-mut)" }}>
+          <label htmlFor="viaje-destino" className="text-[11px] uppercase tracking-wider block mb-1" style={{ color: "var(--wr-mut)" }}>
             {t.viaje.destinoLabel}
           </label>
           <input
+            id="viaje-destino"
             value={dest}
             onChange={(e) => setDest(e.target.value)}
             placeholder={t.viaje.destinoPlaceholder}
@@ -90,10 +94,11 @@ export function TripClient({ carreras }: { carreras: Carrera[] }) {
           />
         </div>
         <div className="rounded-xl p-3 wr-panel">
-          <label className="text-[11px] uppercase tracking-wider block mb-1" style={{ color: "var(--wr-mut)" }}>
+          <label htmlFor="viaje-desde" className="text-[11px] uppercase tracking-wider block mb-1" style={{ color: "var(--wr-mut)" }}>
             {t.viaje.desdeLabel}
           </label>
           <input
+            id="viaje-desde"
             type="date"
             value={d1}
             onChange={(e) => setD1(e.target.value)}
@@ -102,10 +107,11 @@ export function TripClient({ carreras }: { carreras: Carrera[] }) {
           />
         </div>
         <div className="rounded-xl p-3 wr-panel">
-          <label className="text-[11px] uppercase tracking-wider block mb-1" style={{ color: "var(--wr-mut)" }}>
+          <label htmlFor="viaje-hasta" className="text-[11px] uppercase tracking-wider block mb-1" style={{ color: "var(--wr-mut)" }}>
             {t.viaje.hastaLabel}
           </label>
           <input
+            id="viaje-hasta"
             type="date"
             value={d2}
             onChange={(e) => setD2(e.target.value)}

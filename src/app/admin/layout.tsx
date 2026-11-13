@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { requireAdmin } from "@/lib/admin";
 
+// Panel privado: siempre se genera al pedirlo (con la sesión del admin),
+// nunca de antemano en el build.
+export const dynamic = "force-dynamic";
+
 const NAV = [
   { href: "/admin", label: "Resumen" },
   { href: "/admin/carreras", label: "Carreras" },

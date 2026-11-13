@@ -133,7 +133,7 @@ export function RankingsClient({ carreras }: { carreras: Carrera[] }) {
               </div>
             </div>
             <div className="text-right shrink-0">
-              <div className="font-mono font-bold tabular-nums text-sm" style={{ color: "var(--wr-acc)" }}>
+              <div className="font-mono font-bold tabular-nums text-sm" style={{ color: "var(--wr-acc-txt)" }}>
                 {metrica(r)}
               </div>
               <Badge estado={r.status} sm />

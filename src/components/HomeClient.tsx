@@ -70,7 +70,12 @@ export function HomeClient({
     return null;
   }, [carreras, query]);
 
-  const destacadas = useMemo(() => carreras.filter((r) => r.major), [carreras]);
+  // Solo las que todavía no pasaron: varias "Majors" del catálogo inicial no
+  // tienen una fuente que cargue la edición siguiente.
+  const destacadas = useMemo(() => {
+    const hoy = new Date().toISOString().slice(0, 10);
+    return carreras.filter((r) => r.major && r.date >= hoy && r.status !== "cancelada");
+  }, [carreras]);
 
   const proximasAperturas = useMemo(
     () =>
@@ -90,7 +95,7 @@ export function HomeClient({
         <h1 className="font-display font-extrabold leading-none" style={{ fontSize: "clamp(36px,7vw,64px)" }}>
           {t.home.heroTitulo1}
           <br />
-          <span style={{ color: "var(--wr-acc)" }}>{t.home.heroTitulo2}</span>
+          <span style={{ color: "var(--wr-acc-txt)" }}>{t.home.heroTitulo2}</span>
         </h1>
         <p className="max-w-xl text-base" style={{ color: "var(--wr-mut)" }}>
           {t.home.heroDescripcion}
@@ -158,7 +163,7 @@ export function HomeClient({
               <p className="text-sm mt-1" style={{ color: "var(--wr-mut)" }}>
                 {t.home.sinResultadosTexto}
               </p>
-              <Link href="/proponer" className="inline-block mt-3 text-sm hover:underline" style={{ color: "var(--wr-acc)" }}>
+              <Link href="/proponer" className="inline-block mt-3 text-sm hover:underline" style={{ color: "var(--wr-acc-txt)" }}>
                 {t.home.proponerCarrera}
               </Link>
             </div>

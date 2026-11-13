@@ -48,13 +48,13 @@ export function CalendarioClient({ carreras }: { carreras: Carrera[] }) {
       <div className="flex items-center justify-between">
         <h1 className="font-display font-extrabold text-3xl sm:text-4xl">{t.calendario.titulo}</h1>
         <div className="flex items-center gap-2">
-          <button onClick={() => navegar(-1)} className="rounded-lg w-9 h-9 font-bold wr-chip" style={{ color: "var(--wr-ink)" }}>
+          <button type="button" aria-label={t.calendario.mesAnterior} onClick={() => navegar(-1)} className="rounded-lg w-9 h-9 font-bold wr-chip" style={{ color: "var(--wr-ink)" }}>
             ←
           </button>
-          <span className="font-semibold w-36 text-center text-sm" style={{ color: "var(--wr-ink)" }}>
+          <span data-mes-actual aria-live="polite" className="font-semibold w-36 text-center text-sm" style={{ color: "var(--wr-ink)" }}>
             {MESES_FULL[idioma][mes]} {anio}
           </span>
-          <button onClick={() => navegar(1)} className="rounded-lg w-9 h-9 font-bold wr-chip" style={{ color: "var(--wr-ink)" }}>
+          <button type="button" aria-label={t.calendario.mesSiguiente} onClick={() => navegar(1)} className="rounded-lg w-9 h-9 font-bold wr-chip" style={{ color: "var(--wr-ink)" }}>
             →
           </button>
         </div>
@@ -87,7 +87,7 @@ export function CalendarioClient({ carreras }: { carreras: Carrera[] }) {
                 cursor: rs.length ? "pointer" : "default",
               }}
             >
-              <span className="text-[11px] font-mono self-start" style={{ color: esHoy ? "var(--wr-acc)" : "var(--wr-mut)" }}>
+              <span className="text-[11px] font-mono self-start" style={{ color: esHoy ? "var(--wr-acc-txt)" : "var(--wr-mut)" }}>
                 {dia}
               </span>
               {rs.length > 0 && (

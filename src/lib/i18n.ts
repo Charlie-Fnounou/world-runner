@@ -295,6 +295,8 @@ export interface Diccionario {
     sinAlertas: string;
   };
   calendario: {
+    mesAnterior: string;
+    mesSiguiente: string;
     titulo: string;
     diasSemana: [string, string, string, string, string, string, string];
     ayuda: string;
@@ -651,6 +653,8 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
         "Activa la campanita 🔔 en la ficha de una carrera para recibir avisos de apertura de inscripciones, cambios de precio, pocos cupos, cambios de fecha o recorrido.",
     },
     calendario: {
+      mesAnterior: "Mes anterior",
+      mesSiguiente: "Mes siguiente",
       titulo: "Calendario mundial",
       diasSemana: ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
       ayuda: "Los colores indican el estado de inscripción. Toca un día con carreras para ver el detalle.",
@@ -1005,6 +1009,8 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
         "Turn on the 🔔 bell on a race's page to get notified about registration opening, price changes, low spots, or date/route changes.",
     },
     calendario: {
+      mesAnterior: "Previous month",
+      mesSiguiente: "Next month",
       titulo: "World calendar",
       diasSemana: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       ayuda: "Colors show the registration status. Tap a day with races to see the details.",
@@ -1359,6 +1365,8 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
         "Ative o sino 🔔 na página de uma corrida para receber avisos de abertura de inscrições, mudanças de preço, poucas vagas, ou mudanças de data/percurso.",
     },
     calendario: {
+      mesAnterior: "Mês anterior",
+      mesSiguiente: "Próximo mês",
       titulo: "Calendário mundial",
       diasSemana: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
       ayuda: "As cores indicam o status da inscrição. Toque num dia com corridas para ver os detalhes.",
@@ -1713,6 +1721,8 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
         "Activez la cloche 🔔 sur la page d'une course pour être averti de l'ouverture des inscriptions, des changements de prix, du nombre de places restantes, ou des changements de date/parcours.",
     },
     calendario: {
+      mesAnterior: "Mois précédent",
+      mesSiguiente: "Mois suivant",
       titulo: "Calendrier mondial",
       diasSemana: ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"],
       ayuda: "Les couleurs indiquent le statut d'inscription. Touchez un jour avec des courses pour voir le détail.",
