@@ -8,6 +8,7 @@ import { LanguageProvider } from "@/components/LanguageProvider";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { TrackerVisitas } from "@/components/TrackerVisitas";
+import { SoloSinPro } from "@/components/OcultarParaPro";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -26,11 +27,11 @@ export const metadata: Metadata = {
     template: "%s · The World Runner",
   },
   description:
-    "Miles de maratones, medias maratones, 10K, trails y ultras verificadas en más de 110 países. Descubre, compara y planifica tu próxima carrera con links de inscripción oficiales.",
+    "Miles de maratones, medias maratones, 10K, trails y ultras de más de 80 países, recopiladas de fuentes oficiales. Descubre, compara y planifica tu próxima carrera con links de inscripción oficiales.",
   metadataBase: new URL("https://theworldrunner.com"),
   openGraph: {
     title: "The World Runner",
-    description: "Miles de carreras de running verificadas en más de 110 países. Descubre, compara y planifica tu próxima carrera.",
+    description: "Miles de carreras de running de más de 80 países, recopiladas de fuentes oficiales. Descubre, compara y planifica tu próxima carrera.",
     type: "website",
     images: ["/brand/og-image.png"],
   },
@@ -56,17 +57,18 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${inter.variable} ${barlowCondensed.variable} h-full antialiased`}
     >
-      {adsenseClientId && (
-        <head>
-          <Script
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClientId}`}
-            crossOrigin="anonymous"
-            strategy="afterInteractive"
-          />
-        </head>
-      )}
       <body className="min-h-full flex flex-col">
+        {/* Pro promete "sin publicidad": AdSense solo se carga si no es Pro. */}
+        {adsenseClientId && (
+          <SoloSinPro>
+            <Script
+              async
+              src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClientId}`}
+              crossOrigin="anonymous"
+              strategy="afterInteractive"
+            />
+          </SoloSinPro>
+        )}
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <LanguageProvider>
             <TrackerVisitas />

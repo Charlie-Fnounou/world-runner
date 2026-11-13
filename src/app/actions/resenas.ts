@@ -127,10 +127,17 @@ export async function guardarResena(
     if (!Number.isInteger(v) || v < 1 || v > 5) return { ok: false, error: "datos-invalidos" };
   }
 
+  // Se copian solo los campos de la reseña: el objeto llega del navegador
+  // y podría traer otros (ej. usuarioId) para escribir donde no debe.
+  const puntajes = Object.fromEntries(CAMPOS_RESENA.map((c) => [c, datos[c]])) as Record<(typeof CAMPOS_RESENA)[number], number>;
+  const comentario = typeof datos.comentario === "string" ? datos.comentario.trim().slice(0, 2000) || null : null;
+  const existe = await prisma.evento.findUnique({ where: { id: eventoId }, select: { id: true } });
+  if (!existe) return { ok: false, error: "datos-invalidos" };
+
   await prisma.resena.upsert({
     where: { usuarioId_eventoId: { usuarioId: user.id, eventoId } },
-    update: { ...datos, comentario: datos.comentario?.trim() || null },
-    create: { usuarioId: user.id, eventoId, ...datos, comentario: datos.comentario?.trim() || null },
+    update: { ...puntajes, comentario },
+    create: { usuarioId: user.id, eventoId, ...puntajes, comentario },
   });
 
   await recalcularRating(eventoId);

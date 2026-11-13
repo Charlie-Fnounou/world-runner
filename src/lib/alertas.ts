@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import { enviarCorreo } from "@/lib/resend";
 import { slugify } from "@/lib/races-data";
+import { escaparHtml } from "@/lib/seguridad";
 
 // IDs de eventos a los que el usuario con sesión iniciada está suscrito.
 // Devuelve [] si no hay sesión (invitado).
@@ -143,9 +144,9 @@ export async function notificarCambios(eventoId: string, cambios: { tipo: TipoCa
 
       const html = `
         <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 32px 24px;">
-          <h1 style="font-size: 20px; color: #12151b;">${evento.bandera ?? ""} ${evento.nombre}</h1>
+          <h1 style="font-size: 20px; color: #12151b;">${evento.bandera ?? ""} ${escaparHtml(evento.nombre)}</h1>
           <ul style="color: #12151b; font-size: 15px; line-height: 1.7; padding-left: 20px;">
-            ${relevantes.map((c) => `<li>${c.mensaje}</li>`).join("")}
+            ${relevantes.map((c) => `<li>${escaparHtml(c.mensaje)}</li>`).join("")}
           </ul>
           <p style="margin: 24px 0;">
             <a href="${enlace}" style="background:#2547E8; color:#fff; padding:12px 24px; border-radius:999px; text-decoration:none; font-weight:600; display:inline-block;">

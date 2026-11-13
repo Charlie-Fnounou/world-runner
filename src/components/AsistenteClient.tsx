@@ -23,7 +23,7 @@ export function AsistenteClient({ carreras }: { carreras: Carrera[] }) {
     startTransition(async () => {
       const resultado = await preguntarAsistente(query, idioma);
       if (!resultado.ok) {
-        setErr(resultado.error === "no-configurado" ? t.asistente.errorNoConfigurado : t.asistente.errorGenerico);
+        setErr(resultado.error === "no-configurado" ? t.asistente.errorNoConfigurado : resultado.error === "limite" ? t.asistente.errorLimite : t.asistente.errorGenerico);
         return;
       }
       setRes(resultado.data);

@@ -21,3 +21,13 @@ export function OcultarParaPro({ children }: { children: React.ReactNode }) {
   }, []);
   return esPro ? null : <>{children}</>;
 }
+
+// Para scripts de anuncios (AdSense automático): un script ya cargado no
+// se puede "ocultar", así que se espera a confirmar que no es Pro.
+export function SoloSinPro({ children }: { children: React.ReactNode }) {
+  const [estado, setEstado] = useState<"cargando" | "pro" | "gratis">("cargando");
+  useEffect(() => {
+    esProActual().then((pro) => setEstado(pro ? "pro" : "gratis"));
+  }, []);
+  return estado === "gratis" ? <>{children}</> : null;
+}
