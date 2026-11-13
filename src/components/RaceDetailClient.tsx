@@ -62,7 +62,9 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
     });
   }
 
-  const cta = t.raceDetail.cta[r.status === "abierta" || r.status === "ultimos" ? "abierta" : r.status];
+  const claveCta =
+    r.status === "abierta" || r.status === "ultimos" ? "abierta" : r.status === "sorteo" || r.status === "proximamente" ? r.status : "cerrada";
+  const cta = t.raceDetail.cta[claveCta];
 
   // Varios collectors nuevos no traen distancia, precio, desnivel,
   // corredores o clima exactos (la fuente no los publica): "0 km", "$0" o
@@ -80,10 +82,11 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
     [t.raceDetail.datos.desnivel, desnivelTexto],
     [t.raceDetail.datos.tempPromedio, tempTexto],
     [t.raceDetail.datos.tiempoLimite, r.limit || "—"],
-    [t.raceDetail.datos.dificultad, "●".repeat(r.diff) + "○".repeat(5 - r.diff)],
+    [t.raceDetail.datos.dificultad, r.diff > 0 ? "●".repeat(r.diff) + "○".repeat(5 - r.diff) : "—"],
     [t.raceDetail.datos.valoracion, r.rating > 0 ? "★ " + r.rating + " (" + nf(r.nrev, idioma) + ")" : t.raceDetail.datos.sinValoraciones],
   ];
 
+  const faltanDatos = r.km <= 0 || r.price <= 0 || r.status === "sinconfirmar";
   const done = Object.values(checks).filter(Boolean).length;
   const descripcion = descripcionParaIdioma(r, idioma);
 
@@ -183,6 +186,7 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
             </div>
           </section>
 
+          {r.history.length > 0 && (
           <section className="rounded-2xl p-5 wr-panel">
             <h3 className="font-bold mb-3">{t.raceDetail.historialEdiciones}</h3>
             <div className="overflow-x-auto">
@@ -198,11 +202,8 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
                   {r.history.map((h) => (
                     <tr key={h.y} style={{ borderTop: "1px solid var(--wr-line)" }}>
                       <td className="py-2.5 pr-4 font-semibold">{h.y}</td>
-                      <td className="py-2.5 pr-4 font-mono tabular-nums">{nf(h.r, idioma)}</td>
-                      <td className="py-2.5 font-mono tabular-nums">
-                        {r.cur}
-                        {nf(h.p, idioma)}
-                      </td>
+                      <td className="py-2.5 pr-4 font-mono tabular-nums">{h.r > 0 ? nf(h.r, idioma) : "—"}</td>
+                      <td className="py-2.5 font-mono tabular-nums">{h.p > 0 ? r.cur + nf(h.p, idioma) : "—"}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -212,6 +213,7 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
               {t.raceDetail.historialNota}
             </p>
           </section>
+          )}
 
           {r.profile.length > 1 && (
             <section className="rounded-2xl p-5 wr-panel">
@@ -223,6 +225,7 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
             </section>
           )}
 
+          {(r.recM || r.recF) && (
           <section className="rounded-2xl p-5 wr-panel">
             <h3 className="font-bold mb-3">{t.raceDetail.records}</h3>
             <div className="grid sm:grid-cols-2 gap-3 text-sm">
@@ -230,15 +233,39 @@ export function RaceDetailClient({ r }: { r: Carrera }) {
                 <div className="text-xs uppercase tracking-wider" style={{ color: "var(--wr-mut)" }}>
                   {t.raceDetail.masculino}
                 </div>
-                <div className="font-mono mt-1">{r.recM}</div>
+                <div className="font-mono mt-1">{r.recM || "—"}</div>
               </div>
               <div>
                 <div className="text-xs uppercase tracking-wider" style={{ color: "var(--wr-mut)" }}>
                   {t.raceDetail.femenino}
                 </div>
-                <div className="font-mono mt-1">{r.recF}</div>
+                <div className="font-mono mt-1">{r.recF || "—"}</div>
               </div>
             </div>
+          </section>
+          )}
+
+          <section className="rounded-2xl p-5 wr-panel text-sm flex flex-col gap-1.5">
+            <h3 className="font-bold mb-1">{t.raceDetail.fuenteTitulo}</h3>
+            {r.fuente ? (
+              <>
+                <span style={{ color: "var(--wr-ink)" }}>
+                  {r.fuente.url ? (
+                    <a href={r.fuente.url} target="_blank" rel="noopener noreferrer nofollow" className="underline">
+                      {t.raceDetail.fuenteDe(r.fuente.nombre)}
+                    </a>
+                  ) : (
+                    t.raceDetail.fuenteDe(r.fuente.nombre)
+                  )}
+                </span>
+                {r.fuente.verificado && (
+                  <span style={{ color: "var(--wr-mut)" }}>{t.raceDetail.verificadoEl(fmtFecha(r.fuente.verificado.slice(0, 10), idioma))}</span>
+                )}
+              </>
+            ) : (
+              <span style={{ color: "var(--wr-mut)" }}>{t.raceDetail.sinFuente}</span>
+            )}
+            {faltanDatos && <span style={{ color: "var(--wr-mut)" }}>{t.raceDetail.faltanDatos}</span>}
           </section>
         </div>
 

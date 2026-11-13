@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { marcarDuplicados } from "@/lib/duplicados";
 
 // Barrida diaria de calidad de datos: corre sola dentro del cron
 // existente (no hace falta que nadie entre a revisar manualmente).
@@ -13,7 +14,7 @@ export async function corregirCalidadDeDatos() {
   // cualquier otra vista (admin, exports) sea consistente.
   const estadosCorregidos = await prisma.edicion.updateMany({
     where: {
-      estado: { in: ["ABIERTA", "ULTIMOS_CUPOS", "SORTEO", "PROXIMAMENTE"] },
+      estado: { in: ["ABIERTA", "ULTIMOS_CUPOS", "SORTEO", "PROXIMAMENTE", "SIN_CONFIRMAR"] },
       fecha: { lt: new Date() },
     },
     data: { estado: "CERRADA" },
@@ -36,8 +37,13 @@ export async function corregirCalidadDeDatos() {
     eventosEliminados = r.count;
   }
 
+  // 3. Duplicados (misma carrera desde dos fuentes o con dos IDs): se
+  // marcan, no se borran (ver duplicados.ts).
+  const { marcados: duplicadosMarcados } = await marcarDuplicados();
+
   return {
     estadosCorregidos: estadosCorregidos.count,
     eventosEliminados,
+    duplicadosMarcados,
   };
 }

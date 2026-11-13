@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { getCarreras, getCarreraPorSlug, getCarrerasCercanas, slugify } from "@/lib/races-data";
+import { notFound, permanentRedirect } from "next/navigation";
+import { getCarreras, getCarreraPorSlug, getCarrerasCercanas, getSlugPrincipal, slugify } from "@/lib/races-data";
+import { jsonParaScript, monedaIso } from "@/lib/seguridad";
 import { getNovedades } from "@/lib/radar";
 import { preguntasDeCarrera } from "@/lib/faq";
 import { RaceExtras } from "@/components/RaceExtras";
@@ -32,7 +33,7 @@ export async function generateMetadata({
   const r = await getCarreraPorSlug(slug);
   if (!r) return {};
   const titulo = `${r.name} — ${fmtFecha(r.date)}`;
-  const descripcion = r.desc.slice(0, 155);
+  const descripcion = (r.desc || `${r.name}: carrera de running en ${[r.city, r.country].filter(Boolean).join(", ")} el ${fmtFecha(r.date)}. Fecha, distancia y link oficial de inscripción.`).slice(0, 155);
   return {
     title: titulo,
     description: descripcion,
@@ -48,6 +49,8 @@ export default async function RacePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  const principal = await getSlugPrincipal(slug);
+  if (principal) permanentRedirect(`/carreras/${principal}`);
   const r = await getCarreraPorSlug(slug);
   if (!r) notFound();
   const [novedades, cercanas] = await Promise.all([getNovedades(8, r.id), getCarrerasCercanas(r)]);
@@ -73,22 +76,24 @@ export default async function RacePage({
       name: `${r.city}, ${r.country}`,
       geo: { "@type": "GeoCoordinates", latitude: r.lat, longitude: r.lng },
     },
-    offers: r.price
-      ? { "@type": "Offer", price: r.price, priceCurrency: r.cur === "€" ? "EUR" : r.cur === "$" ? "USD" : r.cur === "£" ? "GBP" : "USD", url: r.web }
-      : undefined,
-    url: r.web,
-    description: r.desc,
+    eventStatus: r.status === "cancelada" ? "https://schema.org/EventCancelled" : "https://schema.org/EventScheduled",
+    offers:
+      r.price > 0 && monedaIso(r.cur)
+        ? { "@type": "Offer", price: r.price, priceCurrency: monedaIso(r.cur), url: r.web || undefined }
+        : undefined,
+    url: r.web || undefined,
+    description: r.desc || undefined,
   };
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonParaScript(jsonLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonParaScript(faqLd) }}
       />
       <RaceDetailClient r={r} />
       <RaceExtras r={r} novedades={novedades} cercanas={cercanas} />

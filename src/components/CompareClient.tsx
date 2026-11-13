@@ -31,16 +31,28 @@ const FILAS: Fila[] = [
     valor: (r, idioma) => (r.price > 0 ? r.cur + nf(r.price, idioma) : "—"),
     mejor: (x, y) => x.price > 0 && y.price > 0 && x.price < y.price,
   },
-  { id: "corredores", valor: (r, idioma) => nf(r.runners, idioma), mejor: (x, y) => x.runners > y.runners },
+  {
+    id: "corredores",
+    valor: (r, idioma) => (r.runners > 0 ? nf(r.runners, idioma) : "—"),
+    mejor: (x, y) => x.runners > 0 && y.runners > 0 && x.runners > y.runners,
+  },
   {
     id: "desnivel",
     valor: (r, idioma) => (r.elev > 0 ? nf(r.elev, idioma) + " m" : "—"),
     mejor: (x, y) => x.elev > 0 && y.elev > 0 && x.elev < y.elev,
   },
-  { id: "tempPromedio", valor: (r) => r.temp + " °C" },
-  { id: "tiempoLimite", valor: (r) => r.limit },
-  { id: "dificultad", valor: (r) => "●".repeat(r.diff) + "○".repeat(5 - r.diff), mejor: (x, y) => x.diff < y.diff },
-  { id: "valoracion", valor: (r) => "★ " + r.rating, mejor: (x, y) => x.rating > y.rating },
+  { id: "tempPromedio", valor: (r) => (r.temp !== 0 ? r.temp + " °C" : "—") },
+  { id: "tiempoLimite", valor: (r) => r.limit || "—" },
+  {
+    id: "dificultad",
+    valor: (r) => (r.diff > 0 ? "●".repeat(r.diff) + "○".repeat(5 - r.diff) : "—"),
+    mejor: (x, y) => x.diff > 0 && y.diff > 0 && x.diff < y.diff,
+  },
+  {
+    id: "valoracion",
+    valor: (r) => (r.rating > 0 ? `★ ${r.rating} (${r.nrev})` : "—"),
+    mejor: (x, y) => x.nrev >= 3 && y.nrev >= 3 && x.rating > y.rating,
+  },
   { id: "estado", valor: (r) => <Badge estado={r.status} sm /> },
 ];
 

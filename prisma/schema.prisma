@@ -29,6 +29,9 @@ enum EstadoInscripcion {
   PROXIMAMENTE
   CERRADA
   CANCELADA
+  // La fuente no informa si la inscripción está abierta. Antes se deducía
+  // por la cercanía de la fecha y se mostraba "abierta" sin serlo.
+  SIN_CONFIRMAR
 }
 
 enum TipoTerreno {
@@ -105,6 +108,11 @@ model Evento {
   aeropuerto  String?
   zonaHoteles String?
   transporte  String?
+
+  // Si es la misma carrera que otra ya cargada (otra fuente, o la misma
+  // fuente con otro identificador), apunta a la que se muestra. No se borra
+  // nada: se oculta de listados y su ficha redirige a la principal.
+  duplicadoDeId String?
 
   bandera         String? // emoji de la bandera del país, ej. "🇩🇪"
   colorPrimario   String? // color del gradiente de la tarjeta/portada

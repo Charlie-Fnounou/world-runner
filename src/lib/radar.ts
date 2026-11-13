@@ -41,7 +41,7 @@ const FILTRO_CAMBIOS_CANDIDATOS = {
 
 const SELECT_EVENTO = { select: { id: true, nombre: true, ciudad: true, pais: true, bandera: true } } as const;
 
-function tipoDeCambio(campo: string, valorNuevo: string | null): TipoNovedad | null {
+export function tipoDeCambio(campo: string, valorNuevo: string | null): TipoNovedad | null {
   if (campo === "fecha") return "fecha";
   if (campo === "precioDesde") return "precio";
   if (campo !== "estado") return null;
@@ -52,7 +52,7 @@ function tipoDeCambio(campo: string, valorNuevo: string | null): TipoNovedad | n
   return null;
 }
 
-function esCambioReal(h: { campo: string; valorAnterior: string | null; valorNuevo: string | null; creadoEn: Date }): boolean {
+export function esCambioReal(h: { campo: string; valorAnterior: string | null; valorNuevo: string | null; creadoEn: Date }): boolean {
   if (h.campo === "fecha") return (h.valorAnterior ?? "").slice(0, 10) !== (h.valorNuevo ?? "").slice(0, 10);
   if (h.campo === "precioDesde") return h.valorAnterior !== h.valorNuevo;
   if (h.campo === "estado") {

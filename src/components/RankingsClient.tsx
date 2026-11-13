@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import type { Carrera } from "@/lib/types";
 import { Badge } from "./Badge";
@@ -8,30 +8,27 @@ import { fmtFecha, nf } from "@/lib/format";
 import { slugify } from "@/lib/races-data";
 import { useIdioma } from "./LanguageProvider";
 
-type TabId = "rapidas" | "populares" | "economicas" | "dificiles" | "valoradas" | "frescas";
+type TabId = "planas" | "populares" | "economicas" | "desnivel" | "valoradas";
 
-// Varios collectors nuevos no traen desnivel, precio o clima exactos, y
-// esos campos quedan en 0 quiere decir "sin dato" (no un valor real).
-// Los rankings que ordenan de MENOR a MAYOR (más rápidas = menos desnivel,
-// más económicas = menos precio, mejor clima frío = menos temperatura)
-// tienen que excluir esos ceros o el top-10 termina lleno de carreras sin
-// datos en vez de las que de verdad tienen el mejor valor.
-const TABS: { id: TabId; ordenar: (rs: Carrera[]) => Carrera[] }[] = [
-  {
-    id: "rapidas",
-    ordenar: (rs) => [...rs].filter((r) => r.dist === "Maratón" && r.elev > 0).sort((a, b) => a.elev - b.elev),
-  },
-  { id: "populares", ordenar: (rs) => [...rs].sort((a, b) => b.runners - a.runners) },
-  {
-    id: "economicas",
-    ordenar: (rs) => [...rs].filter((r) => r.price > 0).sort((a, b) => a.price - b.price),
-  },
-  { id: "dificiles", ordenar: (rs) => [...rs].sort((a, b) => b.diff * 1000 + b.elev - (a.diff * 1000 + a.elev)) },
-  { id: "valoradas", ordenar: (rs) => [...rs].filter((r) => r.rating > 0).sort((a, b) => b.rating - a.rating) },
-  {
-    id: "frescas",
-    ordenar: (rs) => [...rs].filter((r) => r.temp !== 0).sort((a, b) => a.temp - b.temp),
-  },
+// Cada ranking usa solo carreras que tienen el dato real (0 = "sin dato").
+// Un ranking con menos de MINIMO carreras con datos no se muestra: un
+// "top" de 1 o 2 carreras no compara nada. "Mejor valoradas" exige
+// reseñas reales de corredores, y precios solo se comparan dentro de una
+// misma moneda (sin tipo de cambio verificado, mezclarlas engaña).
+const MINIMO = 3;
+const MIN_RESENAS = 3;
+
+function proximas(rs: Carrera[]): Carrera[] {
+  const hoy = new Date().toISOString().slice(0, 10);
+  return rs.filter((r) => r.date >= hoy && r.status !== "cancelada");
+}
+
+const TABS: { id: TabId; ordenar: (rs: Carrera[], moneda: string) => Carrera[] }[] = [
+  { id: "planas", ordenar: (rs) => rs.filter((r) => r.dist === "Maratón" && r.elev > 0).sort((a, b) => a.elev - b.elev) },
+  { id: "populares", ordenar: (rs) => rs.filter((r) => r.runners > 0).sort((a, b) => b.runners - a.runners) },
+  { id: "economicas", ordenar: (rs, moneda) => rs.filter((r) => r.price > 0 && r.cur === moneda).sort((a, b) => a.price - b.price) },
+  { id: "desnivel", ordenar: (rs) => rs.filter((r) => r.elev > 0).sort((a, b) => b.elev - a.elev) },
+  { id: "valoradas", ordenar: (rs) => rs.filter((r) => r.rating > 0 && r.nrev >= MIN_RESENAS).sort((a, b) => b.rating - a.rating) },
 ];
 
 function medalla(i: number): string {
@@ -40,24 +37,32 @@ function medalla(i: number): string {
 
 export function RankingsClient({ carreras }: { carreras: Carrera[] }) {
   const { idioma, t } = useIdioma();
-  const [tab, setTab] = useState<TabId>("rapidas");
-  const actual = TABS.find((tt) => tt.id === tab)!;
-  const lista = actual.ordenar(carreras).slice(0, 10);
+  const vigentes = useMemo(() => proximas(carreras), [carreras]);
+  const monedas = useMemo(() => {
+    const cuenta = new Map<string, number>();
+    for (const r of vigentes) if (r.price > 0 && r.cur) cuenta.set(r.cur, (cuenta.get(r.cur) ?? 0) + 1);
+    return [...cuenta.entries()].filter(([, n]) => n >= MINIMO).sort((a, b) => b[1] - a[1]).map(([m]) => m);
+  }, [vigentes]);
+  const [moneda, setMoneda] = useState("");
+  const monedaActiva = monedas.includes(moneda) ? moneda : (monedas[0] ?? "");
+  const disponibles = TABS.filter((tt) => tt.ordenar(vigentes, monedaActiva).length >= MINIMO);
+  const [tab, setTab] = useState<TabId>("planas");
+  const actual = disponibles.find((tt) => tt.id === tab) ?? disponibles[0];
+  const lista = actual ? actual.ordenar(vigentes, monedaActiva).slice(0, 10) : [];
 
   function metrica(r: Carrera): string {
-    switch (tab) {
-      case "rapidas":
+    switch (actual?.id) {
+      case "planas":
+      case "desnivel":
         return `${nf(r.elev, idioma)} m D+`;
       case "populares":
         return `${nf(r.runners, idioma)} ${t.rankings.corredoresSufijo}`;
       case "economicas":
-        return `${r.cur}${r.price}`;
-      case "dificiles":
-        return `${"●".repeat(r.diff)} · ${nf(r.elev, idioma)} m D+`;
+        return `${r.cur} ${nf(r.price, idioma)}`;
       case "valoradas":
-        return `★ ${r.rating}`;
-      case "frescas":
-        return `${r.temp} °C`;
+        return `★ ${r.rating} (${nf(r.nrev, idioma)})`;
+      default:
+        return "";
     }
   }
 
@@ -71,21 +76,41 @@ export function RankingsClient({ carreras }: { carreras: Carrera[] }) {
       </p>
 
       <div className="flex gap-2 overflow-x-auto pb-2 mb-4">
-        {TABS.map((tt) => (
+        {disponibles.map((tt) => (
           <button
             key={tt.id}
+            type="button"
             onClick={() => setTab(tt.id)}
+            aria-pressed={actual?.id === tt.id}
             className="rounded-full px-4 py-2 text-[13px] font-semibold whitespace-nowrap"
             style={{
-              background: tab === tt.id ? "var(--wr-acc)" : "var(--wr-chip)",
-              color: tab === tt.id ? "var(--wr-acc-ink)" : "var(--wr-mut)",
-              border: `1px solid ${tab === tt.id ? "var(--wr-acc)" : "var(--wr-line)"}`,
+              background: actual?.id === tt.id ? "var(--wr-acc)" : "var(--wr-chip)",
+              color: actual?.id === tt.id ? "var(--wr-acc-ink)" : "var(--wr-mut)",
+              border: `1px solid ${actual?.id === tt.id ? "var(--wr-acc)" : "var(--wr-line)"}`,
             }}
           >
             {t.rankings.tabs[tt.id]}
           </button>
         ))}
       </div>
+
+      {actual?.id === "economicas" && monedas.length > 1 && (
+        <div className="flex gap-2 flex-wrap items-center mb-4 text-xs" style={{ color: "var(--wr-mut)" }}>
+          {t.rankings.moneda}
+          {monedas.map((m) => (
+            <button
+              key={m}
+              type="button"
+              onClick={() => setMoneda(m)}
+              aria-pressed={m === monedaActiva}
+              className="rounded-full px-3 py-1 font-mono"
+              style={{ background: m === monedaActiva ? "var(--wr-acc)" : "var(--wr-chip)", color: m === monedaActiva ? "var(--wr-acc-ink)" : "var(--wr-mut)" }}
+            >
+              {m}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className="flex flex-col gap-2">
         {lista.map((r, i) => (

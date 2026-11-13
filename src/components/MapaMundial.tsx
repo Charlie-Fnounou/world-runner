@@ -234,7 +234,7 @@ export function MapaMundial({
     () => enRango.filter((r) => seleccionados.has(r.country)).sort((a, b) => a.date.localeCompare(b.date)),
     [enRango, seleccionados],
   );
-  const proxima = delPanel.find((r) => r.status !== "cerrada") ?? delPanel[0];
+  const proxima = delPanel.find((r) => r.status !== "cerrada" && r.status !== "cancelada") ?? delPanel[0];
 
   function alternarPais(pais: string) {
     setLimite(PASO_LISTA);

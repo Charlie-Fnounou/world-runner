@@ -15,7 +15,7 @@ import { useFavoritos } from "@/hooks/useFavoritos";
 import { buscarCarreras } from "@/lib/search";
 import { useIdioma } from "./LanguageProvider";
 
-const ESTADOS_FILTRO: (EstadoInscripcion | "Todos")[] = ["Todos", "abierta", "ultimos", "sorteo", "proximamente", "cerrada"];
+const ESTADOS_FILTRO: (EstadoInscripcion | "Todos")[] = ["Todos", "abierta", "ultimos", "sorteo", "proximamente", "sinconfirmar", "cerrada", "cancelada"];
 
 export function HomeClient({
   carreras,

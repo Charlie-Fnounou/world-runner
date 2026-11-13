@@ -47,12 +47,17 @@ const CONCURRENCIA = 14; // upserts en simultáneo, por debajo del límite de 17
 const HORIZONTE_MESES = 18; // no ir más allá de año y medio adelante antes de reiniciar
 const COLLECTOR_ID = "runsignup";
 
-interface RaceRunSignup {
+export interface RaceRunSignup {
   race: {
     race_id: number;
     name: string;
     next_date: string; // "MM/DD/YYYY"
     url: string;
+    // "T"/"F". "F" no distingue "todavía no abrió" de "ya cerró", así que
+    // solo "T" se toma como dato confirmado.
+    is_registration_open?: string;
+    is_draft_race?: string;
+    is_private_race?: string;
     address?: {
       city?: string;
       state?: string;
@@ -61,7 +66,7 @@ interface RaceRunSignup {
   };
 }
 
-function fechaDesdeMMDDYYYY(texto: string | null | undefined): Date | null {
+export function fechaDesdeMMDDYYYY(texto: string | null | undefined): Date | null {
   // Series, programas de entrenamiento y clubes recurrentes no tienen
   // una única fecha próxima definida y vienen con next_date null/vacío.
   if (!texto) return null;
@@ -99,9 +104,10 @@ async function obtenerPaginaDeCarreras(pagina: number, inicio: string, fin: stri
   return data.races ?? [];
 }
 
-function aCarreraExterna(r: RaceRunSignup["race"]): CarreraExterna | null {
+export function aCarreraExterna(r: RaceRunSignup["race"]): CarreraExterna | null {
   const fecha = fechaDesdeMMDDYYYY(r.next_date);
   if (!fecha) return null;
+  if (r.is_draft_race === "T" || r.is_private_race === "T") return null;
 
   const { pais, continente } = paisDesdeCodigoIso(r.address?.country_code);
 
@@ -123,6 +129,7 @@ function aCarreraExterna(r: RaceRunSignup["race"]): CarreraExterna | null {
     anio: fecha.getFullYear(),
     fecha,
     urlInscripcionOficial: r.url,
+    estado: r.is_registration_open === "T" ? "ABIERTA" : undefined,
     distancias: [{ tipo: TipoDistancia.OTRA, km: 0 }],
   };
 }
@@ -146,6 +153,8 @@ export async function correrCollectorRunSignup() {
     let nuevas = 0;
     let actualizadas = 0;
     let errores = 0;
+    let omitidas = 0;
+    const motivos = new Map<string, number>();
 
     for (let i = 0; i < PAGINAS_POR_CORRIDA; i++) {
       pagina += 1;
@@ -165,11 +174,14 @@ export async function correrCollectorRunSignup() {
         const resultados = await Promise.all(
           lote.map(async ({ race }) => {
             try {
+              // Series, clubes y borradores no tienen una fecha única: no es un error.
               const externa = aCarreraExterna(race);
-              if (!externa) return "error";
+              if (!externa) return "omitida";
               const { creada } = await upsertCarreraExterna(externa);
               return creada ? "nueva" : "actualizada";
-            } catch {
+            } catch (e) {
+              const motivo = (e instanceof Error ? e.message : String(e)).split("\n").filter(Boolean).pop()?.slice(0, 120) ?? "desconocido";
+              motivos.set(motivo, (motivos.get(motivo) ?? 0) + 1);
               return "error";
             }
           }),
@@ -177,6 +189,7 @@ export async function correrCollectorRunSignup() {
         for (const r of resultados) {
           if (r === "nueva") nuevas++;
           else if (r === "actualizada") actualizadas++;
+          else if (r === "omitida") omitidas++;
           else errores++;
         }
       }
@@ -188,7 +201,11 @@ export async function correrCollectorRunSignup() {
       create: { collector: COLLECTOR_ID, cursor: codificarCursor(mes, pagina) },
     });
 
-    return { nuevas, actualizadas, errores };
+    const detalle = [
+      omitidas ? `${omitidas} omitidas (sin fecha única)` : "",
+      ...[...motivos].slice(0, 3).map(([m, n]) => `${n}× ${m}`),
+    ].filter(Boolean).join(" · ");
+    return { nuevas, actualizadas, errores, detalle };
   });
 }
 

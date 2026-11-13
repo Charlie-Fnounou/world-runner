@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { escaparHtml } from "@/lib/seguridad";
 import { enviarCorreo } from "@/lib/resend";
 import { getCarreras, slugify } from "@/lib/races-data";
 import { fmtFecha } from "@/lib/format";
@@ -19,8 +20,8 @@ function filaCarrera(r: Carrera): string {
   return `
     <tr>
       <td style="padding:8px 0; border-bottom:1px solid #e5e7eb;">
-        <div style="font-weight:600; color:#12151b;">${r.flag} ${r.name}</div>
-        <div style="color:#8b94a7; font-size:13px;">${r.city}, ${r.country} · ${fmtFecha(r.date)}</div>
+        <div style="font-weight:600; color:#12151b;">${r.flag} ${escaparHtml(r.name)}</div>
+        <div style="color:#8b94a7; font-size:13px;">${escaparHtml(r.city)}, ${escaparHtml(r.country)} · ${fmtFecha(r.date)}</div>
       </td>
       <td style="padding:8px 0; border-bottom:1px solid #e5e7eb; text-align:right;">
         <a href="https://theworldrunner.com/carreras/${slugify(r.id, r.name)}" style="color:#2547E8; font-size:13px; text-decoration:none;">Ver ↗</a>
@@ -32,7 +33,7 @@ function plantillaResumenUbicacion(secciones: { valor: string; carreras: Carrera
   const bloques = secciones
     .map(
       (s) => `
-      <h2 style="font-size:16px; color:#12151b; margin:24px 0 8px;">📍 ${s.valor}</h2>
+      <h2 style="font-size:16px; color:#12151b; margin:24px 0 8px;">📍 ${escaparHtml(s.valor)}</h2>
       <table style="width:100%; border-collapse:collapse;">
         ${s.carreras.map(filaCarrera).join("")}
       </table>`,
@@ -66,7 +67,7 @@ export async function enviarResumenesUbicacion() {
 
   if (pendientes.length === 0) return { correosEnviados: 0, seguimientosProcesados: 0 };
 
-  const carreras = (await getCarreras()).filter((r) => r.status !== "cerrada");
+  const carreras = (await getCarreras()).filter((r) => r.status !== "cerrada" && r.status !== "cancelada");
 
   const porUsuario = new Map<string, { email: string; items: typeof pendientes }>();
   for (const s of pendientes) {

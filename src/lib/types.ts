@@ -3,7 +3,9 @@ export type EstadoInscripcion =
   | "ultimos"
   | "sorteo"
   | "proximamente"
-  | "cerrada";
+  | "cerrada"
+  | "cancelada"
+  | "sinconfirmar";
 
 export interface EdicionHistorial {
   y: number;
@@ -47,6 +49,9 @@ export interface Carrera {
   recF: string;
   profile: number[];
   history: EdicionHistorial[];
+  // Solo en la ficha individual (ver getCarreraPorSlug): de dónde sale el
+  // dato y cuándo lo revisó un robot por última vez.
+  fuente?: { nombre: string; url: string; verificado: string | null };
 }
 
 export const ESTADO_INFO: Record<
@@ -58,6 +63,8 @@ export const ESTADO_INFO: Record<
   sorteo: { label: "Sorteo / ballot", color: "#7C3AED", pulse: true },
   proximamente: { label: "Abre pronto", color: "#D97706", pulse: false },
   cerrada: { label: "Inscripción cerrada", color: "#6B7280", pulse: false },
+  cancelada: { label: "Cancelada", color: "#DC2626", pulse: false },
+  sinconfirmar: { label: "Estado sin confirmar", color: "#64748B", pulse: false },
 };
 
 export const DISTANCIAS = [

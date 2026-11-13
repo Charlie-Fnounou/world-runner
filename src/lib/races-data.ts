@@ -2,6 +2,7 @@ import type { Prisma } from "@prisma/client";
 import { prisma } from "./prisma";
 import type { Carrera, EdicionHistorial, EstadoInscripcion } from "./types";
 import { normalizar } from "./text";
+import { urlSegura } from "./collectors/validacion";
 
 export function slugify(id: string, name: string): string {
   const base = normalizar(name)
@@ -16,7 +17,8 @@ const ESTADO_DB_A_UI: Record<string, EstadoInscripcion> = {
   SORTEO: "sorteo",
   PROXIMAMENTE: "proximamente",
   CERRADA: "cerrada",
-  CANCELADA: "cerrada",
+  CANCELADA: "cancelada",
+  SIN_CONFIRMAR: "sinconfirmar",
 };
 
 const CONTINENTE_DB_A_UI: Record<string, string> = {
@@ -54,6 +56,7 @@ const EVENTO_CON_EDICIONES = {
   include: {
     ediciones: { orderBy: { anio: "desc" as const } },
     distancias: true,
+    fuentes: { orderBy: { ultimaObtencion: "desc" as const }, take: 1 },
   },
 } satisfies Prisma.EventoDefaultArgs;
 
@@ -66,6 +69,7 @@ type EventoConEdiciones = Prisma.EventoGetPayload<typeof EVENTO_CON_EDICIONES>;
 // la cuota gratis de Supabase (egress). Acá va solo lo que esas páginas
 // muestran; la ficha sigue usando EVENTO_CON_EDICIONES completo.
 const EVENTO_LISTADO = {
+  where: { duplicadoDeId: null },
   select: {
     id: true,
     nombre: true,
@@ -99,7 +103,7 @@ const EVENTO_LISTADO = {
     },
     distancias: { select: { tipo: true, km: true, terreno: true, edicionId: true } },
   },
-} satisfies Prisma.EventoDefaultArgs;
+} satisfies Prisma.EventoFindManyArgs;
 
 type EventoListado = Prisma.EventoGetPayload<typeof EVENTO_LISTADO>;
 
@@ -112,17 +116,16 @@ function edicionActualDe<E extends { fecha: Date }>(evento: { ediciones: E[] }):
 }
 
 // El estado que guarda cada edición se actualiza solo cuando un
-// collector la vuelve a visitar (ver estadoPorDefecto en upsert.ts).
+// collector la vuelve a visitar (ver estadoAGuardar en validacion.ts).
 // Si una carrera no se re-scrapea justo después de su fecha, puede
 // quedar mostrando "inscripción abierta" indefinidamente aunque ya
 // haya pasado. Como red de seguridad, acá se corrige en el momento de
 // mostrarla: una fecha ya pasada siempre se ve como cerrada, sin
 // importar qué haya quedado guardado.
-function estadoParaMostrar(edicion: { fecha: Date; estado: string }): EstadoInscripcion {
-  const yaPaso = edicion.fecha < new Date();
-  const abiertaOSimilar = edicion.estado === "ABIERTA" || edicion.estado === "ULTIMOS_CUPOS" || edicion.estado === "SORTEO" || edicion.estado === "PROXIMAMENTE";
-  if (yaPaso && abiertaOSimilar) return "cerrada";
-  return ESTADO_DB_A_UI[edicion.estado] ?? "proximamente";
+export function estadoParaMostrar(edicion: { fecha: Date; estado: string }, ahora = new Date()): EstadoInscripcion {
+  if (edicion.estado === "CANCELADA") return "cancelada";
+  if (edicion.fecha < ahora) return "cerrada";
+  return ESTADO_DB_A_UI[edicion.estado] ?? "sinconfirmar";
 }
 
 function aCarrera(evento: EventoConEdiciones | EventoListado): Carrera | null {
@@ -136,8 +139,9 @@ function aCarrera(evento: EventoConEdiciones | EventoListado): Carrera | null {
   const history: EdicionHistorial[] = evento.ediciones
     .filter((e) => e.id !== edicion.id)
     .sort((a, b) => b.anio - a.anio)
-    .slice(0, 3)
-    .map((e) => ({ y: e.anio, r: e.numCorredores ?? 0, p: e.precioDesde ?? 0 }));
+    .map((e) => ({ y: e.anio, r: e.numCorredores ?? 0, p: e.precioDesde ?? 0 }))
+    .filter((h) => h.r > 0 || h.p > 0)
+    .slice(0, 3);
 
   return {
     id: evento.id,
@@ -159,11 +163,11 @@ function aCarrera(evento: EventoConEdiciones | EventoListado): Carrera | null {
     elev: edicion.desnivelPositivoM ?? 0,
     temp: evento.climaTempPromedioC ?? 0,
     limit: edicion.tiempoLimite ?? "",
-    diff: edicion.dificultad ?? 1,
+    diff: edicion.dificultad ?? 0,
     rating: edicion.ratingPromedio ?? 0,
     nrev: edicion.numResenas,
     major: evento.esWorldMarathonMajor,
-    web: evento.sitioWeb ?? "",
+    web: urlSegura(evento.sitioWeb) ?? "",
     airport: detalle?.aeropuerto ?? "",
     hotel: detalle?.zonaHoteles ?? "",
     g: [evento.colorPrimario ?? "#2547E8", evento.colorSecundario ?? "#12151b"],
@@ -175,6 +179,14 @@ function aCarrera(evento: EventoConEdiciones | EventoListado): Carrera | null {
     recF: edicionDetalle?.recordFemenino ?? "",
     profile: Array.isArray(edicionDetalle?.perfilElevacion) ? (edicionDetalle.perfilElevacion as number[]) : [],
     history,
+    fuente:
+      detalle && detalle.fuentes[0]
+        ? {
+            nombre: detalle.fuentes[0].nombre,
+            url: urlSegura(detalle.fuentes[0].url) ?? "",
+            verificado: (edicionDetalle?.ultimaVerificacion ?? detalle.fuentes[0].ultimaObtencion)?.toISOString() ?? null,
+          }
+        : undefined,
   };
 }
 
@@ -206,6 +218,15 @@ export async function getCarreraPorId(id: string): Promise<Carrera | undefined> 
   return aCarrera(evento) ?? undefined;
 }
 
+// Si la carrera de este slug quedó marcada como duplicada, el slug de la
+// principal (para redirigir y no tener dos páginas iguales en Google).
+export async function getSlugPrincipal(slug: string): Promise<string | null> {
+  const e = await prisma.evento.findUnique({ where: { slug }, select: { duplicadoDeId: true } });
+  if (!e?.duplicadoDeId) return null;
+  const principal = await prisma.evento.findUnique({ where: { id: e.duplicadoDeId }, select: { slug: true } });
+  return principal?.slug ?? null;
+}
+
 export async function getCarreraPorSlug(slug: string): Promise<Carrera | undefined> {
   const evento = await prisma.evento.findUnique({ where: { slug }, ...EVENTO_CON_EDICIONES });
   if (!evento) return undefined;
@@ -223,17 +244,17 @@ export async function getCarrerasCercanas(r: Carrera, limite = 6): Promise<Carre
   const enRango = { ediciones: { some: { fecha: { gte: desde, lte: hasta } } } };
 
   let eventos = await prisma.evento.findMany({
-    where: { pais: r.country, id: { not: r.id }, ...enRango },
-    take: limite,
     ...EVENTO_LISTADO,
+    where: { pais: r.country, id: { not: r.id }, duplicadoDeId: null, ...enRango },
+    take: limite,
   });
   if (eventos.length === 0) {
     const continente = Object.entries(CONTINENTE_DB_A_UI).find(([, ui]) => ui === r.continent)?.[0];
     if (continente) {
       eventos = await prisma.evento.findMany({
-        where: { continente: continente as Prisma.EventoWhereInput["continente"], id: { not: r.id }, ...enRango },
-        take: limite,
         ...EVENTO_LISTADO,
+        where: { continente: continente as Prisma.EventoWhereInput["continente"], id: { not: r.id }, duplicadoDeId: null, ...enRango },
+        take: limite,
       });
     }
   }

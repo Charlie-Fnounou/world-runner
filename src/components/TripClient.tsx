@@ -11,7 +11,7 @@ import { useFavoritos } from "@/hooks/useFavoritos";
 import { normalizar } from "@/lib/text";
 import { useIdioma } from "./LanguageProvider";
 
-const ESTADOS_FILTRO: (EstadoInscripcion | "Todos")[] = ["Todos", "abierta", "ultimos", "sorteo", "proximamente", "cerrada"];
+const ESTADOS_FILTRO: (EstadoInscripcion | "Todos")[] = ["Todos", "abierta", "ultimos", "sorteo", "proximamente", "sinconfirmar", "cerrada", "cancelada"];
 
 function coincideDestino(r: Carrera, destino: string): boolean {
   const qts = normalizar(destino).split(/\s+/).filter(Boolean);

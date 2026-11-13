@@ -1,26 +1,10 @@
-import { EstadoInscripcion } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/races-data";
 import { banderaDesdeCodigoIso, centroideDesdeCodigoIso } from "@/lib/paises";
 import { normalizar } from "@/lib/text";
 import { detectarYNotificarCambios } from "@/lib/alertas";
 import type { CarreraExterna } from "./types";
-
-// La mayoría de los collectors no traen un estado de inscripción real
-// (la fuente no lo publica de forma parseable) — antes esos casos
-// quedaban fijos en PROXIMAMENTE ("abre pronto") para siempre, sin
-// importar qué tan cerca estuviera la fecha, lo cual es engañoso: una
-// carrera dentro de pocas semanas casi seguro ya tiene inscripción
-// abierta, no "todavía sin abrir". Cuando el collector no da un estado
-// explícito, se infiere uno razonable a partir de la fecha en vez de
-// asumir siempre "todavía no abrió".
-function estadoPorDefecto(fecha: Date, explicito?: EstadoInscripcion): EstadoInscripcion {
-  if (explicito) return explicito;
-  const diasHasta = (fecha.getTime() - Date.now()) / 86_400_000;
-  if (diasHasta < 0) return "CERRADA";
-  if (diasHasta <= 90) return "ABIERTA";
-  return "PROXIMAMENTE";
-}
+import { estadoAGuardar, problemaDeCarrera, urlSegura } from "./validacion";
 
 // La mayoría de los collectors no traen lat/lng de la carrera puntual
 // y mandan (0,0) — sin este respaldo, esas carreras quedaban todas
@@ -34,7 +18,18 @@ function latLngConRespaldo(c: Pick<CarreraExterna, "lat" | "lng" | "codigoPais">
 // Crea o actualiza una carrera a partir de lo que trajo un recolector.
 // Usa FuenteDato (tipo + externalId) para saber si ya la habíamos
 // guardado antes y así no duplicarla.
-export async function upsertCarreraExterna(c: CarreraExterna): Promise<{ creada: boolean }> {
+export async function upsertCarreraExterna(entrada: CarreraExterna): Promise<{ creada: boolean }> {
+  const problema = problemaDeCarrera(entrada);
+  if (problema) throw new Error(`Carrera descartada (${entrada.fuenteTipo}/${entrada.externalId}): ${problema}`);
+  const c: CarreraExterna = {
+    ...entrada,
+    nombre: entrada.nombre.trim().slice(0, 250),
+    ciudad: entrada.ciudad.trim(),
+    sitioWeb: urlSegura(entrada.sitioWeb),
+    urlInscripcionOficial: urlSegura(entrada.urlInscripcionOficial),
+    fuenteUrl: urlSegura(entrada.fuenteUrl),
+  };
+
   const fuenteExistente = await prisma.fuenteDato.findUnique({
     where: { tipo_externalId: { tipo: c.fuenteTipo, externalId: c.externalId } },
   });
@@ -65,7 +60,7 @@ export async function upsertCarreraExterna(c: CarreraExterna): Promise<{ creada:
       where: { eventoId_anio: { eventoId: fuenteExistente.eventoId, anio: c.anio } },
       update: {
         fecha: c.fecha,
-        estado: estadoPorDefecto(c.fecha, c.estado),
+        estado: estadoAGuardar(c.fecha, c.estado, edicionAntes?.estado ?? null),
         precioDesde: c.precioDesde,
         moneda: c.moneda,
         numCorredores: c.numCorredores,
@@ -78,7 +73,7 @@ export async function upsertCarreraExterna(c: CarreraExterna): Promise<{ creada:
         eventoId: fuenteExistente.eventoId,
         anio: c.anio,
         fecha: c.fecha,
-        estado: estadoPorDefecto(c.fecha, c.estado),
+        estado: estadoAGuardar(c.fecha, c.estado, null),
         precioDesde: c.precioDesde,
         moneda: c.moneda,
         numCorredores: c.numCorredores,
@@ -132,7 +127,7 @@ export async function upsertCarreraExterna(c: CarreraExterna): Promise<{ creada:
         create: {
           anio: c.anio,
           fecha: c.fecha,
-          estado: estadoPorDefecto(c.fecha, c.estado),
+          estado: estadoAGuardar(c.fecha, c.estado, null),
           precioDesde: c.precioDesde,
           moneda: c.moneda,
           numCorredores: c.numCorredores,
@@ -165,15 +160,21 @@ export async function upsertCarreraExterna(c: CarreraExterna): Promise<{ creada:
 
 // Registra en EjecucionRobot cómo le fue a una corrida del recolector,
 // para verlo en /admin/robots.
-export async function registrarEjecucion(collector: string, fn: () => Promise<{ nuevas: number; actualizadas: number; errores: number }>) {
+export async function registrarEjecucion(
+  collector: string,
+  fn: () => Promise<{ nuevas: number; actualizadas: number; errores: number; detalle?: string }>,
+) {
   const inicio = Date.now();
   try {
     const resultado = await fn();
     await prisma.ejecucionRobot.create({
       data: {
         collector,
-        estado: resultado.errores > 0 ? "PARCIAL" : "OK",
-        mensaje: `${resultado.nuevas} nuevas, ${resultado.actualizadas} actualizadas, ${resultado.errores} errores`,
+        // Sin ninguna carrera leída casi siempre significa que la fuente
+        // cambió su sitio (pasó con laufen.de y Minhas Inscrições): se marca
+        // PARCIAL para que se vea en /admin/robots en vez de pasar como OK.
+        estado: resultado.errores > 0 || resultado.nuevas + resultado.actualizadas === 0 ? "PARCIAL" : "OK",
+        mensaje: `${resultado.nuevas} nuevas, ${resultado.actualizadas} actualizadas, ${resultado.errores} errores${resultado.detalle ? ` — ${resultado.detalle}` : ""}`.slice(0, 1000),
         duracionMs: Date.now() - inicio,
       },
     });
