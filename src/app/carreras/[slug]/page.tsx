@@ -53,7 +53,11 @@ export default async function RacePage({
   if (principal) permanentRedirect(`/carreras/${principal}`);
   const r = await getCarreraPorSlug(slug);
   if (!r) notFound();
-  const [novedades, cercanas] = await Promise.all([getNovedades(8, r.id), getCarrerasCercanas(r)]);
+  // Secciones secundarias: si la base falla un momento, la ficha se muestra igual sin ellas.
+  const [novedades, cercanas] = await Promise.all([
+    getNovedades(8, r.id).catch(() => []),
+    getCarrerasCercanas(r).catch(() => []),
+  ]);
 
   const faqLd = {
     "@context": "https://schema.org",
