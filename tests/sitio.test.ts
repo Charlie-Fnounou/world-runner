@@ -87,3 +87,19 @@ test("login: el destino de regreso solo puede ser una ruta del propio sitio", ()
     assert.equal(new URL(`https://theworldrunner.com${rutaInternaSegura(malo)}`).hostname, "theworldrunner.com");
   }
 });
+
+test("robots: cada fuente pausada existe, tiene motivo y fecha, y nadie la llama", async () => {
+  const { FUENTES_PAUSADAS } = await import("../src/lib/collectors/pausadas");
+  const { COLLECTORES } = await import("../src/lib/collectors/lista");
+  const { readFileSync } = await import("node:fs");
+  const claves = new Set(COLLECTORES.map((c) => c.clave));
+  assert.equal(claves.size, COLLECTORES.length, "claves repetidas en la lista");
+  for (const [clave, f] of Object.entries(FUENTES_PAUSADAS)) {
+    assert.ok(claves.has(clave), `${clave} no está en la lista de recolectores`);
+    assert.ok(f.motivo.length > 20);
+    assert.match(f.verificado, /^\d{4}-\d{2}-\d{2}$/);
+  }
+  for (const archivo of ["../src/app/api/cron/collectors/route.ts", "../src/app/actions/robots.ts"]) {
+    assert.ok(readFileSync(new URL(archivo, import.meta.url), "utf8").includes("FUENTES_PAUSADAS[clave]"), `${archivo} no consulta la lista`);
+  }
+});

@@ -47,6 +47,7 @@ Nunca pegar valores de estas variables en comandos de terminal ni en commits.
 - Los rankings solo usan carreras con el dato real y necesitan al menos 3; las valoraciones solo cuentan reseñas reales.
 - Los duplicados no se borran: se marcan con `duplicadoDeId`, salen de los listados y su ficha redirige a la principal.
 - Los robots se identifican como `WorldRunnerBot/1.0`. Si una fuente nos bloquea (403), no se la esquiva haciéndose pasar por un navegador.
+- Fuentes pausadas: `src/lib/collectors/pausadas.ts` lista las que el cron no llama, con el motivo y la fecha en que se comprobó (hoy: runningcalendar AU/NZ/IE nos responden 403; ethiopianrun cambió su sitio y su API ya no existe). Se ven en `/admin/robots`. Para reactivar una, probarla con una sola visita y, si responde, quitarla de la lista. Sus carreras ya guardadas no se borran.
 - Lo que llega de fuentes externas se valida (`collectors/validacion.ts`) y se escapa al mostrarlo (`lib/seguridad.ts`).
 
 ## Publicar (deploy) y volver atrás

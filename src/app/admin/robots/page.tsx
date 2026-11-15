@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { correrCollectoresAhora } from "@/app/actions/robots";
+import { FUENTES_PAUSADAS } from "@/lib/collectors/pausadas";
 
 export default async function AdminRobotsPage({
   searchParams,
@@ -60,10 +61,34 @@ export default async function AdminRobotsPage({
     </section>
   );
 
+  const pausadas = Object.entries(FUENTES_PAUSADAS);
+  const panelPausadas = pausadas.length > 0 && (
+    <section className="rounded-2xl p-5 wr-panel flex flex-col gap-3">
+      <h2 className="font-bold">Fuentes pausadas ({pausadas.length})</h2>
+      <p className="text-sm" style={{ color: "var(--wr-mut)" }}>
+        El robot no las llama. Sus carreras ya guardadas siguen visibles. Se reactivan quitándolas de
+        <code className="mx-1">src/lib/collectors/pausadas.ts</code>
+        cuando vuelvan a responder.
+      </p>
+      <ul className="flex flex-col gap-2 text-sm">
+        {pausadas.map(([clave, f]) => (
+          <li key={clave}>
+            <span className="font-medium">{clave}</span>{" "}
+            <span className="wr-chip rounded-full px-2 py-0.5 text-xs">{f.tipo === "bloqueo" ? "nos bloquea" : "la fuente cambió"}</span>{" "}
+            <span style={{ color: "var(--wr-mut)" }}>
+              {f.motivo} (comprobado {f.verificado})
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+
   if (ejecuciones.length === 0) {
     return (
       <div className="flex flex-col gap-4">
         {panelRunSignup}
+        {panelPausadas}
         <div className="rounded-2xl p-8 wr-panel text-center" style={{ color: "var(--wr-mut)" }}>
           Todavía no hay robots corriendo. Aquí vas a ver el historial de cada sincronización
           (RunSignup, federaciones, sitios oficiales).
@@ -75,6 +100,7 @@ export default async function AdminRobotsPage({
   return (
     <div className="flex flex-col gap-4">
       {panelRunSignup}
+      {panelPausadas}
       <section className="rounded-2xl wr-panel overflow-hidden">
         <table className="w-full text-sm">
           <thead>
