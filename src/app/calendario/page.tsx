@@ -11,5 +11,5 @@ export const revalidate = 86400;
 
 export default async function CalendarioPage() {
   const carreras = await getCarreras();
-  return <CalendarioClient carreras={carreras} />;
+  return <CalendarioClient carreras={carreras} fechaBase={new Date().toISOString().slice(0, 10)} />;
 }

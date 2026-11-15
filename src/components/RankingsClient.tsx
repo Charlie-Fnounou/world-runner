@@ -7,6 +7,7 @@ import { Badge } from "./Badge";
 import { fmtFecha, nf } from "@/lib/format";
 import { slugify } from "@/lib/races-data";
 import { useIdioma } from "./LanguageProvider";
+import { useHoy } from "@/hooks/useHoy";
 
 type TabId = "planas" | "populares" | "economicas" | "desnivel" | "valoradas";
 
@@ -18,9 +19,8 @@ type TabId = "planas" | "populares" | "economicas" | "desnivel" | "valoradas";
 const MINIMO = 3;
 const MIN_RESENAS = 3;
 
-function proximas(rs: Carrera[]): Carrera[] {
-  const hoy = new Date().toISOString().slice(0, 10);
-  return rs.filter((r) => r.date >= hoy && r.status !== "cancelada");
+function proximas(rs: Carrera[], hoy: string | null): Carrera[] {
+  return rs.filter((r) => (!hoy || r.date >= hoy) && r.status !== "cancelada");
 }
 
 const TABS: { id: TabId; ordenar: (rs: Carrera[], moneda: string) => Carrera[] }[] = [
@@ -37,7 +37,8 @@ function medalla(i: number): string {
 
 export function RankingsClient({ carreras }: { carreras: Carrera[] }) {
   const { idioma, t } = useIdioma();
-  const vigentes = useMemo(() => proximas(carreras), [carreras]);
+  const hoy = useHoy();
+  const vigentes = useMemo(() => proximas(carreras, hoy), [carreras, hoy]);
   const monedas = useMemo(() => {
     const cuenta = new Map<string, number>();
     for (const r of vigentes) if (r.price > 0 && r.cur) cuenta.set(r.cur, (cuenta.get(r.cur) ?? 0) + 1);

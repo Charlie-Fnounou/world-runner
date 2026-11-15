@@ -7,20 +7,24 @@ import { RaceCard } from "./RaceCard";
 import { useFavoritos } from "@/hooks/useFavoritos";
 import { MESES_FULL } from "@/lib/format";
 import { useIdioma } from "./LanguageProvider";
+import { useHoy } from "@/hooks/useHoy";
 
-const HOY = new Date();
-
-export function CalendarioClient({ carreras }: { carreras: Carrera[] }) {
+// fechaBase: el día en que el servidor generó la página. Hasta que el
+// navegador conoce su propio "hoy" (useHoy) se usa esa, así el HTML del
+// servidor y el primer dibujo del navegador coinciden.
+export function CalendarioClient({ carreras, fechaBase }: { carreras: Carrera[]; fechaBase: string }) {
   const { idioma, t } = useIdioma();
   const { favoritos, alternar } = useFavoritos();
-  const [anio, setAnio] = useState(HOY.getFullYear());
-  const [mes, setMes] = useState(HOY.getMonth());
+  const hoy = useHoy();
+  const referencia = hoy ?? fechaBase;
+  const [elegido, setElegido] = useState<{ anio: number; mes: number } | null>(null);
+  const anio = elegido?.anio ?? Number(referencia.slice(0, 4));
+  const mes = elegido?.mes ?? Number(referencia.slice(5, 7)) - 1;
   const [diaSeleccionado, setDiaSeleccionado] = useState<number | null>(null);
 
   const navegar = (dir: number) => {
     const d = new Date(anio, mes + dir, 1);
-    setAnio(d.getFullYear());
-    setMes(d.getMonth());
+    setElegido({ anio: d.getFullYear(), mes: d.getMonth() });
     setDiaSeleccionado(null);
   };
 
@@ -73,7 +77,7 @@ export function CalendarioClient({ carreras }: { carreras: Carrera[] }) {
         {Array.from({ length: diasDelMes }).map((_, i) => {
           const dia = i + 1;
           const rs = porDia.get(dia) ?? [];
-          const esHoy = anio === HOY.getFullYear() && mes === HOY.getMonth() && dia === HOY.getDate();
+          const esHoy = hoy !== null && hoy === `${anio}-${String(mes + 1).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
           const seleccionado = diaSeleccionado === dia;
           const estados = [...new Set(rs.map((r) => r.status))] as EstadoInscripcion[];
 

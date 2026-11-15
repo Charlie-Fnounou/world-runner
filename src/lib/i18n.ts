@@ -216,6 +216,14 @@ export interface Diccionario {
     privacidad: string;
     miPlan: { titulo: string; gratis: string; pro: (periodo: string) => string; pase: string; renueva: (fecha: string) => string; terminaEl: (fecha: string) => string; cancelar: string; confirmarCancelar: string; cancelada: string; mejorar: string };
   };
+  errores: {
+    titulo: string;
+    texto: string;
+    reintentar: string;
+    inicio: string;
+    noEncontradaTitulo: string;
+    noEncontradaTexto: string;
+  };
   radar: {
     eyebrow: string;
     titulo: string;
@@ -565,6 +573,14 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
         cancelada: "Suscripción cancelada. Pro sigue activo hasta el final del período pagado.",
         mejorar: "Ver planes",
       },
+    },
+    errores: {
+      titulo: "No pudimos cargar esta página",
+      texto: "Puede ser un problema momentáneo de conexión. Probá de nuevo en unos segundos.",
+      reintentar: "Reintentar",
+      inicio: "Ir al inicio",
+      noEncontradaTitulo: "Página no encontrada",
+      noEncontradaTexto: "La carrera o página que buscás no existe o cambió de dirección.",
     },
     radar: {
       eyebrow: "Radar de carreras",
@@ -922,6 +938,14 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
         mejorar: "See plans",
       },
     },
+    errores: {
+      titulo: "We couldn't load this page",
+      texto: "It may be a temporary connection problem. Try again in a few seconds.",
+      reintentar: "Try again",
+      inicio: "Go home",
+      noEncontradaTitulo: "Page not found",
+      noEncontradaTexto: "The race or page you're looking for doesn't exist or has moved.",
+    },
     radar: {
       eyebrow: "Race radar",
       titulo: "What changed in the running world",
@@ -1278,6 +1302,14 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
         mejorar: "Ver planos",
       },
     },
+    errores: {
+      titulo: "Não conseguimos carregar esta página",
+      texto: "Pode ser um problema momentâneo de conexão. Tente de novo em alguns segundos.",
+      reintentar: "Tentar de novo",
+      inicio: "Ir para o início",
+      noEncontradaTitulo: "Página não encontrada",
+      noEncontradaTexto: "A corrida ou página que você procura não existe ou mudou de endereço.",
+    },
     radar: {
       eyebrow: "Radar de corridas",
       titulo: "O que mudou no mundo da corrida",
@@ -1633,6 +1665,14 @@ export const DICCIONARIOS: Record<Idioma, Diccionario> = {
         cancelada: "Abonnement annulé. Pro reste actif jusqu'à la fin de la période payée.",
         mejorar: "Voir les formules",
       },
+    },
+    errores: {
+      titulo: "Impossible de charger cette page",
+      texto: "C'est peut-être un problème de connexion passager. Réessayez dans quelques secondes.",
+      reintentar: "Réessayer",
+      inicio: "Aller à l'accueil",
+      noEncontradaTitulo: "Page introuvable",
+      noEncontradaTexto: "La course ou la page que vous cherchez n'existe pas ou a changé d'adresse.",
     },
     radar: {
       eyebrow: "Radar des courses",

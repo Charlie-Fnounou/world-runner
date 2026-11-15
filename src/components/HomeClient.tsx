@@ -14,6 +14,7 @@ import { SeguimientoUbicacionBanner } from "./SeguimientoUbicacionBanner";
 import { useFavoritos } from "@/hooks/useFavoritos";
 import { buscarCarreras } from "@/lib/search";
 import { useIdioma } from "./LanguageProvider";
+import { useHoy } from "@/hooks/useHoy";
 
 const ESTADOS_FILTRO: (EstadoInscripcion | "Todos")[] = ["Todos", "abierta", "ultimos", "sorteo", "proximamente", "sinconfirmar", "cerrada", "cancelada"];
 
@@ -72,10 +73,11 @@ export function HomeClient({
 
   // Solo las que todavía no pasaron: varias "Majors" del catálogo inicial no
   // tienen una fuente que cargue la edición siguiente.
-  const destacadas = useMemo(() => {
-    const hoy = new Date().toISOString().slice(0, 10);
-    return carreras.filter((r) => r.major && r.date >= hoy && r.status !== "cancelada");
-  }, [carreras]);
+  const hoy = useHoy();
+  const destacadas = useMemo(
+    () => carreras.filter((r) => r.major && (!hoy || r.date >= hoy) && r.status !== "cancelada"),
+    [carreras, hoy],
+  );
 
   const proximasAperturas = useMemo(
     () =>

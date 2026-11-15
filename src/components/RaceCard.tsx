@@ -7,6 +7,7 @@ import { diasHasta, fmtFecha, nf } from "@/lib/format";
 import { slugify } from "@/lib/races-data";
 import { traducirDistancia } from "@/lib/i18n";
 import { useIdioma } from "./LanguageProvider";
+import { useHoy } from "@/hooks/useHoy";
 
 export function RaceCard({
   r,
@@ -18,7 +19,8 @@ export function RaceCard({
   onFavorito: (id: string) => void;
 }) {
   const { idioma, t } = useIdioma();
-  const d = diasHasta(r.date);
+  const hoy = useHoy();
+  const d = hoy ? diasHasta(r.date) : 0;
   // Varios collectors nuevos no traen distancia o precio exactos (la fuente
   // no los publica): mostrar "0K" o "$0" es engañoso, mejor un guion.
   const distanciaTexto =
