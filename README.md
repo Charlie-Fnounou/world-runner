@@ -52,6 +52,8 @@ Nunca pegar valores de estas variables en comandos de terminal ni en commits.
 
 ## Publicar (deploy) y volver atrás
 
+Para la actualización de la auditoría (código + migración de datos) seguir [docs/publicacion-auditoria.md](docs/publicacion-auditoria.md).
+
 1. Trabajar en una rama, correr `npm test`, `npm run typecheck`, `npm run lint` y `npm run build`.
 2. Si cambió el esquema: `npx prisma db push` (solo cambios que agregan; nunca borrar columnas con datos sin respaldo).
 3. Unir la rama a `main`: Vercel publica solo.
