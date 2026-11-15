@@ -130,6 +130,7 @@ export function aCarreraExterna(r: RaceRunSignup["race"]): CarreraExterna | null
     fecha,
     urlInscripcionOficial: r.url,
     estado: r.is_registration_open === "T" ? "ABIERTA" : undefined,
+    informaEstado: true,
     distancias: [{ tipo: TipoDistancia.OTRA, km: 0 }],
   };
 }

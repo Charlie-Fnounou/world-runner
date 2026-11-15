@@ -22,6 +22,11 @@ export interface CarreraExterna {
   anio: number;
   fecha: Date;
   estado?: EstadoInscripcion;
+  // true si esta fuente publica el estado de inscripción: entonces "sin
+  // estado" significa que no está abierta (ej. RunSignup "F") y el estado
+  // viejo se reemplaza. false/undefined: la fuente no dice nada y se
+  // conserva lo que había (ej. un estado cargado a mano).
+  informaEstado?: boolean;
   precioDesde?: number;
   moneda?: string;
   numCorredores?: number;

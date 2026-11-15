@@ -65,8 +65,8 @@ export function detectarDuplicados(lista: CandidatoDuplicado[]): Map<string, str
   return resultado;
 }
 
-// Marca (no borra) los duplicados de carreras recientes o futuras.
-export async function marcarDuplicados(): Promise<{ marcados: number }> {
+// Solo lectura: qué carreras recientes o futuras son duplicadas y de cuál.
+export async function buscarDuplicados(): Promise<Map<string, string>> {
   const desde = new Date(Date.now() - 30 * 864e5);
   const eventos = await prisma.evento.findMany({
     where: { duplicadoDeId: null, ediciones: { some: { fecha: { gte: desde } } } },
@@ -99,7 +99,12 @@ export async function marcarDuplicados(): Promise<{ marcados: number }> {
     }
   }
 
-  const duplicados = detectarDuplicados(lista);
+  return detectarDuplicados(lista);
+}
+
+// Marca (no borra) los duplicados de carreras recientes o futuras.
+export async function marcarDuplicados(): Promise<{ marcados: number }> {
+  const duplicados = await buscarDuplicados();
   for (const [id, principal] of duplicados) {
     await prisma.evento.update({ where: { id }, data: { duplicadoDeId: principal }, select: { id: true } });
   }

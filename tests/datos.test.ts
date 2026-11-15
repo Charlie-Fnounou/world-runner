@@ -31,6 +31,12 @@ test("estado: una fuente que no informa no pisa un estado cargado a mano", () =>
   assert.equal(estadoAGuardar(FUTURA, undefined, "CERRADA", AHORA), "SIN_CONFIRMAR");
 });
 
+test("estado: una fuente que SÍ informa estado reemplaza el viejo (RunSignup 'F' o cerró)", () => {
+  assert.equal(estadoAGuardar(FUTURA, undefined, "ABIERTA", AHORA, true), "SIN_CONFIRMAR");
+  assert.equal(estadoAGuardar(FUTURA, "ABIERTA", "SIN_CONFIRMAR", AHORA, true), "ABIERTA");
+  assert.equal(estadoAGuardar(PASADA, undefined, "ABIERTA", AHORA, true), "CERRADA");
+});
+
 test("estado mostrado: pasada = cerrada, cancelada se muestra cancelada, desconocido = sin confirmar", () => {
   const ahora = new Date(AHORA);
   assert.equal(estadoParaMostrar({ fecha: PASADA, estado: "ABIERTA" }, ahora), "cerrada");
@@ -135,6 +141,7 @@ test("RunSignup: usa is_registration_open y descarta borradores/privadas", () =>
   const base = { race_id: 1, name: "Turkey Trot", next_date: "11/26/2026", url: "https://runsignup.com/Race/X/1", address: { city: "Austin", country_code: "US" } };
   assert.equal(aCarreraExterna({ ...base, is_registration_open: "T" })?.estado, "ABIERTA");
   assert.equal(aCarreraExterna({ ...base, is_registration_open: "F" })?.estado, undefined);
+  assert.equal(aCarreraExterna({ ...base, is_registration_open: "F" })?.informaEstado, true);
   assert.equal(aCarreraExterna({ ...base, is_draft_race: "T" }), null);
   assert.equal(aCarreraExterna({ ...base, is_private_race: "T" }), null);
 });

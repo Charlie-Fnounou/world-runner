@@ -28,3 +28,6 @@ yarn-debug.log*
 yarn-error.log*
 next-env.d.ts
 tsconfig.tsbuildinfo
+
+# Respaldos de migraciones de datos: contienen datos de la base, no van a Git.
+/prisma/respaldos/

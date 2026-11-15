@@ -60,7 +60,7 @@ export async function upsertCarreraExterna(entrada: CarreraExterna): Promise<{ c
       where: { eventoId_anio: { eventoId: fuenteExistente.eventoId, anio: c.anio } },
       update: {
         fecha: c.fecha,
-        estado: estadoAGuardar(c.fecha, c.estado, edicionAntes?.estado ?? null),
+        estado: estadoAGuardar(c.fecha, c.estado, edicionAntes?.estado ?? null, Date.now(), c.informaEstado),
         precioDesde: c.precioDesde,
         moneda: c.moneda,
         numCorredores: c.numCorredores,
@@ -87,7 +87,7 @@ export async function upsertCarreraExterna(entrada: CarreraExterna): Promise<{ c
     // acaba de disparar arriba porque era la primera vez que vemos esta
     // edición puntual, no hay "antes" real con qué compararla).
     if (edicionAntes) {
-      await detectarYNotificarCambios(fuenteExistente.eventoId, edicionAntes, edicionDespues, c.fuenteNombre, c.estado !== undefined);
+      await detectarYNotificarCambios(fuenteExistente.eventoId, edicionAntes, edicionDespues, c.fuenteNombre, c.estado !== undefined || c.informaEstado === true);
     }
 
     await prisma.fuenteDato.update({

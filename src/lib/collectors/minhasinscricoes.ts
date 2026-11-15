@@ -80,6 +80,8 @@ export function aCarreraExterna(fila: FilaMinhas): CarreraExterna | null {
     anio: fecha.getUTCFullYear(),
     fecha,
     urlInscripcionOficial: fila.href,
+    // Estar o no en "últimas vagas" es lo que publica la fuente.
+    informaEstado: true,
     distancias: [{ tipo: TipoDistancia.OTRA, km: 0, terreno: "ASFALTO" }],
   };
 }

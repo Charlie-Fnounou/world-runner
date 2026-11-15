@@ -62,7 +62,8 @@ Nunca pegar valores de estas variables en comandos de terminal ni en commits.
 
 ## Scripts de datos
 
-- `scripts/migrar-veracidad.ts`: corrige datos ya guardados (estados deducidos → sin confirmar, datos inventados del catálogo inicial, duplicados). Sin argumentos solo muestra qué cambiaría; `--aplicar` respalda y aplica; `--runsignup` además confirma con RunSignup qué inscripciones están abiertas. Es idempotente.
+- `scripts/migrar-veracidad.ts`: corrige datos ya guardados (estados deducidos → sin confirmar, datos inventados del catálogo inicial, duplicados). Sin argumentos solo muestra qué cambiaría; `--aplicar` respalda y aplica; `--runsignup` además confirma con RunSignup qué inscripciones están abiertas. Es idempotente. Se deshace con `scripts/restaurar-veracidad.ts`.
+- `scripts/preparar-reversion.ts`: antes de volver a un deploy anterior a la auditoría (el código viejo no entiende `SIN_CONFIRMAR`).
 
 ## Pagos
 

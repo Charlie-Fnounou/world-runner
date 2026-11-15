@@ -11,11 +11,13 @@ export function estadoAGuardar(
   explicito: EstadoInscripcion | undefined,
   actual: EstadoInscripcion | null,
   ahora = Date.now(),
+  informaEstado = false,
 ): EstadoInscripcion {
   if (explicito) return explicito;
   if (fecha.getTime() < ahora) return actual === "CANCELADA" ? "CANCELADA" : "CERRADA";
-  // Un estado puesto a mano (panel de admin) o por otra vía confiable no
-  // se pisa porque esta fuente no diga nada.
+  // Si la fuente publica el estado y no dice "abierta", lo de antes ya no vale.
+  if (informaEstado) return "SIN_CONFIRMAR";
+  // Si la fuente nunca informa estado, no se pisa uno puesto a mano.
   if (actual && actual !== "CERRADA") return actual;
   return "SIN_CONFIRMAR";
 }
