@@ -29,7 +29,7 @@ function filaCarrera(r: Carrera): string {
     </tr>`;
 }
 
-function plantillaResumenUbicacion(secciones: { valor: string; carreras: Carrera[] }[]): string {
+export function plantillaResumenUbicacion(secciones: { valor: string; carreras: Carrera[] }[]): string {
   const bloques = secciones
     .map(
       (s) => `

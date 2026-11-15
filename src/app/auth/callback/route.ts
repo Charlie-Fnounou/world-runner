@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { rutaInternaSegura } from "@/lib/seguridad";
 import { createClient } from "@/lib/supabase/server";
 import { upsertUsuario } from "@/lib/upsert-usuario";
 
@@ -6,7 +7,7 @@ import { upsertUsuario } from "@/lib/upsert-usuario";
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/";
+  const next = rutaInternaSegura(searchParams.get("next"));
 
   if (code) {
     const supabase = await createClient();

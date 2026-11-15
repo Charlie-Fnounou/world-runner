@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { enviarCorreo, plantillaLinkMagico } from "@/lib/resend";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
+import { rutaInternaSegura } from "@/lib/seguridad";
 
 // Se pide desde el cliente (UserMenu, en el header de TODAS las páginas)
 // en vez de en el render del servidor: leer la sesión ahí adentro
@@ -32,7 +33,7 @@ async function origen() {
 export async function enviarLinkMagico(_prevState: unknown, formData: FormData) {
   const email = String(formData.get("email") || "").trim();
   if (!email) return { error: "Escribe un correo válido." };
-  const next = String(formData.get("next") || "/");
+  const next = rutaInternaSegura(String(formData.get("next") || "/"));
 
   const admin = createAdminClient();
 
@@ -79,6 +80,7 @@ export async function enviarLinkMagico(_prevState: unknown, formData: FormData) 
 // el resultado es que el redirect queda "tragado" y el botón no hace nada.
 // Por eso el cliente (LoginForm) hace el salto con window.location.href.
 export async function iniciarConGoogle(next: string): Promise<{ url?: string; error?: string }> {
+  next = rutaInternaSegura(next);
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",

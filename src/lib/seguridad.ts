@@ -31,3 +31,12 @@ export function monedaIso(cur: string | null | undefined): string | null {
   const simbolos: Record<string, string> = { "€": "EUR", "£": "GBP", "¥": "JPY", "₹": "INR", "₩": "KRW", "₺": "TRY", "R$": "BRL", "US$": "USD" };
   return simbolos[cur.trim()] ?? null;
 }
+
+// Destino de regreso después del login (?next=...). Solo rutas internas:
+// "@otro.com", "//otro.com" o ".otro.com" pegados detrás del dominio
+// terminaban llevando al usuario a otro sitio (redirección abierta).
+export function rutaInternaSegura(next: string | null | undefined): string {
+  if (!next || !next.startsWith("/") || next.startsWith("//") || next.startsWith("/\\")) return "/";
+  if (/[@\\\s]/.test(next)) return "/";
+  return next.slice(0, 500);
+}

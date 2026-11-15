@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { escaparHtml, jsonParaScript, monedaIso } from "../src/lib/seguridad";
+import { escaparHtml, jsonParaScript, monedaIso, rutaInternaSegura } from "../src/lib/seguridad";
 import { esCambioReal, tipoDeCambio } from "../src/lib/radar";
 import { preguntasDeCarrera } from "../src/lib/faq";
 import { buscarCarreras } from "../src/lib/search";
@@ -74,4 +74,16 @@ test("límite de uso: corta después del máximo y se libera al pasar la ventana
   for (let i = 0; i < 3; i++) assert.equal(permitir("prueba", 3, 60_000, t0 + i), true);
   assert.equal(permitir("prueba", 3, 60_000, t0 + 10), false);
   assert.equal(permitir("prueba", 3, 60_000, t0 + 61_000), true);
+});
+
+test("login: el destino de regreso solo puede ser una ruta del propio sitio", () => {
+  assert.equal(rutaInternaSegura("/perfil"), "/perfil");
+  assert.equal(rutaInternaSegura("/carreras/x?y=1"), "/carreras/x?y=1");
+  for (const malo of ["@evil.com", "//evil.com", ".evil.com", "https://evil.com", "/\\evil.com", "/x@evil.com", "", null, undefined]) {
+    assert.equal(rutaInternaSegura(malo), "/", String(malo));
+  }
+  // Así se arma el redirect: nunca debe salir del dominio.
+  for (const malo of ["@evil.com", ".evil.com"]) {
+    assert.equal(new URL(`https://theworldrunner.com${rutaInternaSegura(malo)}`).hostname, "theworldrunner.com");
+  }
 });
