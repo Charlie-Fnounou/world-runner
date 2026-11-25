@@ -7,6 +7,7 @@ import { MobileBar } from "@/components/MobileBar";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { Footer } from "@/components/Footer";
 import { Providers } from "@/components/Providers";
+import { Analytics } from "@vercel/analytics/next";
 
 const display = Bodoni_Moda({
   subsets: ["latin"],
@@ -64,6 +65,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <Footer />
           <MobileBar />
         </Providers>
+        <Analytics />
       </body>
     </html>
   );
